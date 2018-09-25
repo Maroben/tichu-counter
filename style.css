@@ -1,0 +1,75 @@
+:root {
+    --tichu-black: #372E29;
+    --tichu-blue: #0092BD;
+    --tichu-green: #018C48;
+    --tichu-red: #CF3E39;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.hidden {
+    display: none;
+}
+
+body {
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+    
+}
+
+header {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+header a {
+    font-size: 1.8em;
+    text-decoration: none;
+    background-color: var(--tichu-blue);
+    color: white;
+    padding: 0.6em 0;
+    width: 100%;
+    text-align: center;
+}
+
+#game-nav {
+    color: var(--tichu-red);
+    border-bottom: 2px solid var(--tichu-red);
+    margin-bottom: 0.3em;
+}
+
+.game {
+    display: flex;
+    width: 100%;
+    padding: 0.3em 0;
+}
+
+.game-box {
+    width: 100%;
+    text-align: center;
+}
+
+.game button {
+    width: 28px;
+}
+
+.game input {
+    max-width: 28px;
+    vertical-align: middle;
+    text-align: center
+}
+
+.submit {
+    display: flex;
+}
+
+.submit button {
+    flex-grow: 1;
+}

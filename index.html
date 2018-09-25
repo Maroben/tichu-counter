@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tichu Counter</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Simple mobile friendly Tichu counter.">
+    <meta name="keywords" content="Tichu counter">
+    <meta name="page-topic" content="Boardgame">
+    <meta name="author" content="Dijan Diwei Daishen">
+    <meta name="copyright" content="Dijan Diwei Daishen">
+    <meta name="publisher" content="Dijan Diwei Daishen">
+    <meta name="creator" content="Dijan Diwei Daishen">
+
+    <!--    <link rel="icon" href="favicon.ico" type="image/x-icon">-->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="font/icomoon/style.css">
+</head>
+
+<body>
+    <header>
+        <a href="#information">
+            <div class="nav icon-info"></div>
+        </a>
+        <a href="#new">
+            <div class="nav icon-plus"></div>
+        </a>
+        <a href="#rules">
+            <div class="nav icon-wrench"></div>
+        </a>
+    </header>
+
+    <div id="information" class="main hidden">
+
+    </div>
+
+    <div id="new" class="main">
+        <div id="game-nav" class="game">
+            <div class="game-box">&#x5927</div>
+            <div class="game-box">&#x5c0f</div>
+            <div class="game-box">&#x8D1F</div>
+            <div class="game-box">&#x5206</div>
+            <div class="game-box">&#x5BF9</div>
+            <div class="game-box">&#x5206</div>
+            <div class="game-box">&#x8D1F</div>
+            <div class="game-box">&#x5c0f</div>
+            <div class="game-box">&#x5927</div>
+        </div>
+        <div class="game">
+            <div class="game-box icon-cross"></div>
+            <div class="game-box icon-plus"></div>
+            <div class="game-box icon-plus"></div>
+            <div class="game-box">105</div>
+            <div class="game-box">&#x5BF9</div>
+            <div class="game-box">195</div>
+            <div class="game-box icon-minus"></div>
+            <div class="game-box icon-plus"></div>
+            <div class="game-box icon-cross"></div>
+        </div>
+        <form>
+            <div class="game">
+                <div class="game-box"><button type="button" name="a-big" class="box icon-cross"></button></div>
+                <div class="game-box"><button type="button" name="a-small" class="box icon-cross"></button></div>
+                <div class="game-box"> <input type="checkbox" name="a-neg" /></div>
+                <div class="game-box"><input type="number" name="a-point" pattern="[0-9]*" inputmode="numeric" /></div>
+                <div class="game-box">&#x5BF9</div>
+                <div class="game-box"> <input type="number" name="b-point" pattern="[0-9]*" inputmode="numeric" /></div>
+                <div class="game-box"><input type="checkbox" name="b-neg" /></div>
+                <div class="game-box"><button type="button" name="b-small" class="box icon-cross"></button></div>
+                <div class="game-box"><button type="button" name="b-big" class="box icon-cross"></button></div>
+            </div>
+            <div class="submit">
+                <button type="submit" class="icon-checkmark" onclick="return addGame();"></button>
+                <button type="reset" class="icon-undo"></button>
+                <button class="icon-bin"></button>
+            </div>
+        </form>
+    </div>
+
+    <div id="rules" class="main hidden">
+
+    </div>
+
+    <script src="jquery.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
