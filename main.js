@@ -1,29 +1,41 @@
 $(document).ready(() => {
     $('button').click((event) => {
-        $(this).addClass('hidden');
-        if (event.target.classList[0] == "box") {
-            getNextClass(this, event.target);
-            
+        if (event.target.classList[0] == "box3") {            
+            getNextClass3(event.target);
+        }
+        else if (event.target.classList[0] == "box2") {
+            getNextClass2(event.target);
         }
     });
 });
 
-function getNextClass(element, target) {
-    let current = target.classList[1];
-    console.log(current);
-    console.log($(element).children);
-//    switch (current) {
-//        case "icon-cross":
-//            $(`#${id}`).removeClass("icon-cross").addClass("icon-minus");
-//            break;
-//        case "icon-minus":
-//            $(`#${id}`).removeClass("icon-minus").addClass("icon-plus");
-//            break;
-//        case "icon-plus":
-//            $(`#${id}`).removeClass("icon-plus").addClass("icon-cross");
-//            break;
-//        default:
-//            console.err("Wrong target or class");
-//            break;
-//    }
+function getNextClass2(target) {
+    switch (target.classList[1]) {
+        case "icon-minus":
+             $(target).removeClass("icon-minus").addClass("icon-plus");
+            break;
+        case "icon-plus":
+             $(target).removeClass("icon-plus").addClass("icon-minus");
+            break;
+        default:
+            console.log("Wrong target or class");
+            break;
+    }
+}
+
+function getNextClass3(target) {
+    switch (target.classList[1]) {
+        case "icon-cross":
+            $(target).removeClass("icon-cross").addClass("icon-minus");
+            break;
+        case "icon-minus":
+             $(target).removeClass("icon-minus").addClass("icon-plus");
+            break;
+        case "icon-plus":
+             $(target).removeClass("icon-plus").addClass("icon-cross");
+            break;
+        default:
+            console.log("Wrong target or class");
+            break;
+    }
 }
