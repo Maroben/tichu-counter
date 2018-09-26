@@ -22,14 +22,29 @@ body {
 
 }
 
-header {
-    display: flex;
+header,
+footer  {
     width: 100%;
     max-width: 600px;
-    margin: 0 auto;
+    position: fixed;
+    left: 50%;
+    transform: translatex(-50%);
+    background-color: white;
 }
 
-header a {
+header {
+    top: 0;
+}
+
+footer {
+    bottom: 0;
+}
+
+nav {
+    display: flex;
+}
+
+nav a {
     font-size: 1.8em;
     text-decoration: none;
     background-color: var(--tichu-blue);
@@ -39,9 +54,29 @@ header a {
     text-align: center;
 }
 
-form,
-.submit {
-    margin-top: 1.25em;
+main {
+    width: 100%;
+    max-width: 600px;
+    margin: 175px auto 125px auto;
+}
+
+#score {
+    display: flex;
+    color: white;
+    font-size: 1.5em;
+    height: 2em;
+    line-height: 2em;
+}
+
+.team {
+    display: flex;
+    flex-grow: 1;
+}
+
+.team-name,
+.team-points {
+    flex-grow: 1;
+    text-align: center;
 }
 
 #game-nav {
@@ -57,7 +92,7 @@ form,
 }
 
 .game-box {
-    width: 100%;
+    flex-grow: 1;
     text-align: center;
 }
 
@@ -74,14 +109,9 @@ input, button {
     box-shadow: 3px 3px 7px var(--tichu-black);
 }
 
-.middle {
-    height: 2em;
-    vertical-align: middle;
-    text-align: center;
-}
-
 .submit {
     display: flex;
+    margin: 1.25em 0;
 }
 
 .submit button {
@@ -94,14 +124,31 @@ input, button {
 button.icon-cross,
 button.icon-undo {
     background-color: var(--tichu-blue);
+    color: white !important;
 }
 
 button.icon-plus,
-button.icon-checkmark {
+button.icon-checkmark,
+.win {
     background-color: var(--tichu-green);
+    color: white !important;
 }
 
 button.icon-minus,
-button.icon-bin {
+button.icon-bin,
+.lose {
     background-color: var(--tichu-red);
+    color: white !important;
+}
+
+.game .icon-cross {
+    color: var(--tichu-blue);
+}
+
+.game .icon-plus {
+    color: var(--tichu-green);
+}
+
+.game .icon-minus {
+    color: var(--tichu-red);
 }
