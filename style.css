@@ -39,6 +39,9 @@ header a {
     text-align: center;
 }
 
+main {
+    
+}
 form,
 .submit {
     margin-top: 1.25em;
@@ -57,11 +60,11 @@ form,
 }
 
 .game-box {
-    width: 100%;
-    text-align: center;
+    
 }
 
 input, button {
+    flex-grow: 1;
     width: 2.5em;
     height: 2em;
     padding: 0;
