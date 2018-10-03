@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <title>Tichu Counter</title>
@@ -33,16 +33,16 @@
             </div>
         </div>
         <div id="game-nav" class="game">
-                <div class="game-box">&#x5927</div>
-                <div class="game-box">&#x5c0f</div>
-                <div class="game-box">&#x8D1F</div>
-                <div class="game-box">&#x5206</div>
-                <div class="game-box">&#x5BF9</div>
-                <div class="game-box">&#x5206</div>
-                <div class="game-box">&#x8D1F</div>
-                <div class="game-box">&#x5c0f</div>
-                <div class="game-box">&#x5927</div>
-            </div>
+            <div class="game-box">&#x5927</div>
+            <div class="game-box">&#x5c0f</div>
+            <div class="game-box">&#x8D1F</div>
+            <div class="game-box">&#x5206</div>
+            <div class="game-box">&#x5BF9</div>
+            <div class="game-box">&#x5206</div>
+            <div class="game-box">&#x8D1F</div>
+            <div class="game-box">&#x5c0f</div>
+            <div class="game-box">&#x5927</div>
+        </div>
     </header>
 
     <main>
@@ -57,28 +57,35 @@
             <div class="game-box icon-plus"></div>
             <div class="game-box icon-cross"></div>
         </div>
-        <div id="breakpoint"></div>
+        <div id="round_container"></div>
     </main>
 
     <footer>
         <div class="game">
-                <div class="game-box"><button type="button" name="a-big" class="box3 icon-cross"></button></div>
-                <div class="game-box"><button type="button" name="a-small" class="box3 icon-cross"></button></div>
-                <div class="game-box"><button type="button" name="b-neg" class="box2 icon-plus"></button></div>
-                <div class="game-box"><input type="number" name="a-point" inputmode="numeric" pattern="[0-9]*" /></div>
-                <div id="vs" class="game-box">&#x5BF9</div>
-                <div class="game-box"><input type="number" name="b-point" inputmode="numeric" pattern="[0-9]*" /></div>
-                <div class="game-box"><button type="button" name="b-neg" class="box2 icon-plus"></button></div>
-                <div class="game-box"><button type="button" name="b-small" class="box3 icon-cross"></button></div>
-                <div class="game-box"><button type="button" name="b-big" class="box3 icon-cross"></button></div>
-            </div>
-    
-            <div class="submit">
-                <button id="submit" type="submit" class="icon-checkmark"></button>
-                <button id="reset" type="reset" class="icon-undo"></button>
-                <button id="delete" class="icon-bin"></button>
-            </div>
+            <div class="game-box"><button type="button" name="a-big" class="box3 icon-cross"></button></div>
+            <div class="game-box"><button type="button" name="a-small" class="box3 icon-cross"></button></div>
+            <div class="game-box"><button type="button" name="a-neg" class="box2 icon-plus"></button></div>
+            <div class="game-box"><input type="number" name="a-point" inputmode="numeric" pattern="[0-9]*" /></div>
+            <div id="vs" class="game-box">&#x5BF9</div>
+            <div class="game-box"><input type="number" name="b-point" inputmode="numeric" pattern="[0-9]*" /></div>
+            <div class="game-box"><button type="button" name="b-neg" class="box2 icon-plus"></button></div>
+            <div class="game-box"><button type="button" name="b-small" class="box3 icon-cross"></button></div>
+            <div class="game-box"><button type="button" name="b-big" class="box3 icon-cross"></button></div>
+        </div>
+
+        <div class="submit">
+            <button id="submit" type="submit" class="icon-checkmark"></button>
+            <button id="reset" type="reset" class="icon-undo"></button>
+            <button id="delete" class="icon-bin"></button>
+        </div>
     </footer>
+
+
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+
+    <script src="round_container.js"></script>
 
     <script src="jquery.js"></script>
     <script src="main.js"></script>
