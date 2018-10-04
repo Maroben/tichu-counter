@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import Score from './components/score.jsx';
+import Form from './components/form.jsx';
 
 class App extends Component {
   state = {
+    form: {
+      teamA: { big: true, small: false, points: 90 },
+      teamB: { big: false, small: true, points: 10 }
+    },
     rounds: [
       {
         teamA: { big: true, small: false, points: 90 },
@@ -39,7 +44,7 @@ class App extends Component {
             <div className="game-box">&#x8D1F</div>
             <div className="game-box">&#x5c0f</div>
             <div className="game-box">&#x5927</div>
-          </div>
+          </div>`
         </header>
         <main>
           <div className="game">
@@ -54,6 +59,9 @@ class App extends Component {
             <div className="game-box icon-cross"></div>
           </div>
         </main>
+        <footer>
+          <Form form={this.state.form} />
+        </footer>
 
       </div>
     );
