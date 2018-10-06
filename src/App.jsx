@@ -1,11 +1,48 @@
 import React, { Component } from 'react';
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
 import Rounds from './components/round.jsx';
 
 class App extends Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
+
+  checkCookies = function () {
+    let { cookies } = this.props;
+
+    if (cookies.get('rounds') === undefined) {
+      cookies.set('round', [], { path: '/' });
+      this.resetRound();
+    }
+  }
+
+  getRound = function () {
+    let { cookies } = this.props;
+
+    return {
+      teamA: {
+        big: cookies.get('a-big'),
+        small: cookies.get('a-small'),
+        points: cookies.get('a-points')
+      },
+      teamB: {
+        big: cookies.get('b-big'),
+        small: cookies.get('b-small'),
+        points: cookies.get('b-points')
+      }
+    }
+  }
+
   constructor(props) {
     super(props);
+
+    // Enum Type for the IconState
     this.icon = { "cross": "icon-cross", "minus": "icon-minus", "plus": "icon-plus" };
     Object.freeze(this.icon);
+
+    const { cookies } = props;
+    this.checkCookies();
 
     this.state = {
       score: {
@@ -13,23 +50,18 @@ class App extends Component {
         teamB: { name: "Sandro", points: 10 }
       },
       round: {
-        teamA: { big: this.icon.cross, small: this.icon.cross, points: "" },
-        teamB: { big: this.icon.cross, small: this.icon.cross, points: "" }
-      },
-      rounds: [
-        {
-          teamA: { big: this.icon.plus, small: this.icon.cross, points: 30 },
-          teamB: { big: this.icon.cross, small: this.icon.minus, points: 70 }
+        teamA: {
+          big: cookies.get('a-big'),
+          small: cookies.get('a-small'),
+          points: cookies.get('a-points')
         },
-        {
-          teamA: { big: this.icon.cross, small: this.icon.cross, points: 15 },
-          teamB: { big: this.icon.cross, small: this.icon.cross, points: 85 }
-        },
-        {
-          teamA: { big: this.icon.cross, small: this.icon.plus, points: 60 },
-          teamB: { big: this.icon.minus, small: this.icon.cross, points: 40 }
+        teamB: {
+          big: cookies.get('b-big'),
+          small: cookies.get('b-small'),
+          points: cookies.get('b-points')
         }
-      ]
+      },
+      rounds: cookies.get('rounds') || []
     };
 
     this.changeIconState = this.changeIconState.bind(this);
@@ -38,58 +70,79 @@ class App extends Component {
     this.saveRound = this.saveRound.bind(this);
     this.resetRound = this.resetRound.bind(this);
     this.removeRound = this.removeRound.bind(this);
-  };
+  }
 
-  changeIconState(team, element) {
-    let round = this.state.round;
-    let iconState = round[team][element];
+  changeIconState(id) {
+    const { cookies } = this.props;
+    const { round } = this.state;
+    let iconState = cookies.get(id);
 
     switch (iconState) {
       case this.icon.cross:
-        round[team][element] = this.icon.minus;
+        cookies.set(id, this.icon.minus, { path: '/' });
         break;
       case this.icon.minus:
-        round[team][element] = this.icon.plus;
+        cookies.set(id, this.icon.plus, { path: '/' });
         break;
       case this.icon.plus:
-        round[team][element] = this.icon.cross;
+        cookies.set(id, this.icon.cross, { path: '/' });
         break;
       default:
         console.log("Wrong target or class");
         break;
     }
-    this.setState({ round: round });
+
+    this.setState({ round });
   }
 
-  changePoints(event, team) {
-    this.state.round[team].points = event.target.value;
-    this.setState({ round: this.state.round });
+  changePoints(event, id) {
+    const { cookies } = this.props;
+    const { round } = this.state;
+
+    cookies.set(id, event.target.value, { path: '/' });
+
+    this.setState({ round });
   }
 
   saveRound() {
-    let rounds = this.state.rounds;
-    rounds.push(this.state.round);
+    let { cookies } = this.props;
+    let round = this.getRound();
+    let rounds = cookies.get("rounds")
+
+    rounds.push(round);
+    cookies.set("rounds", rounds, { path: '/' });
+
     this.resetRound();
-    this.setState({ rounds: rounds });
+    this.setState({ rounds });
   }
 
   resetRound() {
-    let round = {
-      teamA: { big: this.icon.cross, small: this.icon.cross, points: "" },
-      teamB: { big: this.icon.cross, small: this.icon.cross, points: "" }
-    }
-    this.setState({ round: round });
+    const { cookies } = this.props;
+    const { round } = this.state;
+
+    cookies.set('a-big', this.icon.cross, { path: '/' });
+    cookies.set('a-small', this.icon.cross, { path: '/' });
+    cookies.set('a-points', "", { path: '/' });
+    cookies.set('b-points', "", { path: '/' });
+    cookies.set('b-small', this.icon.cross, { path: '/' });
+    cookies.set('b-big', this.icon.cross, { path: '/' });
+
+    this.setState({ round });
   }
 
   removeRound() {
-    let rounds = this.state.rounds.slice(0, -1);
-    this.setState({ rounds: rounds });
+    let { cookies } = this.props;
+    let rounds = cookies.get("rounds")
+
+    rounds = this.state.rounds.slice(0, -1);
+    cookies.set("rounds", rounds, { path: '/' });
+
+    this.setState({ rounds });
   }
 
   render() {
-    let score = this.state.score;
-    let round = this.state.round;
-    let rounds = this.state.rounds;
+    const { score } = this.state;
+    const { cookies } = this.props;
 
     return (
       <div className="App">
@@ -124,25 +177,25 @@ class App extends Component {
         <footer>
           <div className="game">
             <div className="game-box">
-              <button type="button" className={`box3 ${round.teamA.big}`} onClick={() => this.changeIconState("teamA", "big")}></button>
+              <button type="button" className={cookies.get("a-big")} onClick={() => this.changeIconState("a-big")}></button>
             </div>
             <div className="game-box">
-              <button type="button" className={`box3 ${round.teamA.small}`} onClick={() => this.changeIconState("teamA", "small")}></button>
+              <button type="button" className={cookies.get("a-small")} onClick={() => this.changeIconState("a-small")}></button>
             </div>
             <div className="game-box">
-              <input type="number" inputMode="numeric" value={round.teamA.points} onChange={(event) => this.changePoints(event, "teamA")} />
+              <input type="number" inputMode="numeric" value={cookies.get("a-points")} onChange={(event) => this.changePoints(event, "a-points")} />
             </div>
 
             <div id="vs" className="game-box">vs</div>
 
             <div className="game-box">
-              <input type="number" inputMode="numeric" value={round.teamB.points} onChange={(event) => this.changePoints(event, "teamB")} />
+              <input type="number" inputMode="numeric" value={cookies.get("b-points")} onChange={(event) => this.changePoints(event, "b-points")} />
             </div>
             <div className="game-box">
-              <button type="button" className={`box3 ${round.teamB.small}`} onClick={() => this.changeIconState("teamB", "small")}></button>
+              <button type="button" className={cookies.get("b-small")} onClick={() => this.changeIconState("b-small")}></button>
             </div>
             <div className="game-box">
-              <button type="button" className={`box3 ${round.teamB.big}`} onClick={() => this.changeIconState("teamB", "big")}></button>
+              <button type="button" className={cookies.get("b-big")} onClick={() => this.changeIconState("b-big")}></button>
             </div>
           </div>
 
@@ -157,4 +210,4 @@ class App extends Component {
   };
 }
 
-export default App;
+export default withCookies(App);
