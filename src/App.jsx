@@ -33,10 +33,6 @@ class App extends Component {
     }
   }
 
-  calculateScore = function () {
-
-  }
-
   constructor(props) {
     super(props);
 
@@ -44,22 +40,26 @@ class App extends Component {
     this.icon = { "cross": "icon-cross", "minus": "icon-minus", "plus": "icon-plus" };
     Object.freeze(this.icon);
 
+    this.settings = {
+        goal: "",
+        aName: "",
+        bName: ""
+    }
+
     const { cookies } = props;
     this.checkCookies();
 
     this.state = {
       settings: {
-        goal: cookies.get('max-points'),
-        state: cookies.get('settings')
-      },
-      score: {
+        goal: cookies.get('goal'),
+        state: cookies.get('settings-state'),
         teamA: {
-          name: cookies.get('a-name'),
-          points: cookies.get('a-score')
+          name: cookies.get('aName'),
+          score: cookies.get('aScore')
         },
         teamB: {
-          name: cookies.get('b-name'),
-          points: cookies.get('b-score')
+          name: cookies.get('bName'),
+          score: cookies.get('bScore')
         }
       },
       round: {
@@ -82,6 +82,7 @@ class App extends Component {
     this.saveSettings = this.saveSettings.bind(this);
     this.newGame = this.newGame.bind(this);
     this.changeSettings = this.changeSettings.bind(this);
+    this.checkInput = this.checkInput.bind(this);
 
     this.changeIconState = this.changeIconState.bind(this);
     this.changePoints = this.changePoints.bind(this);
@@ -153,12 +154,6 @@ class App extends Component {
     cookies.set('b-small', this.icon.cross, { path: '/' });
     cookies.set('b-big', this.icon.cross, { path: '/' });
 
-    cookies.set('a-name', "Dijan", { path: '/' });
-    cookies.set('b-name', "Sandro", { path: '/' });
-    cookies.set('a-score', 800, { path: '/' });
-    cookies.set('b-score', 200, { path: '/' });
-    cookies.set('max-points', 1000, { path: '/' });
-    cookies.set('settings', "hidden", { path: '/'});
     this.setState({ round });
   }
 
@@ -175,39 +170,74 @@ class App extends Component {
   openSettings() {
     let { cookies } = this.props;
     let { settings } = this.state;
-    cookies.set("settings", "", { path: '/' });
+    
+    this.settings = {
+      goal: cookies.get('goal'),
+      aName: cookies.get('aName'),
+      bName: cookies.get('bName')
+    }
+
+    cookies.set("settings-state", "", { path: '/' });
+
     this.setState({ settings });
   }
 
-  closeSettings() {
+  closeSettings(abort) {
     let { cookies } = this.props;
     let { settings } = this.state;
-    cookies.set("settings", "hidden", { path: '/' });
+    
+    if (abort) {
+      cookies.set("goal", this.settings.goal, { path: '/' });
+      cookies.set("aName", this.settings.aName, { path: '/' });
+      cookies.set("bName", this.settings.bName, { path: '/' });
+    }
+
+    cookies.set("settings-state", "hidden", { path: '/' });
     this.setState({ settings });
   }
 
   saveSettings() {
-    this.closeSettings();
+    const { settings } = this.state;
+
+    this.checkInput();
+    this.closeSettings(false);
+    this.setState({ settings });
   }
 
   newGame() {
-    this.saveSettings();
     let { cookies } = this.props;
-    let rounds = cookies.get("rounds")
 
+    let rounds = cookies.get("rounds")
     cookies.set("rounds", [], { path: '/' });
+    
+    this.saveSettings();
     this.setState({ rounds });
-    this.closeSettings();
   }
 
   changeSettings(event, id) {
-    const { cookies } = this.props;
-    const { settings, score } = this.state;
-    let points = event.target.value;
+    let { cookies } = this.props;
+    let { settings } = this.state;
 
-    cookies.set(id, points, { path: '/' });
+    cookies.set(id, event.target.value, { path: '/' });
 
-    this.setState({ settings, score });
+    this.setState({ settings });
+  }
+
+  checkInput() {
+    let { cookies } = this.props;
+    let aName = cookies.get('aName');
+    let bName = cookies.get('bName');
+    let goal = cookies.get('goal');
+
+    if (aName === "") {
+      cookies.set('aName', "Dragon", { path: '/' });
+    }
+    if (bName === "") {
+      cookies.set('bName', "Phoenix", { path: '/' });
+    }
+    if (goal <= 0 ) {
+      cookies.set('goal', 1000, { path: '/' });
+    }
   }
 
   render() {
@@ -215,19 +245,19 @@ class App extends Component {
 
     return (
       <div className="App">
-        <div id="settings" class={cookies.get("settings")}>
+        <div id="settings" className={cookies.get("settings-state")}>
           <div className="title">
             <h1>Settings</h1>
-            <button type="button" className="icon-cross" onClick={this.closeSettings}></button>
+            <button type="button" className="icon-cross" onClick={() => this.closeSettings(true)}></button>
           </div>
           <div className="settings-box">
-            <input inputMode="text" value={cookies.get("a-name")} onChange={(event) => this.changeSettings(event, "a-name")} />
+            <input type="text" value={cookies.get("aName")} onChange={(event) => this.changeSettings(event, "aName")} />
             <div className="settings">vs</div>
-            <input inputMode="text" value={cookies.get("b-name")} onChange={(event) => this.changeSettings(event, "b-name")} />
+            <input type="text" value={cookies.get("bName")} onChange={(event) => this.changeSettings(event, "bName")} />
           </div>
           <div className="settings-box">
             <div className="settings">predetermined score</div>
-            <input inputMode="numeric" value={cookies.get("max-points")} onChange={(event) => this.changeSettings(event, "max-points")} />
+            <input inputMode="numeric" value={cookies.get("goal")} onChange={(event) => this.changeSettings(event, "goal")} />
           </div>
 
           <div className="submit">
@@ -244,12 +274,12 @@ class App extends Component {
 
           <div id="score">
             <div className="team win">
-              <div className="team-name">{cookies.get('a-name')}</div>
-              <div className="team-points">{cookies.get('a-score')}</div>
+              <div className="team-name">{cookies.get('aName')}</div>
+              <div className="team-points">{cookies.get('aScore')}</div>
             </div>
             <div className="team lose">
-              <div className="team-points">{cookies.get('b-score')}</div>
-              <div className="team-name">{cookies.get('b-name')}</div>
+              <div className="team-points">{cookies.get('bScore')}</div>
+              <div className="team-name">{cookies.get('bName')}</div>
             </div>
           </div>
 
