@@ -11,7 +11,7 @@ Run the applicatoin with:
 Version 0
 - Maroben
 
-## License
+## License - MIT
 
 Copyright 2018 Maroben
 
