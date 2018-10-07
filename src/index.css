@@ -59,7 +59,7 @@ main {
 #settings .title button {
   color: #CF3E39 !important;
   background: white;
-  font-size: 1.5em;
+  font-size: 1.2em;
 }
 
 #settings .submit {
@@ -108,7 +108,7 @@ main {
   background-color: transparent;
 }
 
-h1 {
+h1, h2 {
   margin: 0;
 }
 
@@ -197,6 +197,11 @@ button.icon-minus,
 button.icon-bin,
 .lose {
   background: linear-gradient(to bottom right, #cf3e39 0%, #F74A44 100%);
+  color: white !important;
+}
+
+.tie {
+  background-color: #7F7C77;
   color: white !important;
 }
 
