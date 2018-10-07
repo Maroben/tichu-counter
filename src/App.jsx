@@ -49,7 +49,8 @@ class App extends Component {
 
     this.state = {
       settings: {
-        goal: cookies.get('max-points')
+        goal: cookies.get('max-points'),
+        state: cookies.get('settings')
       },
       score: {
         teamA: {
@@ -76,6 +77,8 @@ class App extends Component {
       rounds: cookies.get('rounds') || []
     };
 
+    this.openSettings = this.openSettings.bind(this);
+    this.closeSettings = this.closeSettings.bind(this);
     this.saveSettings = this.saveSettings.bind(this);
     this.newGame = this.newGame.bind(this);
     this.changeSettings = this.changeSettings.bind(this);
@@ -155,7 +158,7 @@ class App extends Component {
     cookies.set('a-score', 800, { path: '/' });
     cookies.set('b-score', 200, { path: '/' });
     cookies.set('max-points', 1000, { path: '/' });
-
+    cookies.set('settings', "hidden", { path: '/'});
     this.setState({ round });
   }
 
@@ -169,13 +172,32 @@ class App extends Component {
     this.setState({ rounds });
   }
 
-  saveSettings() {
+  openSettings() {
+    let { cookies } = this.props;
+    let { settings } = this.state;
+    cookies.set("settings", "", { path: '/' });
+    this.setState({ settings });
+  }
 
+  closeSettings() {
+    let { cookies } = this.props;
+    let { settings } = this.state;
+    cookies.set("settings", "hidden", { path: '/' });
+    this.setState({ settings });
+  }
+
+  saveSettings() {
+    this.closeSettings();
   }
 
   newGame() {
     this.saveSettings();
-    
+    let { cookies } = this.props;
+    let rounds = cookies.get("rounds")
+
+    cookies.set("rounds", [], { path: '/' });
+    this.setState({ rounds });
+    this.closeSettings();
   }
 
   changeSettings(event, id) {
@@ -193,10 +215,10 @@ class App extends Component {
 
     return (
       <div className="App">
-        <div id="settings">
+        <div id="settings" class={cookies.get("settings")}>
           <div className="title">
             <h1>Settings</h1>
-            <button type="button" className="icon-cross" onClick={this.saveSettings}></button>
+            <button type="button" className="icon-cross" onClick={this.closeSettings}></button>
           </div>
           <div className="settings-box">
             <input inputMode="text" value={cookies.get("a-name")} onChange={(event) => this.changeSettings(event, "a-name")} />
@@ -217,7 +239,7 @@ class App extends Component {
         <header className="App-header">
           <div className="title">
             <h1>Tichu Counter</h1>
-            <button type="button" className="icon-cog" onClick={this.setSettings}></button>
+            <button type="button" className="icon-cog" onClick={this.openSettings}></button>
           </div>
 
           <div id="score">

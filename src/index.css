@@ -59,6 +59,7 @@ main {
 #settings .title button {
   color: #CF3E39 !important;
   background: white;
+  font-size: 1.5em;
 }
 
 #settings .submit {
@@ -121,7 +122,7 @@ h1 {
 
 .team {
   display: flex;
-  flex-grow: 1;
+  width: 50%;
 }
 
 .team-name,
