@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import Rounds from './components/round.jsx';
 
 class App extends Component {
   static propTypes = {
@@ -34,6 +33,10 @@ class App extends Component {
     }
   }
 
+  calculateScore = function () {
+
+  }
+
   constructor(props) {
     super(props);
 
@@ -45,9 +48,18 @@ class App extends Component {
     this.checkCookies();
 
     this.state = {
+      settings: {
+        goal: cookies.get('max-points')
+      },
       score: {
-        teamA: { name: "Dijan", points: 90 },
-        teamB: { name: "Sandro", points: 10 }
+        teamA: {
+          name: cookies.get('a-name'),
+          points: cookies.get('a-score')
+        },
+        teamB: {
+          name: cookies.get('b-name'),
+          points: cookies.get('b-score')
+        }
       },
       round: {
         teamA: {
@@ -63,6 +75,10 @@ class App extends Component {
       },
       rounds: cookies.get('rounds') || []
     };
+
+    this.saveSettings = this.saveSettings.bind(this);
+    this.newGame = this.newGame.bind(this);
+    this.changeSettings = this.changeSettings.bind(this);
 
     this.changeIconState = this.changeIconState.bind(this);
     this.changePoints = this.changePoints.bind(this);
@@ -98,8 +114,15 @@ class App extends Component {
   changePoints(event, id) {
     const { cookies } = this.props;
     const { round } = this.state;
+    let points = event.target.value;
 
-    cookies.set(id, event.target.value, { path: '/' });
+    cookies.set(id, points, { path: '/' });
+
+    if (id === "a-points") {
+      cookies.set("b-points", 100 - points, { path: '/' });
+    } else {
+      cookies.set("a-points", 100 - points, { path: '/' });
+    }
 
     this.setState({ round });
   }
@@ -127,6 +150,12 @@ class App extends Component {
     cookies.set('b-small', this.icon.cross, { path: '/' });
     cookies.set('b-big', this.icon.cross, { path: '/' });
 
+    cookies.set('a-name', "Dijan", { path: '/' });
+    cookies.set('b-name', "Sandro", { path: '/' });
+    cookies.set('a-score', 800, { path: '/' });
+    cookies.set('b-score', 200, { path: '/' });
+    cookies.set('max-points', 1000, { path: '/' });
+
     this.setState({ round });
   }
 
@@ -140,22 +169,65 @@ class App extends Component {
     this.setState({ rounds });
   }
 
+  saveSettings() {
+
+  }
+
+  newGame() {
+    this.saveSettings();
+    
+  }
+
+  changeSettings(event, id) {
+    const { cookies } = this.props;
+    const { settings, score } = this.state;
+    let points = event.target.value;
+
+    cookies.set(id, points, { path: '/' });
+
+    this.setState({ settings, score });
+  }
+
   render() {
-    const { score } = this.state;
     const { cookies } = this.props;
 
     return (
       <div className="App">
+        <div id="settings">
+          <div className="title">
+            <h1>Settings</h1>
+            <button type="button" className="icon-cross" onClick={this.saveSettings}></button>
+          </div>
+          <div className="settings-box">
+            <input inputMode="text" value={cookies.get("a-name")} onChange={(event) => this.changeSettings(event, "a-name")} />
+            <div className="settings">vs</div>
+            <input inputMode="text" value={cookies.get("b-name")} onChange={(event) => this.changeSettings(event, "b-name")} />
+          </div>
+          <div className="settings-box">
+            <div className="settings">predetermined score</div>
+            <input inputMode="numeric" value={cookies.get("max-points")} onChange={(event) => this.changeSettings(event, "max-points")} />
+          </div>
+
+          <div className="submit">
+            <button onClick={this.saveSettings}>Save Settings</button>
+            <button onClick={this.newGame}>New Game</button>
+          </div>
+        </div>
+
         <header className="App-header">
-          <h1>Tichu Counter</h1>
+          <div className="title">
+            <h1>Tichu Counter</h1>
+            <button type="button" className="icon-cog" onClick={this.setSettings}></button>
+          </div>
+
           <div id="score">
             <div className="team win">
-              <div className="team-name">{score.teamA.name}</div>
-              <div className="team-points">{score.teamA.points}</div>
+              <div className="team-name">{cookies.get('a-name')}</div>
+              <div className="team-points">{cookies.get('a-score')}</div>
             </div>
             <div className="team lose">
-              <div className="team-points">{score.teamB.points}</div>
-              <div className="team-name">{score.teamB.name}</div>
+              <div className="team-points">{cookies.get('b-score')}</div>
+              <div className="team-name">{cookies.get('b-name')}</div>
             </div>
           </div>
 
@@ -171,7 +243,19 @@ class App extends Component {
         </header>
 
         <main>
-          <Rounds rounds={this.state.rounds} />
+          {
+            cookies.get('rounds').map((round, index) => (
+              <div key={index} className="game">
+                <div className={`game-box ${round.teamA.big}`}></div>
+                <div className={`game-box ${round.teamA.small}`}></div>
+                <div className="game-box">{round.teamA.points}</div>
+                <div className="game-box">vs</div>
+                <div className="game-box">{round.teamB.points}</div>
+                <div className={`game-box ${round.teamB.small}`}></div>
+                <div className={`game-box ${round.teamB.big}`}></div>
+              </div>
+            ))
+          }
         </main>
 
         <footer>
@@ -200,9 +284,9 @@ class App extends Component {
           </div>
 
           <div className="submit">
-            <button id="submit" type="submit" className="icon-checkmark" onClick={this.saveRound}></button>
-            <button id="reset" type="reset" className="icon-undo" onClick={this.resetRound}></button>
-            <button id="delete" className="icon-bin" onClick={this.removeRound}></button>
+            <button className="icon-checkmark" onClick={this.saveRound}></button>
+            <button className="icon-undo" onClick={this.resetRound}></button>
+            <button className="icon-bin" onClick={this.removeRound}></button>
           </div>
         </footer>
       </div>
