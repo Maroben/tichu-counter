@@ -31,7 +31,12 @@ class Settings extends Component {
     }
 
     openSettings() {
-        this.c.set("settingsState", "");
+        this.c.set("settingsState", "", { path: '/' });
+        this.settings = {
+            goal: this.c.get('goal'),
+            aName: this.c.get('aName'),
+            bName: this.c.get('bName')
+        }
     }
     
     changeSettings(event, id) {
@@ -39,9 +44,9 @@ class Settings extends Component {
     }
 
     checkInput() {
-        if (this.c.get('goal') <= 0) { this.c.set('goal', 1000); }
-        if (this.c.get('aName') === "") { this.c.set('aName', "Dragon"); }
-        if (this.c.get('bName') <= 0) { this.c.set('bName', "Phoenix"); }
+        if (this.c.get('goal') <= 0) { this.c.set('goal', 1000, { path: '/' }); }
+        if (this.c.get('aName') === "") { this.c.set('aName', "Dragon", { path: '/' }); }
+        if (this.c.get('bName') <= 0) { this.c.set('bName', "Phoenix", { path: '/' }); }
     }
 
     saveSettings() {
@@ -50,24 +55,24 @@ class Settings extends Component {
     }
 
     resetSettings() {
-        this.c.set('goal', 1000);
-        this.c.set('aName', "Dragon");
-        this.c.set('bName', "Phoenix");
+        this.c.set('goal', 1000, { path: '/' });
+        this.c.set('aName', "Dragon", { path: '/' });
+        this.c.set('bName', "Phoenix", { path: '/' });
         this.closeSettings(false);
     }
 
     newGame() {
-        this.c.set("rounds", []);
+        this.c.set("rounds", [], { path: '/' });
         this.saveSettings();
     }
 
     closeSettings(abort) {
         if (abort) {
-            this.c.set('goal', this.settings.goal);
-            this.c.set('aName', this.settings.aName);
-            this.c.set('bName', this.settings.bName);
+            this.c.set('goal', this.settings.goal, { path: '/' });
+            this.c.set('aName', this.settings.aName, { path: '/' });
+            this.c.set('bName', this.settings.bName, { path: '/' });
         }
-        this.c.set("settingsState", "hidden");
+        this.c.set("settingsState", "hidden", { path: '/' });
     }
 
     render() {

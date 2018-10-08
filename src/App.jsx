@@ -4,9 +4,9 @@ import { withCookies, Cookies } from 'react-cookie';
 
 import Settings from './components/settings.jsx';
 import Error from './components/error.jsx';
-import Rounds from './components/rounds.jsx';
 import Score from './components/score.jsx';
 import Submit from './components/submit.jsx';
+import Rounds from './components/rounds.jsx';
 
 class App extends Component {
   static propTypes = {
@@ -34,38 +34,37 @@ class App extends Component {
           state: this.c.get('bState')
         }
       },
-      round: {
-        teamA: {
-          big: this.c.get('aBig'),
-          small: this.c.get('aSmall'),
-          points: this.c.get('aPoints')
-        },
-        teamB: {
-          big: this.c.get('bBig'),
-          small: this.c.get('bSmall'),
-          points: this.c.get('bPoints')
-        }
+      error: {
+        state: this.c.get('errorState'),
+        message: this.c.get('errorMessage')
       },
       rounds: this.c.get('rounds')
     }
 
     if (!this.c.get('first')) {
-      this.c.set('rounds', []);
-      this.c.set('first', true);
-      this.c.set('aName', "Dragon");
-      this.c.set('bName', "Phoenix");
-      this.c.set('goal', 1000);
-      this.c.set('aState', "tie");
-      this.c.set('bState', "tie");
+      this.c.set('rounds', [], { path: '/' });
+      this.c.set('errorState', "hidden", { path: '/' });
+      this.c.set('first', true, { path: '/' });
+      this.c.set('aName', "Dragon", { path: '/' });
+      this.c.set('bName', "Phoenix", { path: '/' });
+      this.c.set('goal', 1000, { path: '/' });
+      this.c.set('aState', "tie", { path: '/' });
+      this.c.set('bState', "tie", { path: '/' });
     }
+    this.updateRound = this.updateRound.bind(this);
   }
 
   openSettings = () => { this.refs.settings.openSettings(); }
 
+  updateRound = () => {
+    let { round } = this.state;
+    this.setState({ round });
+  }
+
   render() {
     return (
       <div className="App">
-        <Settings ref="settings" state={this.state} />
+        <Settings ref="settings" state={this} />
         <Error ref="error" state={this.state} />
 
         <header className="App-header">
@@ -88,10 +87,10 @@ class App extends Component {
         </header>
 
         <main>
-          <Rounds ref="rounds" state={this.state} />
+          <Rounds />
         </main>
 
-        <Submit ref="submit" state={this.state} />
+        <Submit ref="submit" />
       </div>
     );
   };
