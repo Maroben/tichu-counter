@@ -64,6 +64,7 @@ class Settings extends Component {
     newGame() {
         this.c.set("rounds", [], { path: '/' });
         this.saveSettings();
+        this.props.setScore();
     }
 
     closeSettings(abort) {
