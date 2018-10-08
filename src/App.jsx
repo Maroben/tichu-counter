@@ -51,15 +51,9 @@ class App extends Component {
       this.c.set('aState', "tie", { path: '/' });
       this.c.set('bState', "tie", { path: '/' });
     }
-    this.updateRound = this.updateRound.bind(this);
   }
 
   openSettings = () => { this.refs.settings.openSettings(); }
-
-  updateRound = () => {
-    let { round } = this.state;
-    this.setState({ round });
-  }
 
   render() {
     return (
