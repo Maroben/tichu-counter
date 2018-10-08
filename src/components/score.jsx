@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './score.scss';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 
@@ -60,12 +61,12 @@ class Score extends Component {
         return (
             <div id="score">
                 <div className={`team ${this.c.get('aState')}`}>
-                    <div className="team-name">{this.c.get('aName')}</div>
-                    <div className="team-points">{this.c.get('aScore')}</div>
+                    <div className="name">{this.c.get('aName')}</div>
+                    <div className="points">{this.c.get('aScore')}</div>
                 </div>
                 <div className={`team ${this.c.get('bState')}`}>
-                    <div className="team-points">{this.c.get('bScore')}</div>
-                    <div className="team-name">{this.c.get('bName')}</div>
+                    <div className="points">{this.c.get('bScore')}</div>
+                    <div className="name">{this.c.get('bName')}</div>
                 </div>
             </div>
         );

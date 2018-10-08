@@ -1,0 +1,85 @@
+@import 'components/variables';
+@import 'components/styles';
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.hidden {
+  display: none;
+}
+
+body {
+  font-size: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+header,
+footer  {
+  position: fixed;
+  left: 50%;
+  max-width: 600px;
+  width: 100%;
+  transform: translatex(-50%);
+}
+
+header {
+  top: 0;
+
+  .title {
+    color: white;
+    background: $tichu-blue-gradient;
+    box-shadow: inset 0 -1px 0 1px rgba(0,0,0,.1), inset 0 -10px 20px rgba(0,0,0,.1);
+        text-shadow: 0 -1px 0 rgba(0,0,0,.2);
+
+    h1 {
+      padding: 0.2em 0;
+      line-height: 1.3em;
+      text-align: center;
+     
+    }
+    button {
+      font-size: 1.8em;
+      position: absolute;
+      top: 0.2em;
+      right: 0.2em;
+      height: 1.3em;
+      width: 1.3em;
+      box-shadow: none;
+      background: transparent;
+
+      &:hover {
+          box-shadow: inset 0 0px 0 1px rgba(0,0,0,.1), inset 0 -10px 20px rgba(0,0,0,.1);
+      }
+    }
+  }
+
+  .game {
+    padding: 0.3em 0;
+    color: $tichu-red;
+    border-bottom: 1px solid $tichu-red;
+  }
+}
+
+footer {
+  bottom: 0;
+}
+
+.game {
+  display: flex;
+  padding-bottom: 0.5em;
+  
+  .box {
+    width: 14.3%;
+    text-align: center;
+  }
+}
+
+main {
+  max-width: 600px;
+  width: 100%;
+  margin: 8em auto 125px auto;
+}

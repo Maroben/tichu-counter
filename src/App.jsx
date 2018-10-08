@@ -70,14 +70,14 @@ class App extends Component {
 
           <Score ref="score" />
 
-          <div id="game-nav" className="game">
-            <div className="game-box">B</div>
-            <div className="game-box">S</div>
-            <div className="game-box">P</div>
-            <div className="game-box">vs</div>
-            <div className="game-box">P</div>
-            <div className="game-box">S</div>
-            <div className="game-box">B</div>
+          <div className="game">
+            <div className="box">B</div>
+            <div className="box">S</div>
+            <div className="box">P</div>
+            <div className="box">vs</div>
+            <div className="box">P</div>
+            <div className="box">S</div>
+            <div className="box">B</div>
           </div>
         </header>
 

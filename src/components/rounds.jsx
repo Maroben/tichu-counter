@@ -18,13 +18,13 @@ class Rounds extends Component {
          {
             this.c.get('rounds').map((round, index) => (
               <div key={index} className="game">
-                <div className={`game-box ${round.teamA.big}`}></div>
-                <div className={`game-box ${round.teamA.small}`}></div>
-                <div className="game-box">{round.teamA.points}</div>
-                <div className="game-box">vs</div>
-                <div className="game-box">{round.teamB.points}</div>
-                <div className={`game-box ${round.teamB.small}`}></div>
-                <div className={`game-box ${round.teamB.big}`}></div>
+                <div className={`box ${round.teamA.big}`}></div>
+                <div className={`box ${round.teamA.small}`}></div>
+                <div className="box">{round.teamA.points}</div>
+                <div className="box">vs</div>
+                <div className="box">{round.teamB.points}</div>
+                <div className={`box ${round.teamB.small}`}></div>
+                <div className={`box ${round.teamB.big}`}></div>
               </div>
             ))
           }

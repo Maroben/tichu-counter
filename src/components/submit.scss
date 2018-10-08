@@ -1,0 +1,31 @@
+@import 'variables';
+@import 'styles';
+
+footer {
+  .round, .submit {
+    display: flex;
+
+    .box {
+      flex-grow: 1;
+      text-align: center;
+    }
+  }
+
+  .round {
+    button, input {
+      width: 3.5em;
+    }
+    .box {
+      width: 14.3%;
+    }
+  }
+
+  .submit {
+    margin: 1.5em 0;
+
+    button {
+      max-width: 11.5em;
+      width: 100%;
+    }
+  }
+}

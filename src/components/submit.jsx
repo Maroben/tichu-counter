@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
+import './submit.scss';
 
 class Rounds extends Component {
     static propTypes = {
@@ -141,34 +142,34 @@ class Rounds extends Component {
         let { round } = this.state;
         return (
             <footer>
-                <div className="game">
-                    <div className="game-box">
+                <div className="round">
+                    <div className="box">
                         <button type="button" className={round.teamA.big} onClick={() => this.changeIconState("teamA", "big")}></button>
                     </div>
-                    <div className="game-box">
+                    <div className="box">
                         <button type="button" className={round.teamA.small} onClick={() => this.changeIconState("teamA", "small")}></button>
                     </div>
-                    <div className="game-box">
+                    <div className="box">
                         <input type="number" step="5" inputMode="numeric" value={round.teamA.points} onChange={(event) => this.changePoints(event, "teamA")} />
                     </div>
 
-                    <div id="vs" className="game-box">vs</div>
+                    <div class="box">vs</div>
 
-                    <div className="game-box">
+                    <div className="box">
                         <input type="number" step="5" inputMode="numeric" value={round.teamB.points} onChange={(event) => this.changePoints(event, "teamB")} />
                     </div>
-                    <div className="game-box">
+                    <div className="box">
                         <button type="button" className={round.teamB.small} onClick={() => this.changeIconState("teamB", "small")}></button>
                     </div>
-                    <div className="game-box">
+                    <div className="box">
                         <button type="button" className={round.teamB.big} onClick={() => this.changeIconState("teamB", "big")}></button>
                     </div>
                 </div>
 
                 <div className="submit">
-                    <button className="icon-checkmark" onClick={this.saveRound}></button>
-                    <button className="icon-undo" onClick={this.resetRound}></button>
-                    <button className="icon-bin" onClick={this.removeRound}></button>
+                    <div className="box"><button className="icon-bin" onClick={this.removeRound}></button></div>
+                    <div className="box"><button className="icon-undo" onClick={this.resetRound}></button></div>
+                    <div className="box"><button className="icon-checkmark" onClick={this.saveRound}></button></div>
                 </div>
             </footer>
         );

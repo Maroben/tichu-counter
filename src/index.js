@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { CookiesProvider } from 'react-cookie';
-import './index.css';
+import './index.scss';
 import './font/icomoon/style.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
