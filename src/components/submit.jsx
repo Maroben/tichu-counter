@@ -105,6 +105,7 @@ class Rounds extends Component {
         rounds.push(round);
         this.c.set("rounds", rounds, { path: '/' });
 
+        this.props.setScore();
         this.resetRound();
     }
 
@@ -113,6 +114,7 @@ class Rounds extends Component {
         rounds = rounds.slice(0, -1);
         this.c.set("rounds", rounds, { path: '/' });
 
+        this.props.setScore();
         this.resetRound();
     }
 

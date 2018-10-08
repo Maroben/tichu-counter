@@ -54,12 +54,13 @@ class App extends Component {
   }
 
   openSettings = () => { this.refs.settings.openSettings(); }
+  setScore = () => {this.refs.score.setScore(); }
 
   render() {
     return (
       <div className="App">
-        <Settings ref="settings" state={this} />
-        <Error ref="error" state={this.state} />
+        <Settings ref="settings" setScore={this.setScore} />
+        <Error ref="error" />
 
         <header className="App-header">
           <div className="title">
@@ -67,7 +68,7 @@ class App extends Component {
             <button type="button" className="icon-cog" onClick={this.openSettings}></button>
           </div>
 
-          <Score ref="score" state={this.state} />
+          <Score ref="score" />
 
           <div id="game-nav" className="game">
             <div className="game-box">B</div>
@@ -84,7 +85,7 @@ class App extends Component {
           <Rounds />
         </main>
 
-        <Submit ref="submit" />
+        <Submit ref="submit" setScore={this.setScore} />
       </div>
     );
   };
