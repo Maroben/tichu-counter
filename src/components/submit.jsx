@@ -109,14 +109,31 @@ class Rounds extends Component {
         round.teamB.points = this.roundPoints(round.teamB.points);
 
         if ((round.teamA.points == 0) && (round.teamB.points == 0)) {
+            this.setMessage(`Please insert your points!`);
             return false;
         }
         this.setState({ round });
         return true;
     }
 
+    checkTichu() {
+        let { round } = this.state;
+
+        let amount = 0;
+        if (round.teamA.big === "icon-plus") amount++;
+        if (round.teamA.small === "icon-plus") amount++;
+        if (round.teamB.big === "icon-plus") amount++;
+        if (round.teamB.small === "icon-plus") amount++;
+
+        if (amount > 1) {
+            this.setMessage(`It's impossible to have succeeded in more than one Tichu!`);
+            return false;
+        }
+        return true;
+    }
+
     saveRound() {
-        if (this.checkPoints()) {
+        if (this.checkPoints() && this.checkTichu()) {
             let { round } = this.state;
             let rounds = this.c.get("rounds");
 
@@ -154,6 +171,12 @@ class Rounds extends Component {
         }
 
         this.setState({ round });
+    }
+
+    setMessage(message) {
+        this.c.set('message', message, { path: '/' });
+        this.c.set('messageState', "", { path: '/' });
+        this.c.set('submitNewGame', "hidden", { path: '/' });
     }
 
     render() {
