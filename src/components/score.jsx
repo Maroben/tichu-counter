@@ -22,6 +22,11 @@ class Score extends Component {
         let a = this.getScore("teamA", "aScore");
         let b = this.getScore("teamB", "bScore");
         this.setLead(a - b);
+
+        if ((a || b) >= this.c.get('goal')) {
+            if (a > b) { this.getMessage('aName'); }
+            else if (b > a) { this.getMessage('bName'); }
+        }
     }
 
     getScore(team, id) {
@@ -31,8 +36,14 @@ class Score extends Component {
         }, 0);
         
         this.c.set(id, score, { path: '/' });
-        
+
         return score;
+    }
+
+    getMessage(team) {
+        this.c.set('message', `Team ${this.c.get(team)} has won!`, { path: '/' });
+        this.c.set('messageState', "", { path: '/' });
+        this.c.set('submitNewGame', "", { path: '/' });
     }
 
     getTichuPoints(team) {

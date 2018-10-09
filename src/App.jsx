@@ -3,7 +3,7 @@ import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 
 import Settings from './components/settings.jsx';
-import Error from './components/error.jsx';
+import Message from './components/message.jsx';
 import Score from './components/score.jsx';
 import Submit from './components/submit.jsx';
 import Rounds from './components/rounds.jsx';
@@ -34,33 +34,36 @@ class App extends Component {
           state: this.c.get('bState')
         }
       },
-      error: {
+      message: {
         state: this.c.get('errorState'),
-        message: this.c.get('errorMessage')
+        message: this.c.get('message')
       },
       rounds: this.c.get('rounds')
     }
 
     if (!this.c.get('first')) {
       this.c.set('rounds', [], { path: '/' });
-      this.c.set('errorState', "hidden", { path: '/' });
+      this.c.set('messageState', "hidden", { path: '/' });
       this.c.set('first', true, { path: '/' });
       this.c.set('aName', "Dragon", { path: '/' });
       this.c.set('bName', "Phoenix", { path: '/' });
       this.c.set('goal', 1000, { path: '/' });
       this.c.set('aState', "tie", { path: '/' });
       this.c.set('bState', "tie", { path: '/' });
+      this.c.set('submitNewGame', 'hidden', { path: '/' });
     }
   }
 
   openSettings = () => { this.refs.settings.openSettings(); }
+  openMessage = () => { this.refs.message.openMessage(); }
   setScore = () => {this.refs.score.setScore(); }
+  newGame = () => {this.refs.settings.newGame(); }
 
   render() {
     return (
       <div className="App">
         <Settings ref="settings" setScore={this.setScore} />
-        <Error ref="error" />
+        <Message ref="message" newGame={this.newGame}/>
 
         <header className="App-header">
           <div className="title">
@@ -71,13 +74,13 @@ class App extends Component {
           <Score ref="score" />
 
           <div className="game">
-            <div className="box">B</div>
-            <div className="box">S</div>
-            <div className="box">P</div>
+            <div className="box">Big</div>
+            <div className="box">Small</div>
+            <div className="box">Points</div>
             <div className="box">vs</div>
-            <div className="box">P</div>
-            <div className="box">S</div>
-            <div className="box">B</div>
+            <div className="box">Points</div>
+            <div className="box">Small</div>
+            <div className="box">Big</div>
           </div>
         </header>
 

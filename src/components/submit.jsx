@@ -70,13 +70,26 @@ class Rounds extends Component {
     changePoints(event, team) {
         let { round } = this.state;
         let points = event.target.value;
+        let other;
+        
+        if (team === "teamA") { other = "teamB"; } 
+        else { other = "teamA"; }
 
-        round[team].points = points;        
+        round[team].points = points;
 
-        if (team === "teamA") {
-            round.teamB.points = 100 - points;
-        } else {
-            round.teamA.points = 100 - points;
+        if (points == 200 ) {
+            round[other].points = 0;
+        } 
+        else if (points > 125) {
+            round[team].points = 125;
+            round[other].points = -25;
+        }
+        else if (points < -25) {
+            round[team].points = -25;
+            round[other].points = 125;
+        }
+        else  {
+            round[other].points = 100 - points;
         }
 
         this.setState({ round });
@@ -93,21 +106,26 @@ class Rounds extends Component {
         let { round } = this.state;
 
         round.teamA.points = this.roundPoints(round.teamA.points);
-        round.teamB.points = 100 - round.teamA.points;
+        round.teamB.points = this.roundPoints(round.teamB.points);
 
+        if ((round.teamA.points == 0) && (round.teamB.points == 0)) {
+            return false;
+        }
         this.setState({ round });
+        return true;
     }
 
     saveRound() {
-        this.checkPoints();
-        let { round } = this.state;
-        let rounds = this.c.get("rounds");
+        if (this.checkPoints()) {
+            let { round } = this.state;
+            let rounds = this.c.get("rounds");
 
-        rounds.push(round);
-        this.c.set("rounds", rounds, { path: '/' });
+            rounds.push(round);
+            this.c.set("rounds", rounds, { path: '/' });
 
-        this.props.setScore();
-        this.resetRound();
+            this.props.setScore();
+            this.resetRound();
+        }
     }
 
     removeRound() {
@@ -150,13 +168,13 @@ class Rounds extends Component {
                         <button type="button" className={round.teamA.small} onClick={() => this.changeIconState("teamA", "small")}></button>
                     </div>
                     <div className="box">
-                        <input type="number" step="5" inputMode="numeric" value={round.teamA.points} onChange={(event) => this.changePoints(event, "teamA")} />
+                        <input type="number" onClick={this.select} step="5" inputMode="numeric" value={round.teamA.points} onChange={(event) => this.changePoints(event, "teamA")} />
                     </div>
 
-                    <div class="box">vs</div>
+                    <div className="box vs">vs</div>
 
                     <div className="box">
-                        <input type="number" step="5" inputMode="numeric" value={round.teamB.points} onChange={(event) => this.changePoints(event, "teamB")} />
+                        <input type="number" onClick={this.select} step="5" inputMode="numeric" value={round.teamB.points} onChange={(event) => this.changePoints(event, "teamB")} />
                     </div>
                     <div className="box">
                         <button type="button" className={round.teamB.small} onClick={() => this.changeIconState("teamB", "small")}></button>
