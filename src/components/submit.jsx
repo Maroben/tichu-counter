@@ -43,9 +43,8 @@ class Rounds extends Component {
         this.saveRound = this.saveRound.bind(this);
         this.resetRound = this.resetRound.bind(this);
         this.removeRound = this.removeRound.bind(this);
-
     }
-    
+
     changeButtonState(t, id) {
         let { theme } = this.state;
         let team = this.state[t];
@@ -67,12 +66,12 @@ class Rounds extends Component {
                 if (id === "double") {
                     team[id] = theme.unselected;
                     break;
-                } 
+                }
                 if (id === "pSelection") {
                     team[id] = theme.unselected;
                     oponent[id] = theme.plus;
                     break;
-                } 
+                }
                 team[id] = theme.cross;
                 break;
             default:
@@ -82,77 +81,92 @@ class Rounds extends Component {
         this.setState({ team });
     }
 
-    
     rangeChange(event) {
         let { points } = this.state;
         points = event.target.value;
         this.setState({ points });
     }
 
-    // roundPoints(number) {
-    //     if (number % 5 > 2) {
-    //         return parseInt(number / 5) * 5 + 5;
-    //     }
-    //     return parseInt(number / 5) * 5;
-    // }
+    checkRound(round) {
+        let a = Object.values(round.teamA);
+        let b = Object.values(round.teamB);
+        let tichu = 0;
+        let neg = 0;
+        let msg = [];
 
-    // checkPoints() {
-    //     let { round } = this.state;
+        for (let i = 0; i < a.length; i++) {
+            if (a[i] === 'plus') tichu++;
+            if (b[i] === 'plus') tichu++;
+            if (a[i] === 'minus') neg++;
+            if (b[i] === 'minus') neg++;
+        }
 
-    //     round.teamA.points = this.roundPoints(round.teamA.points);
-    //     round.teamB.points = this.roundPoints(round.teamB.points);
+        if (tichu > 1) msg.push("There can only be one Tichu.");
+        if (neg >= 4) msg.push("One player must have finished first.");
 
-    //     if ((round.teamA.points == 0) && (round.teamB.points == 0)) {
-    //         this.setMessage(`Please insert your points!`);
-    //         return false;
-    //     }
-    //     this.setState({ round });
-    //     return true;
-    // }
+        if (msg.length > 0) {
+            this.c.set('message', msg, { path: '/' });
+            this.props.setError();
+            return false;
+        }
+        return true;
+    }
 
-    // checkTichu() {
-    //     let { round } = this.state;
+    getPoints() {
+        if (this.state.teamA.pSelection === this.themeText.plus) {
+            return [this.state.points, 100 - this.state.points]
+        }
+        return [100 - this.state.points, this.state.points]
+    }
 
-    //     let amount = 0;
-    //     if (round.teamA.big === "icon-plus") amount++;
-    //     if (round.teamA.small === "icon-plus") amount++;
-    //     if (round.teamB.big === "icon-plus") amount++;
-    //     if (round.teamB.small === "icon-plus") amount++;
+    getRound() {
+        let a = this.state.teamA;
+        let b = this.state.teamB;
+        let p = this.getPoints();
 
-    //     if (amount > 1) {
-    //         this.setMessage(`It's impossible to have succeeded in more than one Tichu!`);
-    //         return false;
-    //     }
-    //     return true;
-    // }
+        return {
+            teamA: {
+                big: a.big,
+                small1: a.small1,
+                small2: a.small2,
+                double: a.double,
+                points: p[0]
+            },
+            teamB: {
+                big: b.big,
+                small1: b.small1,
+                small2: b.small2,
+                double: b.double,
+                points: p[1]
+            }
+        }
+    }
 
     saveRound() {
-        // if (this.checkPoints() && this.checkTichu()) {
-        //     let { round } = this.state;
-        //     let rounds = this.c.get("rounds");
+        let round = this.getRound();
 
-        //     rounds.push(round);
-        //     this.c.set("rounds", rounds, { path: '/' });
+        if (this.checkRound(round)) {
+            let rounds = this.c.get("rounds");
 
-        //     this.props.setScore();
-        //     this.resetRound();
-        // }
-        this.c.set('message', `>>>>>>> ${this.c.get('aName')} has won! <<<<<<<`, { path: '/' });
-        this.props.setVictory();
+            rounds.push(round);
+            this.c.set("rounds", rounds, { path: '/' });
+
+            this.props.setScore();
+            this.resetRound();
+        }
     }
 
     removeRound() {
-        // let rounds = this.c.get("rounds");
-        // rounds = rounds.slice(0, -1);
-        // this.c.set("rounds", rounds, { path: '/' });
+        let rounds = this.c.get("rounds");
+        rounds = rounds.slice(0, -1);
+        this.c.set("rounds", rounds, { path: '/' });
 
-        // this.props.setScore();
-        // this.resetRound();
+        this.props.setScore();
+        this.resetRound();
     }
 
     resetRound() {
         let round = {
-            points: 50,
             teamA: {
                 big: this.themeText.cross,
                 small1: this.themeText.cross,

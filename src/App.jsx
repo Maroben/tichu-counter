@@ -45,25 +45,27 @@ class App extends Component {
       this.c.set('first', true, { path: '/' });
       this.c.set('rounds', [], { path: '/' });
 
+      this.c.set('message', [], { path: '/' });
       this.c.set('messageState', "hidden", { path: '/' });
-      this.c.set('submitNewGame', 'hidden', { path: '/' });
+      this.c.set('showVictory', 'hidden', { path: '/' });
       this.c.set('showError', 'hidden', { path: '/' });
+      this.c.set('submitState', 'hidden', { path: '/' });
 
       this.c.set('aName', "Dragon", { path: '/' });
       this.c.set('bName', "Phoenix", { path: '/' });
       this.c.set('goal', 1000, { path: '/' });
       this.c.set('aState', "tie", { path: '/' });
       this.c.set('bState', "tie", { path: '/' });
-
     }
   }
 
   openSettings = () => { this.refs.settings.openSettings(); }
-  newGame = () => {this.refs.settings.newGame(); }
+  newGame = () => { this.refs.settings.newGame(); }
 
-  setVictory = () => {this.refs.message.setVictory(); }
+  setVictory = () => { this.refs.message.setVictory(); }
+  setError = () => { this.refs.message.setError(); }
   
-  setScore = () => {this.refs.score.setScore(); }
+  setScore = () => { this.refs.score.setScore(); }
 
   render() {
     return (
@@ -86,6 +88,7 @@ class App extends Component {
             ref="submit" 
             setScore={this.setScore}
             setVictory={this.setVictory}
+            setError={this.setError}
           />
 
           <Settings ref="settings" setScore={this.setScore} />

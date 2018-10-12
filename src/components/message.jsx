@@ -7,6 +7,7 @@ class Error extends Component {
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
     };
+
     constructor(props) {
         super(props);
 
@@ -22,20 +23,23 @@ class Error extends Component {
     }
 
     setVictory() {
-        this.c.set('submitNewGame', '', { path: '/' });
-        this.c.set("messageState", '', { path: '/' });
-        this.c.set("submitState", "hidden", { path: '/' });
+        this.openMessage();
+        this.c.set("showVictory", "", { path: '/' });
     }
 
     setError() {
-        this.c.set('submitNewGame', '', { path: '/' });
+        this.openMessage();
+        this.c.set("showError", "", { path: '/' });
+    }
+
+    openMessage() {
         this.c.set("messageState", '', { path: '/' });
         this.c.set("submitState", "hidden", { path: '/' });
     }
 
     closeMessage () {
         this.c.set('messageState', "hidden", { path: '/' });
-        this.c.set('submitNewGame', 'hidden', { path: '/' });
+        this.c.set('showVictory', 'hidden', { path: '/' });
         this.c.set('showError', 'hidden', { path: '/' });
         this.c.set("submitState", "", { path: '/' });
     }
@@ -60,22 +64,26 @@ class Error extends Component {
 
                 <div className="container">
                     <div className="box1">
-                        <div className="box">{this.c.get('message')}</div>
+                        {
+                            this.c.get('message').map((message, index) => (
+                                <div key={index} className="box">{message}</div>
+                            ))
+                        }
                     </div>
                 </div>
 
                 <div className="container">
-                    <div className={`box3 ${this.c.get("submitNewGame")}`}>
+                    <div className={`box3 ${this.c.get("showVictory")}`}>
                         <button className="unselected" onClick={this.openSettings}>Settings</button>
                     </div>
-                    <div className={`box3 ${this.c.get("submitNewGame")}`}>
+                    <div className={`box3 ${this.c.get("showVictory")}`}>
                         <button className="unselected" onClick={this.showHistory}>Show Rounds</button>
                     </div>
-                    <div className={`box3 ${this.c.get("submitNewGame")}`}>
+                    <div className={`box3 ${this.c.get("showVictory")}`}>
                         <button className="plus" onClick={this.newGame}>New Game</button>
                     </div>
                     <div className={`box1 ${this.c.get("showError")}`}>
-                        <button className="plus" onClick={this.closeMessage}>Okay</button>
+                        <button className="plus" onClick={this.closeMessage}>okay</button>
                     </div>
                 </div>
             </div>
