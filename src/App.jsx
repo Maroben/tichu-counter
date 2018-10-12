@@ -75,7 +75,10 @@ class App extends Component {
             <h1>Tichu Counter</h1>
             <button type="button" className="icon-cog" onClick={this.openSettings}></button>
           </div>
-          <Score ref="score" />
+          <Score 
+            ref="score" 
+            setVictory={this.setVictory}
+          />
         </header>
 
         <main>
@@ -87,7 +90,6 @@ class App extends Component {
           <Submit 
             ref="submit" 
             setScore={this.setScore}
-            setVictory={this.setVictory}
             setError={this.setError}
           />
 

@@ -24,8 +24,8 @@ class Score extends Component {
         this.setLead(a - b);
 
         if ((a || b) >= this.c.get('goal')) {
-            if (a > b) { this.getMessage('aName'); }
-            else if (b > a) { this.getMessage('bName'); }
+            if (a > b) this.getMessage('aName', 'bName'); 
+            else if (b > a) this.getMessage('bName', 'aName'); 
         }
     }
 
@@ -40,10 +40,12 @@ class Score extends Component {
         return score;
     }
 
-    getMessage(team) {
-        this.c.set('message', `Team ${this.c.get(team)} has won!`, { path: '/' });
-        this.c.set('messageState', "", { path: '/' });
-        this.c.set('submitNewGame', "", { path: '/' });
+    getMessage(winner, loser) {
+        let msg = [];
+        msg.push(`${this.c.get(winner)} has won!`);
+        msg.push(`${this.c.get(loser)} sucks ass.`)
+        this.c.set('message', msg, { path: '/' });
+        this.props.setVictory();
     }
 
     getTichuPoints(team) {

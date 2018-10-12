@@ -83,7 +83,7 @@ class Error extends Component {
                         <button className="plus" onClick={this.newGame}>New Game</button>
                     </div>
                     <div className={`box1 ${this.c.get("showError")}`}>
-                        <button className="plus" onClick={this.closeMessage}>okay</button>
+                        <button className="plus" onClick={this.closeMessage}>okay :(</button>
                     </div>
                 </div>
             </div>
