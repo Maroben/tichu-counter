@@ -50,6 +50,10 @@ class App extends Component {
       this.c.set('showVictory', 'hidden', { path: '/' });
       this.c.set('showError', 'hidden', { path: '/' });
       this.c.set('submitState', 'hidden', { path: '/' });
+      this.c.set('roundsState', 'hidden', { path: '/' });
+
+      this.c.set('roundsButton', 'hidden', { path: '/' });
+      this.c.set('backButton', 'hidden', { path: '/' });
 
       this.c.set('aName', "Dragon", { path: '/' });
       this.c.set('bName', "Phoenix", { path: '/' });
@@ -67,6 +71,9 @@ class App extends Component {
   
   setScore = () => { this.refs.score.setScore(); }
 
+  showRounds = () => { this.refs.rounds.showRounds(); }
+  goBack = () => { this.refs.rounds.goBack(); }
+
   render() {
     return (
       <div className="App">
@@ -82,8 +89,9 @@ class App extends Component {
         </header>
 
         <main>
-          List played rounds.
-          <Rounds />
+          <button className={`home unselected ${this.c.get('roundsButton')}`} onClick={this.showRounds}>show rounds</button>
+
+          <Rounds ref="rounds" className={this.c.get('roundsButton')} showRounds={this.showRounds}/>
         </main>
 
         <footer>
@@ -98,8 +106,12 @@ class App extends Component {
           <Message 
             ref="message" 
             newGame={this.newGame}
+            showRounds={this.showRounds}
             openSettings={this.openSettings}
           />
+          <div className="box">
+            <button type="button" className={`home unselected ${this.c.get('backButton')}`} onClick={this.goBack}>back</button>
+          </div>
         </footer>
       </div>
     );

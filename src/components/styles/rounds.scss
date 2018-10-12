@@ -1,16 +1,11 @@
 @import 'variables';
 @import 'styles';
 
-main {
-    .icon-cross {
-        color: $tichu-blue;
-    }
-
-    .icon-plus {
-        color: $tichu-green;
-    }
-
-    .icon-minus {
-        color: $tichu-red;
+#rounds {
+    .round {
+        display: flex;
+        .box {
+            width: 11%;
+        }
     }
 }

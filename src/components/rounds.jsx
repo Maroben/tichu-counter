@@ -11,21 +11,42 @@ class Rounds extends Component {
     super(props);
 
     this.c = this.props.cookies;
+
+    this.themeIcon = { "cross": "icon-cross", "minus": "icon-minus", "plus": "icon-plus" };
+
+    this.showRounds = this.showRounds.bind(this);
+    this.goBack = this.goBack.bind(this);
+  }
+
+  showRounds() {
+    this.c.set('roundsButton', 'hidden', { path: '/' });
+    this.c.set('backButton', '', { path: '/' });
+    this.c.set('submitState', 'hidden', { path: '/' });
+    this.c.set('roundsState', '', { path: '/' });
+  }
+
+  goBack() {
+    this.c.set('roundsButton', '', { path: '/' });
+    this.c.set('backButton', 'hidden', { path: '/' });
+    this.c.set('submitState', '', { path: '/' });
+    this.c.set('roundsState', 'hidden', { path: '/' });
   }
 
   render() {
     return (
-      <div>
+      <div id="rounds" className={this.c.get('roundsState')}>
          {
             this.c.get('rounds').map((round, index) => (
-              <div key={index} className="game">
-                <div className={`box ${round.teamA.big}`}></div>
-                <div className={`box ${round.teamA.small}`}></div>
+              <div key={index} className="round">
+                <div className={`box ${this.themeIcon[round.teamA.big]}`}></div>
+                <div className={`box ${this.themeIcon[round.teamA.small1]}`}></div>
+                <div className={`box ${this.themeIcon[round.teamA.small2]}`}></div>
                 <div className="box">{round.teamA.points}</div>
                 <div className="box">vs</div>
                 <div className="box">{round.teamB.points}</div>
-                <div className={`box ${round.teamB.small}`}></div>
-                <div className={`box ${round.teamB.big}`}></div>
+                <div className={`box ${this.themeIcon[round.teamB.small1]}`}></div>
+                <div className={`box ${this.themeIcon[round.teamB.small2]}`}></div>
+                <div className={`box ${this.themeIcon[round.teamB.big]}`}></div>
               </div>
             ))
           }

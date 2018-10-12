@@ -14,8 +14,7 @@ h2 {
 }
 
 .cross,
-.icon-undo,
-.icon-cros {
+.icon-undo {
     background: $tichu-blue-gradient;
     &:hover {
     background: $tichu-blue;
@@ -23,8 +22,7 @@ h2 {
 }
 
 .minus,
-.icon-bin,
-.icon-minus {
+.icon-bin {
     background: $tichu-red-gradient;
     &:hover {
     background: $tichu-red;
@@ -32,8 +30,7 @@ h2 {
 }
 
 .plus,
-.icon-checkmark,
-.icon-plus {
+.icon-checkmark {
     background: $tichu-green-gradient;
     &:hover {
     background: $tichu-green;
@@ -47,6 +44,17 @@ h2 {
     }
 }
 
+.icon-cross {
+    color: $tichu-blue;
+}
+
+.icon-minus {
+    color: $tichu-red;
+}
+
+.icon-plus {
+    color: $tichu-green;
+}
 
 /////////////////////////// border 
 

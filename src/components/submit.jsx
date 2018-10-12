@@ -95,7 +95,7 @@ class Rounds extends Component {
         let neg = 0;
         let msg = [];
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 3; i++) {
             if (a[i] === 'plus') tichuA++;
             if (b[i] === 'plus') tichuB++;
             if (a[i] === 'minus') neg++;

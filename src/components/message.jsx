@@ -17,9 +17,12 @@ class Error extends Component {
         this.setError = this.setError.bind(this);
 
         this.closeMessage = this.closeMessage.bind(this);
-        this.newGame = this.newGame.bind(this);
-        this.openSettings = this.openSettings.bind(this);
 
+        this.openSettings = this.openSettings.bind(this);
+        this.showRounds = this.showRounds.bind(this);
+        this.newGame = this.newGame.bind(this);
+
+        
     }
 
     setVictory() {
@@ -37,20 +40,25 @@ class Error extends Component {
         this.c.set("submitState", "hidden", { path: '/' });
     }
 
-    closeMessage () {
+    closeMessage (special) {
         this.c.set('messageState', "hidden", { path: '/' });
         this.c.set('showVictory', 'hidden', { path: '/' });
         this.c.set('showError', 'hidden', { path: '/' });
-        this.c.set("submitState", "", { path: '/' });
-    }
-
-    newGame () {
-        this.props.newGame();
-        this.closeMessage();
+        if (!special) this.c.set("submitState", "", { path: '/' });
     }
 
     openSettings () {
         this.props.openSettings();
+        this.closeMessage(true);
+    }
+
+    showRounds () {
+        this.props.showRounds();
+        this.closeMessage(true);
+    }
+
+    newGame () {
+        this.props.newGame();
         this.closeMessage();
     }
 
@@ -59,7 +67,7 @@ class Error extends Component {
             <div id="message" className={this.c.get("messageState")}>
                 <div className="title h2">
                     <h2>Message</h2>
-                    <button type="button" className="icon-cross" onClick={this.closeMessage}></button>
+                    <button type="button" className="icon-cross" onClick={() => this.closeMessage(false)}></button>
                 </div>
 
                 <div className="container">
@@ -77,13 +85,13 @@ class Error extends Component {
                         <button className="unselected" onClick={this.openSettings}>Settings</button>
                     </div>
                     <div className={`box3 ${this.c.get("showVictory")}`}>
-                        <button className="unselected" onClick={this.showHistory}>Show Rounds</button>
+                        <button className="unselected" onClick={this.showRounds}>Show Rounds</button>
                     </div>
                     <div className={`box3 ${this.c.get("showVictory")}`}>
                         <button className="plus" onClick={this.newGame}>New Game</button>
                     </div>
                     <div className={`box1 ${this.c.get("showError")}`}>
-                        <button className="plus" onClick={this.closeMessage}>okay :(</button>
+                        <button className="plus" onClick={() => this.closeMessage(false)}>okay :(</button>
                     </div>
                 </div>
             </div>

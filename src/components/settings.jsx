@@ -32,7 +32,10 @@ class Settings extends Component {
 
     openSettings() {
         this.c.set("settingsState", "", { path: '/' });
-        this.c.set("submitState", "hidden", { path: '/' });
+        this.c.set("submitState", 'hidden', { path: '/' });
+        this.c.set('roundsButton', 'hidden', { path: '/' });
+        this.c.set('backButton', 'hidden', { path: '/' });
+        this.c.set('roundsState', 'hidden', { path: '/' });
         this.settings = {
             goal: this.c.get('goal'),
             aName: this.c.get('aName'),
@@ -74,6 +77,8 @@ class Settings extends Component {
             this.c.set('aName', this.settings.aName, { path: '/' });
             this.c.set('bName', this.settings.bName, { path: '/' });
         }
+        this.c.set('roundsButton', '', { path: '/' });
+        this.c.set('backButton', 'hidden', { path: '/' });
         this.c.set("settingsState", "hidden", { path: '/' });
         this.c.set("submitState", "", { path: '/' });
     }

@@ -2,6 +2,7 @@
 @import 'components/styles/styles';
 @import 'components/styles/headers';
 @import 'components/styles/footer';
+@import 'components/styles/button';
 
 .hidden {
   display: none !important;
@@ -30,9 +31,26 @@ header {
 
 footer {
   bottom: 0;
+  .box {
+    margin: 0.5em;
+    button {
+      &.home {
+        width: 100%;
+      }
+    }
+  }
+  
 }
 
 main {
   max-width: 600px;
   width: 100%;
+  margin: 7em auto;
+  text-align: center;
+  button {
+    &.home {
+      width: 11em;
+    }
+  }
 }
+
