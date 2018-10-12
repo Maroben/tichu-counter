@@ -14,7 +14,7 @@ class Error extends Component {
 
         this.setVictory = this.setVictory.bind(this);
         this.setError = this.setError.bind(this);
-        
+
         this.closeMessage = this.closeMessage.bind(this);
         this.newGame = this.newGame.bind(this);
         this.openSettings = this.openSettings.bind(this);
@@ -24,17 +24,20 @@ class Error extends Component {
     setVictory() {
         this.c.set('submitNewGame', '', { path: '/' });
         this.c.set("messageState", '', { path: '/' });
+        this.c.set("submitState", "hidden", { path: '/' });
     }
 
     setError() {
         this.c.set('submitNewGame', '', { path: '/' });
         this.c.set("messageState", '', { path: '/' });
+        this.c.set("submitState", "hidden", { path: '/' });
     }
 
     closeMessage () {
         this.c.set('messageState', "hidden", { path: '/' });
         this.c.set('submitNewGame', 'hidden', { path: '/' });
         this.c.set('showError', 'hidden', { path: '/' });
+        this.c.set("submitState", "", { path: '/' });
     }
 
     newGame () {

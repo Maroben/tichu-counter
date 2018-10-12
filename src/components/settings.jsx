@@ -32,6 +32,7 @@ class Settings extends Component {
 
     openSettings() {
         this.c.set("settingsState", "", { path: '/' });
+        this.c.set("submitState", "hidden", { path: '/' });
         this.settings = {
             goal: this.c.get('goal'),
             aName: this.c.get('aName'),
@@ -74,6 +75,7 @@ class Settings extends Component {
             this.c.set('bName', this.settings.bName, { path: '/' });
         }
         this.c.set("settingsState", "hidden", { path: '/' });
+        this.c.set("submitState", "", { path: '/' });
     }
 
     render() {

@@ -3,12 +3,17 @@
 @import 'input';
 @import 'button';
 
-#submit {
+footer {
+  font-size: 1em;
   .container {
+    display: flex; 
+    flex-flow: row;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
 
     .box1 {
-      max-width: 100%;
-      width: 100%;
+      margin: 0.5em 0.5em 2em 0.5em;
     }
 
     .box2 {
@@ -26,7 +31,7 @@
       display: flex; 
       flex-flow: column;
       flex-grow: 1;
-      margin: 0 0.5em .5em 0.5em;
+      margin: 0 0.5em 0.5em 0.5em;
     }
 
     &.team {

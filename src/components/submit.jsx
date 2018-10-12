@@ -137,7 +137,7 @@ class Rounds extends Component {
         //     this.props.setScore();
         //     this.resetRound();
         // }
-        this.c.set('message', `${this.c.get('aName')} has won!`, { path: '/' });
+        this.c.set('message', `>>>>>>> ${this.c.get('aName')} has won! <<<<<<<`, { path: '/' });
         this.props.setVictory();
     }
 
@@ -174,7 +174,7 @@ class Rounds extends Component {
     render() {
         let { teamA, teamB, points } = this.state;
         return (
-            <div id="submit">
+            <div id="submit" className={this.c.get("submitState")}>
                 <div className="round">
                     <div className="container">
                         <div className="box2">
