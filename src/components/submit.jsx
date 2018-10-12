@@ -90,19 +90,28 @@ class Rounds extends Component {
     checkRound(round) {
         let a = Object.values(round.teamA);
         let b = Object.values(round.teamB);
-        let tichu = 0;
+        let tichuA = 0;
+        let tichuB = 0;
         let neg = 0;
         let msg = [];
 
-        for (let i = 0; i < a.length; i++) {
-            if (a[i] === 'plus') tichu++;
-            if (b[i] === 'plus') tichu++;
+        for (let i = 0; i < 4; i++) {
+            if (a[i] === 'plus') tichuA++;
+            if (b[i] === 'plus') tichuB++;
             if (a[i] === 'minus') neg++;
             if (b[i] === 'minus') neg++;
         }
 
-        if (tichu > 1) msg.push("There can only be one Tichu.");
+        if (tichuA + tichuB > 1) msg.push("There can only be one Tichu.");
         if (neg >= 4) msg.push("One player must have finished first.");
+
+        if (round.teamA.double === 'plus' && tichuB > 0) {
+            msg.push(`How can ${this.c.get('aName')} have a double Victory if ${this.c.get('bName')} has a Tichu?`);
+        }
+
+        if (round.teamB.double === 'plus' && tichuA > 0) {
+            msg.push(`How can Team ${this.c.get('bName')} have a double Victory, if Team ${this.c.get('aName')} has a Tichu?`);
+        }
 
         if (msg.length > 0) {
             this.c.set('message', msg, { path: '/' });

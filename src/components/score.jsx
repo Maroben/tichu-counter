@@ -13,51 +13,52 @@ class Score extends Component {
         this.c = this.props.cookies;
 
         this.setScore = this.setScore.bind(this);
-        this.getScore = this.getScore.bind(this);
-        this.getTichuPoints = this.getTichuPoints.bind(this);
-        this.setLead = this.setLead.bind(this);
     }
 
     setScore() {
-        let a = this.getScore("teamA", "aScore");
-        let b = this.getScore("teamB", "bScore");
+        // TODO redundancy
+        let a = this.getScore("teamA", "teamB");
+        let b = this.getScore("teamB", "teamA");
+        this.c.set('aScore', a, { path: '/' });
+        this.c.set('bScore', b, { path: '/' });
+
         this.setLead(a - b);
 
         if ((a || b) >= this.c.get('goal')) {
-            if (a > b) this.getMessage('aName', 'bName'); 
-            else if (b > a) this.getMessage('bName', 'aName'); 
+            if (a > b) this.setMessage('aName', 'bName'); 
+            else if (b > a) this.setMessage('bName', 'aName'); 
         }
     }
 
-    getScore(team, id) {
+    getScore(team, oponent) {
         let rounds = this.c.get('rounds');
-        let score = rounds.reduce((total, round) => {
+        return rounds.reduce((total, round) => {
+            if (round[team].double === "plus") {
+                return total + 200 + this.getTichuPoints(round[team]);
+            }
+            else if (round[oponent].double === "plus") {
+                return total + this.getTichuPoints(round[team]);
+            }
             return total + parseInt(round[team].points) + this.getTichuPoints(round[team]); 
         }, 0);
-        
-        this.c.set(id, score, { path: '/' });
-
-        return score;
-    }
-
-    getMessage(winner, loser) {
-        let msg = [];
-        msg.push(`${this.c.get(winner)} has won!`);
-        msg.push(`${this.c.get(loser)} sucks ass.`)
-        this.c.set('message', msg, { path: '/' });
-        this.props.setVictory();
     }
 
     getTichuPoints(team) {
-        let sum = 0;
-        if (team.big === "icon-plus") { sum += 200; }
-        if (team.big === "icon-minus") { sum -= 200; }
-        if (team.small === "icon-plus") { sum += 100; }
-        if (team.small === "icon-minus") { sum -= 100; }
-        return sum;
+        let tichu = 0;
+
+        // TODO that seems a bit to much ..
+        if (team.big === "plus") tichu += 200;
+        else if (team.big === "minus") tichu -= 200;
+        if (team.small1 === "plus") tichu += 100;
+        else if (team.small1 === "minus") tichu -= 100;
+        if (team.small2 === "plus") tichu += 100;
+        else if (team.small2 === "minus") tichu -= 100;
+
+        return tichu;
     }
 
     setLead(status) {
+        // TODO might be solved better
         if (status > 0) {
             this.c.set('aState', 'win', { path: '/' });
             this.c.set('bState', 'lose', { path: '/' });
@@ -68,6 +69,14 @@ class Score extends Component {
             this.c.set('aState', 'tie', { path: '/' });
             this.c.set('bState', 'tie', { path: '/' });
         }
+    }
+
+    setMessage(winner, loser) {
+        let msg = [];
+        msg.push(`${this.c.get(winner)} has won!`);
+        msg.push(`${this.c.get(loser)} sucks ass.`)
+        this.c.set('message', msg, { path: '/' });
+        this.props.setVictory();
     }
 
     render() {
