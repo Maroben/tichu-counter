@@ -62,33 +62,24 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Settings ref="settings" setScore={this.setScore} />
-        <Message ref="message" newGame={this.newGame}/>
-
         <header className="App-header">
-          <div className="title">
+          <div className="title1">
             <h1>Tichu Counter</h1>
             <button type="button" className="icon-cog" onClick={this.openSettings}></button>
           </div>
-
           <Score ref="score" />
-
-          <div className="game">
-            <div className="box">Big</div>
-            <div className="box">Small</div>
-            <div className="box">Points</div>
-            <div className="box">vs</div>
-            <div className="box">Points</div>
-            <div className="box">Small</div>
-            <div className="box">Big</div>
-          </div>
         </header>
 
         <main>
+          List played rounds.
           <Rounds />
         </main>
 
-        <Submit ref="submit" setScore={this.setScore} />
+        <footer>
+          <Submit ref="submit" setScore={this.setScore} />
+          <Settings ref="settings" setScore={this.setScore} />
+          <Message ref="message" newGame={this.newGame}/>
+        </footer>
       </div>
     );
   };

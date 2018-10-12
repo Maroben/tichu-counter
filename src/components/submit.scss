@@ -1,35 +1,57 @@
 @import 'variables';
 @import 'styles';
+@import 'input';
+@import 'button';
 
 footer {
-  .round, .submit {
-    display: flex;
+  font-size: 1em;
+  .container {
+    display: flex; 
+    flex-flow: row;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
 
-    .box {
+    .box1 {
+      max-width: 482px;
+      width: 100%;
+      margin: 0.5em 0.5em 2em 0.5em;
+    }
+
+    .box2 {
+      display: flex; 
+      flex-flow: column;
       flex-grow: 1;
-      text-align: center;
-    }
-  }
+      margin: 0 0.5em 1.5em 0.5em;
 
-  .round {
-    button, input {
-      width: 3.5em;
+      button {
+        margin-bottom: 0.5em;
+      }
     }
 
-    .box {
-      width: 14.3%;
+    .box3 {
+      display: flex; 
+      flex-flow: column;
+      flex-grow: 1;
+      margin: 0 0.5em .5em 0.5em;
     }
 
-    .vs {
-      line-height: 1.8em;
-    }
-  }
+    &.team {
+      .box3 {
+        display: inline-block;
+        flex-grow: 0;
+        text-align: center;
+        line-height: 2.5em;
+        width: 100%;
 
-  .submit {
-    margin: 1.5em 0;
+        button {
+          width: 100%;
+        }
 
-    button {
-      width: 30%;
+        &.points {
+          width: 5em;
+        }
+      }
     }
   }
 }

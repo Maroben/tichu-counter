@@ -16,203 +16,216 @@ class Rounds extends Component {
         this.c = this.props.cookies;
 
         // Enum Type for the IconState
-        this.icon = { "cross": "icon-cross", "minus": "icon-minus", "plus": "icon-plus" };
+        this.themeIcon = { "cross": "icon-cross", "minus": "icon-minus", "plus": "icon-plus" };
+        this.themeText = { "cross": "cross", "minus": "minus", "plus": "plus", "unselected": "unselected" };
         Object.freeze(this.icon);
 
         this.state = {
-            round: {
-                teamA: {
-                    big: this.icon.cross,
-                    small: this.icon.cross,
-                    points: ""
-                },
-                teamB: {
-                    big: this.icon.cross,
-                    small: this.icon.cross,
-                    points: ""
-                }
-            }
-        }
+            points: 50,
+            teamA: {
+                big: this.themeText.cross,
+                small1: this.themeText.cross,
+                small2: this.themeText.cross,
+                double: this.themeText.unselected,
+                pSelection: this.themeText.plus
+            },
+            teamB: {
+                big: this.themeText.cross,
+                small1: this.themeText.cross,
+                small2: this.themeText.cross,
+                double: this.themeText.unselected,
+                pSelection: this.themeText.unselected
+            },
+            theme: this.themeText
+        };
 
-        this.changeIconState = this.changeIconState.bind(this);
-        this.changePoints = this.changePoints.bind(this);
-        this.roundPoints = this.roundPoints.bind(this);
-        this.checkPoints = this.checkPoints.bind(this);
+        this.changeButtonState = this.changeButtonState.bind(this);
+        this.rangeChange = this.rangeChange.bind(this);
 
         this.saveRound = this.saveRound.bind(this);
         this.resetRound = this.resetRound.bind(this);
         this.removeRound = this.removeRound.bind(this);
+
     }
+    
+    changeButtonState(t, id) {
+        let { theme } = this.state;
+        let team = this.state[t];
+        let oponent = this.state[t === "teamA" ? "teamB" : "teamA"];
+        let buttonState = team[id];
 
-    changeIconState(team, id) {
-        let { round } = this.state;
-        let t = round[team];
-        let iconState = t[id];
-
-        switch (iconState) {
-            case this.icon.cross:
-                t[id] = this.icon.minus;
+        switch (buttonState) {
+            case theme.unselected:
+                team[id] = theme.plus;
+                oponent[id] = theme.unselected;
                 break;
-            case this.icon.minus:
-                t[id] = this.icon.plus;
+            case theme.cross:
+                team[id] = theme.minus;
                 break;
-            case this.icon.plus:
-                t[id] = this.icon.cross;
+            case theme.minus:
+                team[id] = theme.plus;
+                break;
+            case theme.plus:
+                if (id === "double") {
+                    team[id] = theme.unselected;
+                    break;
+                } 
+                if (id === "pSelection") {
+                    team[id] = theme.unselected;
+                    oponent[id] = theme.plus;
+                    break;
+                } 
+                team[id] = theme.cross;
                 break;
             default:
                 console.log("Wrong target or class");
                 break;
         }
-
-        this.setState({ round });
+        this.setState({ team });
     }
 
-    changePoints(event, team) {
-        let { round } = this.state;
-        let points = event.target.value;
-        let other;
-        
-        if (team === "teamA") { other = "teamB"; } 
-        else { other = "teamA"; }
-
-        round[team].points = points;
-
-        if (points == 200 ) {
-            round[other].points = 0;
-        } 
-        else if (points > 125) {
-            round[team].points = 125;
-            round[other].points = -25;
-        }
-        else if (points < -25) {
-            round[team].points = -25;
-            round[other].points = 125;
-        }
-        else  {
-            round[other].points = 100 - points;
-        }
-
-        this.setState({ round });
+    
+    rangeChange(event) {
+        let { points } = this.state;
+        points = event.target.value;
+        this.setState({ points });
     }
 
-    roundPoints(number) {
-        if (number % 5 > 2) {
-            return parseInt(number / 5) * 5 + 5;
-        }
-        return parseInt(number / 5) * 5;
-    }
+    // roundPoints(number) {
+    //     if (number % 5 > 2) {
+    //         return parseInt(number / 5) * 5 + 5;
+    //     }
+    //     return parseInt(number / 5) * 5;
+    // }
 
-    checkPoints() {
-        let { round } = this.state;
+    // checkPoints() {
+    //     let { round } = this.state;
 
-        round.teamA.points = this.roundPoints(round.teamA.points);
-        round.teamB.points = this.roundPoints(round.teamB.points);
+    //     round.teamA.points = this.roundPoints(round.teamA.points);
+    //     round.teamB.points = this.roundPoints(round.teamB.points);
 
-        if ((round.teamA.points == 0) && (round.teamB.points == 0)) {
-            this.setMessage(`Please insert your points!`);
-            return false;
-        }
-        this.setState({ round });
-        return true;
-    }
+    //     if ((round.teamA.points == 0) && (round.teamB.points == 0)) {
+    //         this.setMessage(`Please insert your points!`);
+    //         return false;
+    //     }
+    //     this.setState({ round });
+    //     return true;
+    // }
 
-    checkTichu() {
-        let { round } = this.state;
+    // checkTichu() {
+    //     let { round } = this.state;
 
-        let amount = 0;
-        if (round.teamA.big === "icon-plus") amount++;
-        if (round.teamA.small === "icon-plus") amount++;
-        if (round.teamB.big === "icon-plus") amount++;
-        if (round.teamB.small === "icon-plus") amount++;
+    //     let amount = 0;
+    //     if (round.teamA.big === "icon-plus") amount++;
+    //     if (round.teamA.small === "icon-plus") amount++;
+    //     if (round.teamB.big === "icon-plus") amount++;
+    //     if (round.teamB.small === "icon-plus") amount++;
 
-        if (amount > 1) {
-            this.setMessage(`It's impossible to have succeeded in more than one Tichu!`);
-            return false;
-        }
-        return true;
-    }
+    //     if (amount > 1) {
+    //         this.setMessage(`It's impossible to have succeeded in more than one Tichu!`);
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     saveRound() {
-        if (this.checkPoints() && this.checkTichu()) {
-            let { round } = this.state;
-            let rounds = this.c.get("rounds");
+        // if (this.checkPoints() && this.checkTichu()) {
+        //     let { round } = this.state;
+        //     let rounds = this.c.get("rounds");
 
-            rounds.push(round);
-            this.c.set("rounds", rounds, { path: '/' });
+        //     rounds.push(round);
+        //     this.c.set("rounds", rounds, { path: '/' });
 
-            this.props.setScore();
-            this.resetRound();
-        }
+        //     this.props.setScore();
+        //     this.resetRound();
+        // }
     }
 
     removeRound() {
-        let rounds = this.c.get("rounds");
-        rounds = rounds.slice(0, -1);
-        this.c.set("rounds", rounds, { path: '/' });
+        // let rounds = this.c.get("rounds");
+        // rounds = rounds.slice(0, -1);
+        // this.c.set("rounds", rounds, { path: '/' });
 
-        this.props.setScore();
-        this.resetRound();
+        // this.props.setScore();
+        // this.resetRound();
     }
 
     resetRound() {
-        let { round } = this.state;
-
-        round = {
+        let round = {
+            points: 50,
             teamA: {
-                big: this.icon.cross,
-                small: this.icon.cross,
-                points: ""
+                big: this.themeText.cross,
+                small1: this.themeText.cross,
+                small2: this.themeText.cross,
+                double: this.themeText.unselected,
+                pSelection: this.state.teamA.pSelection
             },
             teamB: {
-                big: this.icon.cross,
-                small: this.icon.cross,
-                points: ""
+                big: this.themeText.cross,
+                small1: this.themeText.cross,
+                small2: this.themeText.cross,
+                double: this.themeText.unselected,
+                pSelection: this.state.teamB.pSelection
             }
         }
-
-        this.setState({ round });
-    }
-
-    setMessage(message) {
-        this.c.set('message', message, { path: '/' });
-        this.c.set('messageState', "", { path: '/' });
-        this.c.set('submitNewGame', "hidden", { path: '/' });
+        this.setState(round);
     }
 
     render() {
-        let { round } = this.state;
+        let { teamA, teamB, points } = this.state;
         return (
-            <footer>
+            <div id="submit">
                 <div className="round">
-                    <div className="box">
-                        <button type="button" className={round.teamA.big} onClick={() => this.changeIconState("teamA", "big")}></button>
+                    <div className="container">
+                        <div className="box2">
+                            <button type="button" className={teamA.big} onClick={() => this.changeButtonState("teamA", "big")}>big Tichu</button>
+                            <button type="button" className={teamA.small1} onClick={() => this.changeButtonState("teamA", "small1")}>small Tichu</button>
+                            <button type="button" className={teamA.small2} onClick={() => this.changeButtonState("teamA", "small2")}>small Tichu</button>
+                            <button type="button" className={teamA.double} onClick={() => this.changeButtonState("teamA", "double")}>double Victory</button>
+                        </div>
+                        <div className="box2">
+                            <button type="button" className={teamB.big} onClick={() => this.changeButtonState("teamB", "big")}>big Tichu</button>
+                            <button type="button" className={teamB.small1} onClick={() => this.changeButtonState("teamB", "small1")}>small Tichu</button>
+                            <button type="button" className={teamB.small2} onClick={() => this.changeButtonState("teamB", "small2")}>small Tichu</button>
+                            <button type="button" className={teamB.double} onClick={() => this.changeButtonState("teamB", "double")}>double Victory</button>
+                        </div>
                     </div>
-                    <div className="box">
-                        <button type="button" className={round.teamA.small} onClick={() => this.changeIconState("teamA", "small")}></button>
+                    <div className="container team">
+                        <div className="box3">
+                            <button type="button" className={teamA.pSelection} onClick={() => this.changeButtonState("teamA", "pSelection")}>{this.c.get('aName')}</button>
+                        </div>
+                        <div className="box3 points">
+                            {points}
+                        </div>
+                        <div className="box3">
+                            <button type="button" className={teamB.pSelection} onClick={() => this.changeButtonState("teamB", "pSelection")}>{this.c.get('bName')}</button>
+                        </div>
                     </div>
-                    <div className="box">
-                        <input type="number" onClick={this.select} step="5" inputMode="numeric" value={round.teamA.points} onChange={(event) => this.changePoints(event, "teamA")} />
+                    <div className="container">
+                        <div className="box1">
+                            <input
+                                type="range"
+                                value={this.state.points}
+                                min="-25"
+                                max="125"
+                                step="5"
+                                onChange={(event) => this.rangeChange(event)}
+                            />
+                        </div>
                     </div>
-
-                    <div className="box vs">vs</div>
-
-                    <div className="box">
-                        <input type="number" onClick={this.select} step="5" inputMode="numeric" value={round.teamB.points} onChange={(event) => this.changePoints(event, "teamB")} />
-                    </div>
-                    <div className="box">
-                        <button type="button" className={round.teamB.small} onClick={() => this.changeIconState("teamB", "small")}></button>
-                    </div>
-                    <div className="box">
-                        <button type="button" className={round.teamB.big} onClick={() => this.changeIconState("teamB", "big")}></button>
+                    <div className="container">
+                        <div className="box3">
+                            <button className="icon-bin" onClick={this.removeRound}></button>
+                        </div>
+                        <div className="box3">
+                            <button className="icon-undo" onClick={this.resetRound}></button>
+                        </div>
+                        <div className="box3">
+                            <button className="icon-checkmark" onClick={this.saveRound}></button>
+                        </div>
                     </div>
                 </div>
-
-                <div className="submit">
-                    <div className="box"><button className="icon-bin" onClick={this.removeRound}></button></div>
-                    <div className="box"><button className="icon-undo" onClick={this.resetRound}></button></div>
-                    <div className="box"><button className="icon-checkmark" onClick={this.saveRound}></button></div>
-                </div>
-            </footer>
+            </div>
         );
     }
 }

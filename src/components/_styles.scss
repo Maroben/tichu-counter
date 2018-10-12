@@ -13,62 +13,42 @@ h2 {
     font-size: 1.5em;
 }
 
-button, input {
-    margin: 0;
-    padding: 0;
-    height: 2.5em;
-    text-align: center;
-    vertical-align: middle;
-    border: none;
-    border-radius: 3px;
-    color: white;
-}
 
-button {
-    cursor: pointer;
+.cross,
+.icon-undo,
+.icon-cros {
+    background: $tichu-blue-gradient;
+    &:hover {
+    background: $tichu-blue;
+    }
 }
-
-.submit,
-.round {
-    button {
-        box-shadow: inset 0 -1px 0 1px rgba(0,0,0,.1), inset 0 -10px 20px rgba(0,0,0,.1);
-        text-shadow: 0 -1px 0 rgba(0,0,0,.2);
-        
-        &.reset,
-        &.icon-undo,
-        &.icon-cross {
-            background: $tichu-blue-gradient;
-        
-            &:hover {
-            background: $tichu-blue;
-            }
-        }
-        
-        &.delete,
-        &.icon-bin,
-        &.icon-minus {
-            background: $tichu-red-gradient;
-        
-            &:hover {
-            background: $tichu-red;
-            }
-        }
-        
-        &.save,
-        &.icon-checkmark,
-        &.icon-plus {
-            background: $tichu-green-gradient;
-        
-            &:hover {
-            background: $tichu-green;
-            }
-        }
+.minus,
+.icon-bin,
+.icon-minus {
+    background: $tichu-red-gradient;
+    &:hover {
+    background: $tichu-red;
+    }
+}
+.plus,
+.icon-checkmark,
+.icon-plus {
+    background: $tichu-green-gradient;
+    &:hover {
+    background: $tichu-green;
     }
 }
 
-input {
-    background: $tichu-black;
+.unselected {
+    background: $color-grey-gradient;
+    &:hover {
+    background: $color-grey;
+    }
 }
+
+
+/////////////////////////// border 
+
 
 #settings,
 #message {

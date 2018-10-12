@@ -1,0 +1,16 @@
+// _button.scss
+
+button {
+    font-size: 1em;
+    margin: 0;
+    padding: 0;
+    height: 2.5em;
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    border-radius: 3px;
+    box-shadow: $box-shadow;
+    text-shadow: $text-shadow;
+    color: white;
+    cursor: pointer;
+}
