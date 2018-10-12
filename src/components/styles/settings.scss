@@ -1,0 +1,42 @@
+@import 'variables';
+@import 'styles';
+@import 'input';
+@import 'button';
+
+#settings {
+    font-size: 1em;
+    .container {
+        display: flex; 
+        flex-flow: row;
+        max-width: 600px;
+        width: 100%;
+        margin: 0 auto;
+    
+        .box1 {
+            max-width: 482px;
+            width: 100%;
+            margin: 0.5em 0.5em 2em 0.5em;
+        }
+    
+        .box2 {
+            font-size: 1.2em;
+            display: flex;
+            flex-flow: column;
+            flex-grow: 1;
+            margin: 0.5em;
+    
+            .label,
+            input {
+                line-height: 1.5em;
+                margin-bottom: 0.5em;
+            }
+        }
+    
+        .box3 {
+            display: flex; 
+            flex-flow: column;
+            margin: 0.5em;
+            width: 33%;
+        }
+    }
+}

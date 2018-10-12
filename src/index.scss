@@ -1,12 +1,14 @@
-@import 'components/variables';
-@import 'components/styles';
+@import 'components/styles/variables';
+@import 'components/styles/styles';
+@import 'components/styles/headers';
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 body {
   font-size: 16px;
+  font-family: 'Times New Roman', Times, serif;
   margin: 0;
   padding: 0;
 }
@@ -32,5 +34,4 @@ footer {
 main {
   max-width: 600px;
   width: 100%;
-  margin: 8em auto 125px auto;
 }

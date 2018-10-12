@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './rounds.scss';
+import './styles/rounds.scss';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 

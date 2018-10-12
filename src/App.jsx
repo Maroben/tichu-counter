@@ -35,35 +35,41 @@ class App extends Component {
         }
       },
       message: {
-        state: this.c.get('errorState'),
+        state: this.c.get('messageState'),
         message: this.c.get('message')
       },
       rounds: this.c.get('rounds')
     }
 
     if (!this.c.get('first')) {
-      this.c.set('rounds', [], { path: '/' });
-      this.c.set('messageState', "hidden", { path: '/' });
       this.c.set('first', true, { path: '/' });
+      this.c.set('rounds', [], { path: '/' });
+
+      this.c.set('messageState', "hidden", { path: '/' });
+      this.c.set('submitNewGame', 'hidden', { path: '/' });
+      this.c.set('showError', 'hidden', { path: '/' });
+
       this.c.set('aName', "Dragon", { path: '/' });
       this.c.set('bName', "Phoenix", { path: '/' });
       this.c.set('goal', 1000, { path: '/' });
       this.c.set('aState', "tie", { path: '/' });
       this.c.set('bState', "tie", { path: '/' });
-      this.c.set('submitNewGame', 'hidden', { path: '/' });
+
     }
   }
 
   openSettings = () => { this.refs.settings.openSettings(); }
-  openMessage = () => { this.refs.message.openMessage(); }
-  setScore = () => {this.refs.score.setScore(); }
   newGame = () => {this.refs.settings.newGame(); }
+
+  setVictory = () => {this.refs.message.setVictory(); }
+  
+  setScore = () => {this.refs.score.setScore(); }
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <div className="title1">
+          <div className="title h1">
             <h1>Tichu Counter</h1>
             <button type="button" className="icon-cog" onClick={this.openSettings}></button>
           </div>
@@ -76,9 +82,19 @@ class App extends Component {
         </main>
 
         <footer>
-          <Submit ref="submit" setScore={this.setScore} />
+          <Submit 
+            ref="submit" 
+            setScore={this.setScore}
+            setVictory={this.setVictory}
+          />
+
           <Settings ref="settings" setScore={this.setScore} />
-          <Message ref="message" newGame={this.newGame}/>
+
+          <Message 
+            ref="message" 
+            newGame={this.newGame}
+            openSettings={this.openSettings}
+          />
         </footer>
       </div>
     );

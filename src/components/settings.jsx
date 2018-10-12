@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './settings.scss';
+import './styles/settings.scss';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 
@@ -79,27 +79,34 @@ class Settings extends Component {
     render() {
         return (
             <div id="settings" className={this.c.get("settingsState")}>
-                <div className="title">
+                <div className="title h2">
                     <h2>Settings</h2>
                     <button type="button" className="icon-cross" onClick={() => this.closeSettings(true)}></button>
                 </div>
 
-                <div className="settings">
-                    <div className="box">
-                        <input type="text" value={this.c.get('aName')} onChange={(event) => this.changeSettings(event, "aName")} />
-                        <div className="label">vs</div>
-                        <input type="text" value={this.c.get('bName')} onChange={(event) => this.changeSettings(event, "bName")} />
+                <div className="container">
+                    <div className="box2">
+                        <div className="label">Team A</div>
+                        <div className="label">Team B</div>
+                        <div className="label">goal score</div>
                     </div>
-                    <div className="box">
-                        <div className="label">predetermined score</div>
+                    <div className="box2">
+                        <input type="text" value={this.c.get('aName')} onChange={(event) => this.changeSettings(event, "aName")} />
+                        <input type="text" value={this.c.get('bName')} onChange={(event) => this.changeSettings(event, "bName")} />
                         <input inputMode="numeric" value={this.c.get("goal")} onChange={(event) => this.changeSettings(event, "goal")} />
                     </div>
                 </div>
 
-                <div className="submit">
-                    <div className="box"><button className="delete" onClick={this.newGame}>New</button></div>
-                    <div className="box"><button className="reset" onClick={this.resetSettings}>Reset</button></div>
-                    <div className="box"><button className="save" onClick={this.saveSettings}>Save</button></div>
+                <div className="container">
+                    <div className="box3">
+                        <button className="minus" onClick={this.newGame}>New Game</button>
+                    </div>
+                    <div className="box3">
+                        <button className="cross" onClick={this.resetSettings}>Reset</button>
+                    </div>
+                    <div className="box3">
+                        <button className="plus" onClick={this.saveSettings}>Save</button>
+                    </div>
                 </div>
             </div>
         );

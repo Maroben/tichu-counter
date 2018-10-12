@@ -1,9 +1,7 @@
-
-
 import React, { Component } from 'react';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
-import './submit.scss';
+import './styles/submit.scss';
 
 class Rounds extends Component {
     static propTypes = {
@@ -139,6 +137,8 @@ class Rounds extends Component {
         //     this.props.setScore();
         //     this.resetRound();
         // }
+        this.c.set('message', `${this.c.get('aName')} has won!`, { path: '/' });
+        this.props.setVictory();
     }
 
     removeRound() {

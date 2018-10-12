@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './score.scss';
+import './styles/score.scss';
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 

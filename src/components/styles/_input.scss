@@ -1,6 +1,23 @@
 // _input.scss
 @import 'variables';
 
+input {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1em;
+    margin: 0;
+    padding: 0;
+    height: 1.5em;
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    border-radius: 3px;
+    box-shadow: $box-shadow;
+    text-shadow: $text-shadow;
+    color: white;
+    background: $tichu-black;
+    cursor: pointer;
+}
+
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
