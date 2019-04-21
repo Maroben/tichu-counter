@@ -83,7 +83,9 @@ class Game extends Component {
 		if (values.index !== undefined) {
 			const index = values.index
 			const round = rounds[index]
-			this.setState({ round, edit: true, index })
+			let slideDisabled = false
+			if (round[0].double + round[1].double > 0) slideDisabled = true
+			this.setState({ round, edit: true, slideDisabled, index })
 		}
 	}
 
