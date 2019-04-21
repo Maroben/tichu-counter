@@ -48,8 +48,19 @@ class Tichu extends Component {
 		}
 	}
 
+	calculateScore = async (current) => {
+		current.team[0].score = 0
+		current.team[1].score = 0
+		current.rounds.forEach((round) => {
+			current.team[0].score += round[0].betPoints + round[0].points
+			current.team[1].score += round[1].betPoints + round[1].points
+		})
+		await this.setState({ current })
+	}
+
 	handleData = () => {
 		const { current, games } = this.state
+
 		localStorage.setItem("Current", JSON.stringify(current))
 		localStorage.setItem("Games", JSON.stringify(games))
 	}
@@ -57,29 +68,28 @@ class Tichu extends Component {
 	handleDelete = async () => {
 		const { current } = this.state
 		if (current.rounds.length > 0) current.rounds.shift()
-		this.setState({ current })
+		await this.calculateScore(current)
 		this.handleData()
 	}
 
 	handleDeleteByIndex = async (index) => {
 		const { current } = this.state
 		current.rounds.splice(index, 1)
-		this.setState({ current })
+		await this.calculateScore(current)
 		this.handleData()
 	}
 
 	handleDone = async (round) => {
 		const { current } = this.state
 		current.rounds.unshift(round)
-		await this.setState({ current })
-		console.log(current)
+		await this.calculateScore(current)
 		this.handleData()
 	}
 
 	handleEdit = async (round, index) => {
 		const { current } = this.state
 		current.rounds[index] = round
-		await this.setState({ current })
+		await this.calculateScore(current)
 		this.handleData()
 	}
 

@@ -101,7 +101,7 @@ const Rounds = ({ classes, history, current, onDeleteByIndex }) => {
 									{current.team[0].name}
 								</Grid>
 								<Grid item xs={2} className={classes.item}>
-									{round[0].points}
+									{round[0].points + round[0].betPoints}
 								</Grid>
 								<Grid item xs={2} className={classes.item}>
 									{round[0].points}
@@ -121,7 +121,7 @@ const Rounds = ({ classes, history, current, onDeleteByIndex }) => {
 									{current.team[1].name}
 								</Grid>
 								<Grid item xs={2} className={classes.item}>
-									{round[1].points}
+									{round[1].points + round[1].betPoints}
 								</Grid>
 								<Grid item xs={2} className={classes.item}>
 									{round[1].points}
