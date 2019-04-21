@@ -6,6 +6,7 @@ import { Switch, Route, Redirect } from "react-router-dom"
 import Game from "./game"
 import Rounds from "./common/game/rounds"
 import Statistics from "./statistics"
+import Games from "./common/stats/games"
 import Settings from "./settings"
 import NotFound from "./404"
 
@@ -22,12 +23,15 @@ const styles = (theme) => ({
 	}
 })
 
+const paths = ["/statistics", "/counter", "/settings"]
+
 class Tichu extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			value: 1,
+			value: paths.indexOf(window.location.pathname),
 			current: {
+				data: "",
 				team: [
 					{
 						name: "Dragon",
@@ -44,7 +48,7 @@ class Tichu extends Component {
 			},
 			games: [],
 			settings: {
-				winPoints: 1000,
+				winPoints: 200,
 				over: false // Signifies if the game is over
 			}
 		}
@@ -125,6 +129,7 @@ class Tichu extends Component {
 
 	handleGameOver = async () => {
 		const { current, games } = this.state
+		current.date = new Date()
 		games.unshift(current)
 		await this.setState({ games })
 		this.handleNewGame()
@@ -161,12 +166,13 @@ class Tichu extends Component {
 	}
 
 	render() {
-		const { value, current, settings } = this.state
+		const { value, current, games, settings } = this.state
 
 		return (
 			<React.Fragment>
 				<Switch>
-					<Route path="/statistics" render={(props) => <Statistics />} />
+					<Route path="/statistics/games" render={(props) => <Games games={games} />} />
+					<Route path="/statistics" render={(props) => <Statistics games={games} />} />
 					<Route
 						path="/counter/rounds"
 						render={(props) => (

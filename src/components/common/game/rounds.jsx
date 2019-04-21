@@ -52,7 +52,6 @@ const styles = (theme) => ({
 	}
 })
 
-let cardKey = 0
 let icon = [<FailedIcon color="secondary" />, <NeutralIcon />, <SuccessIcon color="primary" />]
 
 const Rounds = ({ classes, history, current, onDeleteByIndex }) => {
@@ -73,7 +72,7 @@ const Rounds = ({ classes, history, current, onDeleteByIndex }) => {
 					</Paper>
 				)}
 				{current.rounds.map((round, index) => (
-					<Card key={cardKey++} className={classes.card}>
+					<Card key={index} className={classes.card}>
 						<CardContent className={classes.content}>
 							<Grid container spacing={24} className={classes.grid}>
 								<Grid item xs={2} className={classes.item}>
