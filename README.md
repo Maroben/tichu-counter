@@ -1,15 +1,12 @@
 # Tichu Counter
 
-A simple tichu counter application created with [create-react-app](https://github.com/facebook/create-react-app). The app is running on https://tichu.daishen.ch
-
-## Development
-Run the applicatoin with:
-  npm start
+A react tichu counter running on https://tichu.daishen.ch
 
 ## Contributors
 
 Version 0
-- Maroben
+
+-   Maroben
 
 ## License - MIT
 

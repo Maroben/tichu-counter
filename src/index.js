@@ -1,11 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { CookiesProvider } from 'react-cookie';
-import './index.scss';
-import './font/icomoon/style.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react"
+import ReactDOM from "react-dom"
+import { BrowserRouter } from "react-router-dom"
+import App from "./App.jsx"
+import * as serviceWorker from "./serviceWorker"
 
-ReactDOM.render( < CookiesProvider > < App / > </CookiesProvider>, document.getElementById('root'));
-
-serviceWorker.unregister();
+ReactDOM.render(
+	<BrowserRouter>
+		<App />
+	</BrowserRouter>,
+	document.getElementById("root")
+)
+serviceWorker.unregister()

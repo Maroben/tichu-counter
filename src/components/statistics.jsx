@@ -17,7 +17,7 @@ class Statistics extends Component {
 		return (
 			<React.Fragment>
 				<Header title={"Tichu Statistics"} />
-				<main className={classes.main}>Settings</main>
+				<main className={classes.main}>statistics</main>
 			</React.Fragment>
 		)
 	}
