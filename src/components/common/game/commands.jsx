@@ -24,24 +24,43 @@ const styles = (theme) => ({
 	}
 })
 
-const Commands = ({ classes, onRounds, onReset, onDone }) => {
+const Commands = ({ classes, edit, onReset, onEdit, onDone }) => {
 	return (
 		<React.Fragment>
-			<Button color="default" component={Link} to={"/rounds"} className={classes.button}>
-				<ReorderIcon className={classes.icon} />
-				Rounds
-			</Button>
-			<Button color="default" onClick={onReset} className={classes.button}>
-				<ClearIcon /> Reset
-			</Button>
-			<Button
-				variant="contained"
-				color="primary"
-				onClick={onDone}
-				className={`${classes.button} ${classes.last}`}
-			>
-				<CheckIcon /> Done
-			</Button>
+			{!edit && (
+				<React.Fragment>
+					<Button
+						color="default"
+						component={Link}
+						to="/counter/rounds"
+						className={classes.button}
+					>
+						<ReorderIcon className={classes.icon} />
+						Rounds
+					</Button>
+					<Button color="default" onClick={onReset} className={classes.button}>
+						<ClearIcon /> Reset
+					</Button>
+					<Button
+						variant="contained"
+						color="primary"
+						onClick={onDone}
+						className={`${classes.button} ${classes.last}`}
+					>
+						<CheckIcon /> Done
+					</Button>
+				</React.Fragment>
+			)}
+			{edit && (
+				<Button
+					variant="contained"
+					color="primary"
+					onClick={onEdit}
+					className={`${classes.button} ${classes.last}`}
+				>
+					<CheckIcon /> Done
+				</Button>
+			)}
 		</React.Fragment>
 	)
 }

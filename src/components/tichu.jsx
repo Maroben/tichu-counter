@@ -4,6 +4,7 @@ import { withStyles } from "@material-ui/core/styles"
 import { Switch, Route, Redirect } from "react-router-dom"
 
 import Game from "./game"
+import Rounds from "./common/game/rounds"
 import Statistics from "./statistics"
 import Settings from "./settings"
 import NotFound from "./404"
@@ -22,32 +23,64 @@ const styles = (theme) => ({
 })
 
 class Tichu extends Component {
-	state = {
-		value: 1,
-		team: [
-			{
-				name: "Dragon",
-				score: 0
+	constructor(props) {
+		super(props)
+		this.state = {
+			value: 1,
+			current: {
+				team: [
+					{
+						name: "Dragon",
+						score: 0
+					},
+					{
+						name: "Phoenix",
+						score: 0
+					}
+				],
+				rounds: []
 			},
-			{
-				name: "Phoenix",
-				score: 0
-			}
-		],
-		current: [],
-		games: []
+			games: []
+		}
+		if (localStorage.getItem("Current") !== null) {
+			this.state.current = JSON.parse(localStorage.getItem("Current"))
+			this.state.games = JSON.parse(localStorage.getItem("Games"))
+		}
 	}
 
-	handleDelete = () => {
-		const { current } = this.state
-		if (current.length > 0) current.pop()
-		this.setState({ current })
+	handleData = () => {
+		const { current, games } = this.state
+		localStorage.setItem("Current", JSON.stringify(current))
+		localStorage.setItem("Games", JSON.stringify(games))
 	}
 
-	handleDone = (round) => {
+	handleDelete = async () => {
 		const { current } = this.state
-		current.push(round)
+		if (current.rounds.length > 0) current.rounds.shift()
 		this.setState({ current })
+		this.handleData()
+	}
+
+	handleDeleteByIndex = async (index) => {
+		const { current } = this.state
+		current.rounds.splice(index, 1)
+		this.setState({ current })
+		this.handleData()
+	}
+
+	handleDone = async (round) => {
+		const { current } = this.state
+		current.rounds.unshift(round)
+		await this.setState({ current })
+		console.log(current)
+		this.handleData()
+	}
+
+	handleEdit = async (round, index) => {
+		const { current } = this.state
+		current.rounds[index] = round
+		await this.setState({ current })
+		this.handleData()
 	}
 
 	handleBottomNav = async (event, value) => {
@@ -55,21 +88,38 @@ class Tichu extends Component {
 	}
 
 	render() {
-		const { value, team, current } = this.state
+		const { value, current } = this.state
 
 		return (
 			<React.Fragment>
 				<Switch>
 					<Route path="/statistics" render={(props) => <Statistics />} />
 					<Route
-						path="/counter"
+						path="/counter/rounds"
+						render={(props) => (
+							<Rounds
+								{...props}
+								current={current}
+								onDeleteByIndex={this.handleDeleteByIndex}
+							/>
+						)}
+					/>
+					<Route
+						path="/counter/edit"
 						render={(props) => (
 							<Game
-								rounds={current}
-								team={team}
-								onDelete={this.handleDelete}
+								{...props}
+								team={current.team}
+								rounds={current.rounds}
+								onEdit={this.handleEdit}
 								onDone={this.handleDone}
 							/>
+						)}
+					/>
+					<Route
+						path="/counter"
+						render={(props) => (
+							<Game {...props} team={current.team} onDone={this.handleDone} />
 						)}
 					/>
 					<Route path="/settings" render={(props) => <Settings />} />

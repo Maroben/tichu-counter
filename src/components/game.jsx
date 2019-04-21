@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
+import queryString from "query-string"
 
 import Header from "./common/header"
 import ScoreBoard from "./common/game/scoreBoard"
@@ -8,7 +9,6 @@ import Scores from "./common/game/scores"
 import PointsSlider from "./common/game/pointsSlider"
 import Bets from "./common/game/bets"
 import Commands from "./common/game/commands"
-import Rounds from "./common/game/rounds"
 
 const styles = (theme) => ({
 	root: {
@@ -57,7 +57,8 @@ const styles = (theme) => ({
 class Game extends Component {
 	state = {
 		slideDisabled: false,
-		roundsOn: false,
+		edit: false,
+		index: -1,
 		round: [
 			{
 				bets: [0, 0, 0],
@@ -74,6 +75,16 @@ class Game extends Component {
 				double: 0
 			}
 		]
+	}
+
+	componentDidMount() {
+		const { rounds } = this.props
+		const values = queryString.parse(this.props.location.search)
+		if (values.index !== undefined) {
+			const index = values.index
+			const round = rounds[index]
+			this.setState({ round, edit: true, index })
+		}
 	}
 
 	handleBet = (team, bet) => {
@@ -153,70 +164,74 @@ class Game extends Component {
 		this.setState({ round, slideDisabled })
 	}
 
-	handleRounds = () => {
-		this.setState({ roundsOn: !this.state.roundsOn })
+	handleEdit = (round, index) => {
+		this.props.onEdit(round, index)
+		this.props.history.goBack()
+	}
+
+	handleDone = (round) => {
+		this.props.onDone(round)
+		this.handleReset()
 	}
 
 	render() {
-		const { classes, rounds, team, onDelete, onDone } = this.props
-		const { round, slideDisabled, roundsOn } = this.state
+		const { classes, team } = this.props
+		const { round, slideDisabled, edit, index } = this.state
 
 		return (
 			<React.Fragment>
-				<Header title={"Tichu Counter"} />
+				<Header title={edit ? "Edit Round" : "Tichu Counter"} />
 
 				<main className={classes.main}>
-					<div className={classes.scoreBoard}>
-						<ScoreBoard team={team[0]} reverse={false} />
-						<ScoreBoard team={team[1]} reverse={true} />
-					</div>
-					{!roundsOn && (
-						<div className={classes.bottom}>
-							<div className={classes.score}>
-								<Scores points={round[0].points} betPoints={round[0].betPoints} />
-								<div className={classes.middle} />
-								<Scores points={round[1].points} betPoints={round[1].betPoints} />
-							</div>
-
-							<div className={classes.bets}>
-								<Bets
-									onBet={this.handleBet}
-									onDouble={this.handleDouble}
-									bets={round[0].bets}
-									betsOff={round[0].betsOff}
-									double={round[0].double}
-									team={0}
-								/>
-								<div className={classes.middle} />
-								<Bets
-									onBet={this.handleBet}
-									onDouble={this.handleDouble}
-									bets={round[1].bets}
-									betsOff={round[1].betsOff}
-									double={round[1].double}
-									team={1}
-								/>
-							</div>
-
-							{!slideDisabled && (
-								<div className={classes.points}>
-									<PointsSlider
-										onSlide={this.handleSlide}
-										points={round[1].points}
-									/>
-								</div>
-							)}
-
-							<div className={classes.commands}>
-								<Commands
-									onRounds={this.handleRounds}
-									onReset={this.handleReset}
-									onDone={() => onDone(round)}
-								/>
-							</div>
+					{!edit && (
+						<div className={classes.scoreBoard}>
+							<ScoreBoard team={team[0]} reverse={false} />
+							<ScoreBoard team={team[1]} reverse={true} />
 						</div>
 					)}
-					{roundsOn && <Rounds rounds={rounds} onDelete={onDelete} />}
+					<div className={classes.bottom}>
+						<div className={classes.score}>
+							<Scores points={round[0].points} betPoints={round[0].betPoints} />
+							<div className={classes.middle} />
+							<Scores points={round[1].points} betPoints={round[1].betPoints} />
+						</div>
+
+						<div className={classes.bets}>
+							<Bets
+								onBet={this.handleBet}
+								onDouble={this.handleDouble}
+								bets={round[0].bets}
+								betsOff={round[0].betsOff}
+								double={round[0].double}
+								team={0}
+							/>
+							<div className={classes.middle} />
+							<Bets
+								onBet={this.handleBet}
+								onDouble={this.handleDouble}
+								bets={round[1].bets}
+								betsOff={round[1].betsOff}
+								double={round[1].double}
+								team={1}
+							/>
+						</div>
+
+						{!slideDisabled && (
+							<div className={classes.points}>
+								<PointsSlider onSlide={this.handleSlide} points={round[1].points} />
+							</div>
+						)}
+
+						<div className={classes.commands}>
+							<Commands
+								edit={edit}
+								onRounds={this.handleRounds}
+								onReset={this.handleReset}
+								onEdit={() => this.handleEdit(round, index)}
+								onDone={() => this.handleDone(round)}
+							/>
+						</div>
+					</div>
 				</main>
 			</React.Fragment>
 		)
