@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
-
+import { Link } from "react-router-dom"
 import { Button } from "@material-ui/core"
 
 import ClearIcon from "@material-ui/icons/Clear"
@@ -27,7 +27,7 @@ const styles = (theme) => ({
 const Commands = ({ classes, onRounds, onReset, onDone }) => {
 	return (
 		<React.Fragment>
-			<Button color="default" onClick={onRounds} className={classes.button}>
+			<Button color="default" component={Link} to={"/rounds"} className={classes.button}>
 				<ReorderIcon className={classes.icon} />
 				Rounds
 			</Button>

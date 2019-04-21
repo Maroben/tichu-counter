@@ -1,12 +1,14 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
-
-import BottomNav from "./common/bottomNavigation"
+import { Switch, Route, Redirect } from "react-router-dom"
 
 import Game from "./game"
 import Statistics from "./statistics"
 import Settings from "./settings"
+import NotFound from "./404"
+
+import BottomNav from "./common/bottomNavigation"
 
 const styles = (theme) => ({
 	main: {
@@ -39,18 +41,16 @@ class Tichu extends Component {
 	handleDelete = () => {
 		const { current } = this.state
 		if (current.length > 0) current.pop()
-		console.log(current)
 		this.setState({ current })
 	}
 
 	handleDone = (round) => {
 		const { current } = this.state
 		current.push(round)
-		console.log(current)
 		this.setState({ current })
 	}
 
-	handleBottomNav = (event, value) => {
+	handleBottomNav = async (event, value) => {
 		this.setState({ value })
 	}
 
@@ -59,18 +59,26 @@ class Tichu extends Component {
 
 		return (
 			<React.Fragment>
-				{value === 0 && <Statistics />}
-				{value === 1 && (
-					<Game
-						rounds={current}
-						team={team}
-						onDelete={this.handleDelete}
-						onDone={this.handleDone}
+				<Switch>
+					<Route path="/statistics" render={(props) => <Statistics />} />
+					<Route
+						path="/counter"
+						render={(props) => (
+							<Game
+								rounds={current}
+								team={team}
+								onDelete={this.handleDelete}
+								onDone={this.handleDone}
+							/>
+						)}
 					/>
-				)}
-				{value === 2 && <Settings />}
+					<Route path="/settings" render={(props) => <Settings />} />
+					<Route path="/404" component={NotFound} />
+					<Redirect from="/" to="/counter" exact />
+					<Redirect to="/404" />
+				</Switch>
 
-				<BottomNav handlers={this.handleBottomNav} value={value} />
+				<BottomNav onNavigation={this.handleBottomNav} value={value} />
 			</React.Fragment>
 		)
 	}

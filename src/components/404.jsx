@@ -6,6 +6,8 @@ import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import Button from "@material-ui/core/Button"
 
+import Header from "./common/header"
+
 const styles = (theme) => ({
 	root: {
 		...theme.mixins.gutters(),
@@ -20,11 +22,12 @@ const styles = (theme) => ({
 
 const NotFound = ({ classes, history }) => {
 	const handleBack = () => {
-		history.replace("/")
+		history.replace("/counter")
 	}
 
 	return (
 		<React.Fragment>
+			<Header title={"404 | NOT FOUND"} />
 			<Paper className={classes.root}>
 				<Typography variant="body1" color="textPrimary" className={classes.message}>
 					This resource doesn't exist.
