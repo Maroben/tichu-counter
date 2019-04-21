@@ -5,7 +5,7 @@ import Tichu from "./components/tichu"
 
 import CssBaseline from "@material-ui/core/CssBaseline"
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
-import "react-toastify/dist/ReactToastify.css"
+// import "react-toastify/dist/ReactToastify.css"
 
 const theme = createMuiTheme({
 	typography: {
