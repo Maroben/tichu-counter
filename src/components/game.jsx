@@ -17,41 +17,41 @@ const styles = (theme) => ({
 	},
 	scoreBoard: {
 		display: "flex",
-		marginBottom: theme.spacing.unit * 2
+		marginBottom: theme.spacing(2)
 	},
 	title: {
-		marginBottom: theme.spacing.unit * 2
+		marginBottom: theme.spacing(2)
 	},
 	main: {
-		margin: theme.spacing.unit * 2
+		margin: theme.spacing(2)
 	},
 	score: {
 		display: "flex",
-		marginBottom: theme.spacing.unit * 2
+		marginBottom: theme.spacing(2)
 	},
 	bets: {
 		display: "flex",
 		flexGrow: 1,
-		marginBottom: theme.spacing.unit * 2
+		marginBottom: theme.spacing(2)
 	},
 	points: {
 		display: "block",
-		height: theme.spacing.unit * 2,
-		marginTop: theme.spacing.unit * 3,
-		marginBottom: theme.spacing.unit * 2
+		height: theme.spacing(2),
+		marginTop: theme.spacing(3),
+		marginBottom: theme.spacing(2)
 	},
 	commands: {
 		display: "flex",
-		marginBottom: theme.spacing.unit * 2
+		marginBottom: theme.spacing(2)
 	},
 	bottom: {
 		position: "fixed",
-		bottom: theme.spacing.unit * 7,
-		left: theme.spacing.unit * 2,
-		right: theme.spacing.unit * 2
+		bottom: theme.spacing(7),
+		left: theme.spacing(2),
+		right: theme.spacing(2)
 	},
 	middle: {
-		width: theme.spacing.unit * 4
+		width: theme.spacing(4)
 	}
 })
 

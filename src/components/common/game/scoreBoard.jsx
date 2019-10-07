@@ -10,11 +10,11 @@ const styles = (theme) => ({
 	},
 	borderLeft: {
 		borderLeft: "0.5px solid grey",
-		paddingLeft: theme.spacing.unit
+		paddingLeft: theme.spacing()
 	},
 	borderRight: {
 		borderRight: "0.5px solid grey",
-		paddingRight: theme.spacing.unit
+		paddingRight: theme.spacing()
 	}
 })
 

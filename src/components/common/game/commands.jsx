@@ -13,11 +13,11 @@ const styles = (theme) => ({
 		display: "block"
 	},
 	icon: {
-		paddingRight: theme.spacing.unit
+		paddingRight: theme.spacing()
 	},
 	button: {
 		flexGrow: 1,
-		marginRight: theme.spacing.unit * 2
+		marginRight: theme.spacing(2)
 	},
 	last: {
 		marginRight: 0

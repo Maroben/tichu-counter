@@ -10,7 +10,7 @@ const styles = (theme) => ({
 	},
 	button: {
 		width: "100%",
-		marginBottom: theme.spacing.unit
+		marginBottom: theme.spacing()
 	}
 })
 

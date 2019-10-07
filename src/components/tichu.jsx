@@ -14,7 +14,7 @@ import BottomNav from "./common/bottomNavigation"
 
 const styles = (theme) => ({
 	main: {
-		margin: theme.spacing.unit * 2
+		margin: theme.spacing(2)
 	},
 	footer: {
 		width: "100%",
@@ -48,7 +48,7 @@ class Tichu extends Component {
 			},
 			games: [],
 			settings: {
-				winPoints: 200,
+				winPoints: 1000,
 				over: false // Signifies if the game is over
 			}
 		}

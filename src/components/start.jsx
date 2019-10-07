@@ -12,19 +12,19 @@ const styles = (theme) => ({
 		width: "100%"
 	},
 	title: {
-		marginBottom: theme.spacing.unit * 2
+		marginBottom: theme.spacing(2)
 	},
 	main: {
-		margin: theme.spacing.unit * 2
+		margin: theme.spacing(2)
 	},
 	button: {
 		width: "100%",
-		marginBottom: theme.spacing.unit * 2
+		marginBottom: theme.spacing(2)
 	},
 	fab: {
 		position: "fixed",
-		bottom: theme.spacing.unit * 2,
-		right: theme.spacing.unit * 2
+		bottom: theme.spacing(2),
+		right: theme.spacing(2)
 	}
 })
 

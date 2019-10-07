@@ -7,13 +7,13 @@ import { Card, CardContent, Typography, CardActionArea } from "@material-ui/core
 
 const styles = (theme) => ({
 	main: {
-		margin: theme.spacing.unit * 2
+		margin: theme.spacing(2)
 	},
 	card: {
-		marginBottom: theme.spacing.unit * 2
+		marginBottom: theme.spacing(2)
 	},
 	header: {
-		paddingBottom: theme.spacing.unit
+		paddingBottom: theme.spacing()
 	},
 	content: {}
 })
@@ -66,20 +66,18 @@ class Statistics extends Component {
 				<main className={classes.main}>
 					<Card className={classes.card}>
 						<CardContent className={classes.content}>
-							<Typography variant="h5" color="default" className={classes.header}>
+							<Typography variant="h5" className={classes.header}>
 								General Statistics
 							</Typography>
-							<Typography variant="body1" color="default">
-								{total.count} Games played
-							</Typography>
-							<Typography variant="body1" color="default">
+							<Typography variant="body1">{total.count} Games played</Typography>
+							<Typography variant="body1">
 								{total.bets[0][0]} big Tichu bets -> {total.bets[0][1]} successful
 							</Typography>
-							<Typography variant="body1" color="default">
+							<Typography variant="body1">
 								{total.bets[1][0] + total.bets[2][0]} small Tichu bets ->{" "}
 								{total.bets[1][1] + total.bets[2][1]} successful
 							</Typography>
-							<Typography variant="body1" color="default">
+							<Typography variant="body1">
 								{total.doubleVic} Double Victories
 							</Typography>
 						</CardContent>
@@ -87,7 +85,7 @@ class Statistics extends Component {
 					<Card className={classes.card}>
 						<CardActionArea to="/statistics/games" component={Link}>
 							<CardContent className={classes.content}>
-								<Typography variant="h5" color="default" className={classes.header}>
+								<Typography variant="h5" className={classes.header}>
 									Game History
 								</Typography>
 							</CardContent>

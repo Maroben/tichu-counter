@@ -13,7 +13,7 @@ const styles = (theme) => ({
 		width: "100%"
 	},
 	icon: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(),
 		fontSize: 32
 	}
 })

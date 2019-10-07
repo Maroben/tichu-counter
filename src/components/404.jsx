@@ -11,12 +11,12 @@ import Header from "./common/header"
 const styles = (theme) => ({
 	root: {
 		...theme.mixins.gutters(),
-		paddingTop: theme.spacing.unit * 2,
-		paddingBottom: theme.spacing.unit * 2,
-		margin: theme.spacing.unit * 2
+		paddingTop: theme.spacing(2),
+		paddingBottom: theme.spacing(2),
+		margin: theme.spacing(2)
 	},
 	message: {
-		marginBottom: theme.spacing.unit * 2
+		marginBottom: theme.spacing(2)
 	}
 })
 

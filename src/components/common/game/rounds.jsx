@@ -20,10 +20,10 @@ import FailedIcon from "@material-ui/icons/IndeterminateCheckBox"
 
 const styles = (theme) => ({
 	main: {
-		margin: theme.spacing.unit * 2
+		margin: theme.spacing(2)
 	},
 	card: {
-		marginBottom: theme.spacing.unit * 2,
+		marginBottom: theme.spacing(2),
 		minWidth: 300,
 		[theme.breakpoints.up("md")]: {
 			width: 300
@@ -41,14 +41,14 @@ const styles = (theme) => ({
 	},
 	empty: {
 		...theme.mixins.gutters(),
-		paddingTop: theme.spacing.unit * 2,
-		paddingBottom: theme.spacing.unit * 2
+		paddingTop: theme.spacing(2),
+		paddingBottom: theme.spacing(2)
 	},
 	button: {
-		marginTop: theme.spacing.unit
+		marginTop: theme.spacing()
 	},
 	divider: {
-		margin: `${theme.spacing.unit}px 0`
+		margin: `${theme.spacing()}px 0`
 	}
 })
 

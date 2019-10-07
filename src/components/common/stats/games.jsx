@@ -1,7 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { withStyles } from "@material-ui/core/styles"
-import { Link } from "react-router-dom"
 
 import Header from "../header"
 
@@ -9,10 +8,10 @@ import { Card, CardActionArea, CardContent, Typography } from "@material-ui/core
 
 const styles = (theme) => ({
 	main: {
-		margin: theme.spacing.unit * 2
+		margin: theme.spacing(2)
 	},
 	card: {
-		marginBottom: theme.spacing.unit * 2
+		marginBottom: theme.spacing(2)
 	}
 })
 
