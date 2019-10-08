@@ -79,9 +79,10 @@ class Game extends Component {
 	}
 
 	componentDidMount() {
-		const { rounds } = this.props
+		const { rounds } = this.props.current
 		const values = queryString.parse(this.props.location.search)
-		if (values.index !== undefined) {
+
+		if (values.index) {
 			const index = values.index
 			const round = rounds[index]
 			let slideDisabled = false
@@ -96,6 +97,7 @@ class Game extends Component {
 		const teamB = (team + 1) % 2
 		const both = round[team].bets.concat(round[teamB].bets)
 
+		// TODO extract logic
 		// Do not allow more than one successful tichu
 		if (both.includes(1) && both.filter((b) => b === -1).length < 3) {
 			round[team].bets[bet] = bets[bet] > -1 ? -1 : 0
@@ -107,6 +109,7 @@ class Game extends Component {
 			round[team].bets[bet] = bets[bet] > 0 ? -1 : ++bets[bet]
 		}
 
+		// TODO extract logic
 		// Do not allow more than two tichu bets for each team
 		if (round[team].bets.filter((b) => b !== 0).length > 1) {
 			round[team].betsOff[round[team].bets.indexOf(0)] = true
@@ -169,7 +172,7 @@ class Game extends Component {
 
 	handleEdit = (round, index) => {
 		this.props.onEdit(round, index)
-		this.props.history.goBack()
+		this.handleBack()
 	}
 
 	handleDone = (round) => {
@@ -180,6 +183,10 @@ class Game extends Component {
 	handleGameOver = (round) => {
 		this.props.onGameOver(round)
 		this.handleReset()
+	}
+
+	handleBack = () => {
+		this.props.history.goBack()
 	}
 
 	render() {
@@ -246,6 +253,7 @@ class Game extends Component {
 									onRounds={this.handleRounds}
 									onReset={this.handleReset}
 									onEdit={() => this.handleEdit(round, index)}
+									onCancel={() => this.handleBack()}
 									onDone={() => this.handleDone(round)}
 								/>
 							</div>

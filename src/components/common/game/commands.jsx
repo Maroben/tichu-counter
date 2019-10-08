@@ -24,11 +24,11 @@ const styles = (theme) => ({
 	}
 })
 
-const Commands = ({ classes, edit, onReset, onEdit, onDone }) => {
+const Commands = ({ classes, edit, onReset, onEdit, onCancel, onDone }) => {
 	return (
-		<React.Fragment>
+		<>
 			{!edit && (
-				<React.Fragment>
+				<>
 					<Button
 						color="default"
 						component={Link}
@@ -49,19 +49,24 @@ const Commands = ({ classes, edit, onReset, onEdit, onDone }) => {
 					>
 						<CheckIcon /> Done
 					</Button>
-				</React.Fragment>
+				</>
 			)}
 			{edit && (
-				<Button
-					variant="contained"
-					color="primary"
-					onClick={onEdit}
-					className={`${classes.button} ${classes.last}`}
-				>
-					<CheckIcon /> Done
-				</Button>
+				<>
+					<Button color="default" onClick={onCancel} className={classes.button}>
+						<ClearIcon /> Cancel
+					</Button>
+					<Button
+						variant="contained"
+						color="primary"
+						onClick={onEdit}
+						className={`${classes.button} ${classes.last}`}
+					>
+						<CheckIcon /> Done
+					</Button>
+				</>
 			)}
-		</React.Fragment>
+		</>
 	)
 }
 

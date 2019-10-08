@@ -30,37 +30,33 @@ class Tichu extends Component {
 		super(props)
 		this.state = {
 			value: paths.indexOf(window.location.pathname),
-			current: {
-				data: "",
-				team: [
-					{
-						name: "Dragon",
-						score: 0,
-						winner: -1
-					},
-					{
-						name: "Phoenix",
-						score: 0,
-						winner: -1
-					}
-				],
-				rounds: []
-			},
-			games: [],
+			current: localStorage.getItem("Current")
+				? JSON.parse(localStorage.getItem("Current"))
+				: {
+						data: "",
+						team: [
+							{
+								name: "Dragon",
+								score: 0,
+								winner: -1
+							},
+							{
+								name: "Phoenix",
+								score: 0,
+								winner: -1
+							}
+						],
+						rounds: []
+				  },
+			games: localStorage.getItem("Games") ? JSON.parse(localStorage.getItem("Games")) : [],
 			settings: {
 				winPoints: 1000,
 				over: false // Signifies if the game is over
 			}
 		}
-		if (localStorage.getItem("Current") !== null) {
-			this.state.current = JSON.parse(localStorage.getItem("Current"))
-			this.state.games = JSON.parse(localStorage.getItem("Games"))
-		}
 	}
 
-	handleGameData = (current) => {
-		let { settings } = this.state
-
+	handleGameData = (current, settings) => {
 		// Calculate both team score
 		current.team[0].score = 0
 		current.team[1].score = 0
@@ -87,57 +83,57 @@ class Tichu extends Component {
 				current.team[1].winner = 0
 			}
 		}
-		this.setState({ settings })
-		return current
+
+		return { current, settings }
 	}
 
-	handleData = async (current) => {
-		const { games, winPoints } = this.state
-		current = await this.handleGameData(current, winPoints)
-		localStorage.setItem("Current", JSON.stringify(current))
-		localStorage.setItem("Games", JSON.stringify(games))
-		this.setState({ current })
+	handleData = (current) => {
+		const { games, settings } = this.state
+		const data = this.handleGameData(current, settings)
+
+		this.setLocalStorage(data.current, games)
+
+		this.setState({ current: data.current, settings: data.settings })
 	}
 
-	handleDelete = async () => {
+	handleDelete = () => {
 		const { current } = this.state
 		if (current.rounds.length > 0) current.rounds.shift()
 		this.handleData(current)
 	}
 
-	handleDeleteByIndex = async (index) => {
+	handleDeleteByIndex = (index) => {
 		const { current } = this.state
 		current.rounds.splice(index, 1)
 		this.handleData(current)
 	}
 
-	handleDone = async (round) => {
+	handleDone = (round) => {
 		const { current } = this.state
 		current.rounds.unshift(round)
 		this.handleData(current)
 	}
 
-	handleEdit = async (round, index) => {
+	handleEdit = (round, index) => {
 		const { current } = this.state
 		current.rounds[index] = round
 		this.handleData(current)
 	}
 
-	handleBottomNav = async (event, value) => {
+	handleBottomNav = (event, value) => {
 		this.setState({ value })
 	}
 
-	handleGameOver = async () => {
+	handleGameOver = () => {
 		const { current, games } = this.state
 		current.date = new Date()
 		games.unshift(current)
-		await this.setState({ games })
+		this.setState({ games })
 		this.handleNewGame()
 	}
 
 	handleGameContinue = () => {
 		const { settings } = this.state
-		console.log("continue")
 		settings.over = false
 		this.setState({ settings })
 	}
@@ -160,9 +156,14 @@ class Tichu extends Component {
 			],
 			rounds: []
 		}
+
+		this.setLocalStorage(current, games)
+		this.setState({ current, games, settings })
+	}
+
+	setLocalStorage = (current, games) => {
 		localStorage.setItem("Current", JSON.stringify(current))
 		localStorage.setItem("Games", JSON.stringify(games))
-		this.setState({ current, games, settings })
 	}
 
 	render() {
@@ -186,13 +187,7 @@ class Tichu extends Component {
 					<Route
 						path="/counter/edit"
 						render={(props) => (
-							<Game
-								{...props}
-								team={current.team}
-								rounds={current.rounds}
-								onEdit={this.handleEdit}
-								onDone={this.handleDone}
-							/>
+							<Game {...props} current={current} onEdit={this.handleEdit} />
 						)}
 					/>
 					<Route

@@ -1,11 +1,9 @@
 import React, { Component } from "react"
-import { ToastContainer } from "react-toastify"
 
 import Tichu from "./components/tichu"
 
 import CssBaseline from "@material-ui/core/CssBaseline"
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
-// import "react-toastify/dist/ReactToastify.css"
 
 const theme = createMuiTheme({
 	typography: {
@@ -19,7 +17,6 @@ class App extends Component {
 			<React.Fragment>
 				<MuiThemeProvider theme={theme}>
 					<CssBaseline />
-					<ToastContainer />
 					<Tichu />
 				</MuiThemeProvider>
 			</React.Fragment>
