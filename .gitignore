@@ -4,7 +4,9 @@
 .firebaserc
 firebase-debug.log
 .vscode
-
+.cache
+dist
+ 
 # dependencies
 /node_modules
 /.pnp
