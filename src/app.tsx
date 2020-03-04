@@ -12,8 +12,8 @@ import NotFoundView from './views/notFoundView'
 
 const theme = createMuiTheme({
     palette: {
-        primary: { main: '#1b5e20' },
-        secondary: { main: '#dd2c00' }
+        primary: { main: '#2196f3' },
+        secondary: { main: '#ff3d00' }
     }
 })
 
