@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { createStyles, Theme } from '@material-ui/core'
 import { WithStyles, withStyles } from '@material-ui/core/styles'
 
@@ -22,6 +22,11 @@ interface Props extends WithStyles<typeof styles> {}
 
 const BottomNav = ({ classes }: Props) => {
     const [value, setValue] = useState(1)
+    const path = window.location.pathname
+    if (value == 1) {
+        if (path === '/statistics') setValue(0)
+        if (path === '/settings') setValue(2)
+    }
 
     return (
         <BottomNavigation
