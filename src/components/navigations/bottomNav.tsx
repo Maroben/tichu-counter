@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { createStyles, Theme } from '@material-ui/core'
 import { WithStyles, withStyles } from '@material-ui/core/styles'
 
@@ -12,9 +12,10 @@ const styles = (theme: Theme) =>
     createStyles({
         root: {
             width: '100%',
-            position: 'absolute',
+            position: 'fixed',
             bottom: 0,
-            left: 0
+            left: 0,
+            zIndex: 99
         }
     })
 

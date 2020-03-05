@@ -14,6 +14,7 @@ import HeaderNav from '../components/navigations/headerNav'
 import CounterView from '../views/counterView'
 import StatisticsView from '../views/statisticsView'
 import SettingsView from '../views/settingsView'
+import SettingsForm from '../components/forms/settingsForm'
 
 const styles = (theme: Theme) => createStyles({})
 
@@ -48,13 +49,19 @@ class CounterController extends Component<Props, State> {
                     <Switch>
                         <Route path="/statistics" component={StatisticsView} />
                         <Route
-                            path="/settings"
+                            path="/settings/edit"
                             render={(props) => (
-                                <SettingsView
+                                <SettingsForm
                                     {...props}
                                     settings={settings}
                                     onUpdate={() => this.handleSettings}
                                 />
+                            )}
+                        />
+                        <Route
+                            path="/settings"
+                            render={(props) => (
+                                <SettingsView {...props} settings={settings} />
                             )}
                         />
                         <Route

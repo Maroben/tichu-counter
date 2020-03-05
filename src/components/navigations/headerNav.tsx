@@ -10,7 +10,7 @@ interface Props extends WithStyles<typeof styles> {}
 
 const HeaderNav = (props: Props) => {
     return (
-        <AppBar position="static">
+        <AppBar position="sticky">
             <Toolbar>
                 <Typography variant="h5" color="inherit">
                     Tichu Counter

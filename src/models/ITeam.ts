@@ -1,7 +1,7 @@
-import IPlayer from './IPlayer'
+import Player from './Player'
 
 export default interface ITeam {
     name: string
-    player1: IPlayer
-    player2: IPlayer
+    player1: Player
+    player2: Player
 }
