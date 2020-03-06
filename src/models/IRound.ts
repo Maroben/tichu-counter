@@ -2,9 +2,9 @@ import IBet from './IBet'
 
 export class TeamRound {
     constructor(
-        private bets: IBet[],
-        private points: number,
-        private double: boolean
+        public bets: IBet[],
+        public points: number,
+        public double: boolean
     ) {}
 
     getBetPoints(): number {
@@ -24,6 +24,5 @@ export class TeamRound {
 }
 
 export default interface IRound {
-    teamA: TeamRound
-    teamB: TeamRound
+    teamRounds: TeamRound[]
 }

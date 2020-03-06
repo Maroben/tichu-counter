@@ -40,8 +40,8 @@ export default class Game {
         let teamA = 0
         let teamB = 0
         this.rounds.map((round) => {
-            teamA += round.teamA.getPoints()
-            teamB += round.teamB.getPoints()
+            teamA += round.teamRounds[0].getPoints()
+            teamB += round.teamRounds[1].getPoints()
         })
         return [teamA, teamB]
     }
