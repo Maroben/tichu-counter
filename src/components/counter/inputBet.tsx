@@ -69,7 +69,6 @@ const InputBet = ({ classes, bet, nrBets, onBet, onRemove }: Props) => {
                 <Button
                     color="default"
                     variant="outlined"
-                    size="large"
                     className={classes.w100}
                     onClick={openPopover}
                 >
@@ -79,7 +78,6 @@ const InputBet = ({ classes, bet, nrBets, onBet, onRemove }: Props) => {
                 <ButtonGroup
                     variant="contained"
                     className={classes.w100}
-                    size="large"
                     color={bet.success ? 'primary' : 'secondary'}
                 >
                     <Button onClick={onRemove}>
