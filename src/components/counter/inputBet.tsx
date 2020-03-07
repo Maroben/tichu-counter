@@ -22,12 +22,20 @@ const styles = (theme: Theme) =>
 
 interface Props extends WithStyles<typeof styles> {
     bet: IBet
+    cantWin: boolean
     nrBets: number[]
     onBet: (bet: IBet) => void
     onRemove: () => void
 }
 
-const InputBet = ({ classes, bet, nrBets, onBet, onRemove }: Props) => {
+const InputBet = ({
+    classes,
+    bet,
+    nrBets,
+    cantWin,
+    onBet,
+    onRemove
+}: Props) => {
     const [anchorEl, setAnchorEl] = useState(null as unknown)
     const [selected, setSelected] = useState([false, false, false])
     const open = Boolean(anchorEl)
@@ -38,7 +46,7 @@ const InputBet = ({ classes, bet, nrBets, onBet, onRemove }: Props) => {
         if (bet.bet === BetType.none) {
             bet = {
                 bet: BetType.small,
-                success: nrBets[0] >= 1 ? false : true
+                success: cantWin || nrBets[0] >= 1 ? false : true
             }
             handleClick(bet)
         }
@@ -130,7 +138,10 @@ const InputBet = ({ classes, bet, nrBets, onBet, onRemove }: Props) => {
                                     color={selected[2] ? 'primary' : 'default'}
                                     className={classes.w100}
                                     onClick={() => changeSuccess(true)}
-                                    disabled={!bet.success && nrBets[0] === 1}
+                                    disabled={
+                                        cantWin ||
+                                        (!bet.success && nrBets[0] === 1)
+                                    }
                                 >
                                     Success
                                 </Button>
