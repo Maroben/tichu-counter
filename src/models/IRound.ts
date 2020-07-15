@@ -10,14 +10,16 @@ export class TeamRound {
     getBetPoints(): number {
         let sum = 0
         this.bets.map((b) => {
-            sum += b.bet * 100 * (b.success ? -1 : 1)
+            sum += b.bet * 100 * (b.success ? 1 : -1)
         })
         return sum
     }
 
-    getPoints(): number {
+    getPoints(enemy: TeamRound): number {
         if (this.double) {
             return 200 + this.getBetPoints()
+        } else if (enemy.double) {
+            return this.getBetPoints()
         }
         return this.points + this.getBetPoints()
     }
@@ -25,4 +27,6 @@ export class TeamRound {
 
 export default interface IRound {
     teamRounds: TeamRound[]
+    startTime: Date
+    endTime: Date
 }

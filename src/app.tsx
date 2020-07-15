@@ -26,17 +26,15 @@ type State = {}
 class App extends Component<Props, State> {
     render() {
         return (
-            <>
-                <MuiThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <Switch>
-                        <Route path="/login" component={LoginView} />
-                        <Route path="/register" component={RegisterView} />
-                        <Route path="/404" component={NotFoundView} />
-                        <Route path="/" component={CounterController} />
-                    </Switch>
-                </MuiThemeProvider>
-            </>
+            <MuiThemeProvider theme={theme}>
+                <CssBaseline />
+                <Switch>
+                    <Route path="/login" component={LoginView} />
+                    <Route path="/register" component={RegisterView} />
+                    <Route path="/404" component={NotFoundView} />
+                    <Route path="/" component={CounterController} />
+                </Switch>
+            </MuiThemeProvider>
         )
     }
 }

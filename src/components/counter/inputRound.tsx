@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { createStyles, Theme } from '@material-ui/core'
 import { WithStyles, withStyles } from '@material-ui/core/styles'
 
@@ -23,11 +24,12 @@ const styles = (theme: Theme) =>
         },
         pr: {
             paddingRight: theme.spacing()
-            // fontSize: '2.5em'
         }
     })
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+    addRound: (round: IRound) => void
+}
 
 type State = {
     round: IRound
@@ -44,7 +46,9 @@ class InputRound extends Component<Props, State> {
             teamRounds: [
                 new TeamRound([dBet, dBet], 50, false),
                 new TeamRound([dBet, dBet], 50, false)
-            ]
+            ],
+            startTime: new Date(),
+            endTime: new Date()
         },
         nrBets: [0, 0], // [Total Success, Total Failures]
         cantWin: -1, // if 0 TeamA cant win, elseif TeamB cant win
@@ -100,6 +104,22 @@ class InputRound extends Component<Props, State> {
             }
         })
         this.setState({ round, nrBets, cantDouble })
+    }
+
+    handleSave() {
+        let { round } = this.state
+        round.endTime = new Date()
+        this.props.addRound(round)
+        round = {
+            teamRounds: [
+                new TeamRound([dBet, dBet], 50, false),
+                new TeamRound([dBet, dBet], 50, false)
+            ],
+            startTime: new Date(),
+            endTime: new Date()
+        }
+        this.handleDisplay(round)
+        this.setState({ cantWin: -1 })
     }
 
     render() {
@@ -174,6 +194,7 @@ class InputRound extends Component<Props, State> {
                             variant="contained"
                             className={classes.w100}
                             color={teamA.points >= 50 ? 'primary' : 'secondary'}
+                            disableRipple
                         >
                             {teamA.points}
                         </Button>
@@ -183,6 +204,7 @@ class InputRound extends Component<Props, State> {
                             variant="contained"
                             className={classes.w100}
                             color={teamB.points >= 50 ? 'primary' : 'secondary'}
+                            disableRipple
                         >
                             {teamB.points}
                         </Button>
@@ -194,7 +216,12 @@ class InputRound extends Component<Props, State> {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <Button variant="text" className={classes.w100}>
+                        <Button
+                            variant="text"
+                            className={classes.w100}
+                            component={Link}
+                            to="/rounds"
+                        >
                             Rounds
                         </Button>
                     </Grid>
@@ -203,6 +230,7 @@ class InputRound extends Component<Props, State> {
                             variant="contained"
                             color="primary"
                             className={classes.w100}
+                            onClick={() => this.handleSave()}
                         >
                             save
                         </Button>

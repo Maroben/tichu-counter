@@ -12,6 +12,7 @@ import BottomNav from '../components/navigations/bottomNav'
 import HeaderNav from '../components/navigations/headerNav'
 
 import CounterView from '../views/counterView'
+import RoundsView from '../views/roundsView'
 import StatisticsView from '../views/statisticsView'
 import SettingsView from '../views/settingsView'
 import SettingsForm from '../components/forms/settingsForm'
@@ -36,6 +37,10 @@ class CounterController extends Component<Props, State> {
 
     handleSettings(settings: ISettings) {
         this.setState({ settings })
+    }
+
+    handleGame(game: Game) {
+        this.setState({ game })
     }
 
     render() {
@@ -65,6 +70,16 @@ class CounterController extends Component<Props, State> {
                             )}
                         />
                         <Route
+                            path="/rounds"
+                            render={(props) => (
+                                <RoundsView
+                                    {...props}
+                                    game={game}
+                                    settings={settings}
+                                />
+                            )}
+                        />
+                        <Route
                             path="/"
                             exact
                             render={(props) => (
@@ -72,6 +87,7 @@ class CounterController extends Component<Props, State> {
                                     {...props}
                                     game={game}
                                     settings={settings}
+                                    updateGame={(game) => this.handleGame(game)}
                                 />
                             )}
                         />
