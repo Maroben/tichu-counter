@@ -1,23 +1,30 @@
-import ISettings from '../models/ISettings'
+import Settings from "../models/Settings"
+import ITeam from "../models/ITeam"
 
-export const defaultSettings: ISettings = {
-    teamA: {
-        name: 'Dragon',
-        player1: {
-            name: 'Player1'
+const teamA: ITeam = {
+    name: "Dragon",
+    players: [
+        {
+            name: "Azure Dragon"
         },
-        player2: {
-            name: 'Player2'
+        {
+            name: "White Tiger"
         }
-    },
-    teamB: {
-        name: 'Phoenix',
-        player1: {
-            name: 'Player3'
-        },
-        player2: {
-            name: 'Player4'
-        }
-    },
-    winPoints: 1000
+    ]
 }
+
+const teamB: ITeam = {
+    name: "Phoenix",
+    players: [
+        {
+            name: "Black Tortoise"
+        },
+        {
+            name: "Vermillion Bird"
+        }
+    ]
+}
+
+const winPoints: number = 1000
+
+export const defaultSettings: Settings = new Settings(teamA, teamB, winPoints)

@@ -1,28 +1,27 @@
-import React, { Component } from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
-import { createStyles, Theme } from '@material-ui/core'
-import { WithStyles, withStyles } from '@material-ui/core/styles'
+import React, { Component } from "react"
+import { Switch, Route, Redirect } from "react-router-dom"
+import { createStyles, Theme } from "@material-ui/core"
+import { WithStyles, withStyles } from "@material-ui/core/styles"
 
-import Game from '../models/Game'
-import ISettings from '../models/ISettings'
+import Game from "../models/Game"
+import Settings from "../models/Settings"
 
-import { defaultSettings } from '../assets/defaultSettings'
+import { defaultSettings } from "../assets/defaultSettings"
 
-import BottomNav from '../components/navigations/bottomNav'
-import HeaderNav from '../components/navigations/headerNav'
+import HeaderNav from "../components/navigations/headerNav"
 
-import CounterView from '../views/counterView'
-import RoundsView from '../views/roundsView'
-import StatisticsView from '../views/statisticsView'
-import SettingsView from '../views/settingsView'
-import SettingsForm from '../components/forms/settingsForm'
+import CounterView from "../views/counterView"
+import UserView from "../views/userView"
+import RoundsView from "../views/roundsView"
+import StatisticsView from "../views/statisticsView"
+import SettingsView from "../views/settingsView"
 
 const styles = (theme: Theme) => createStyles({})
 
 interface Props extends WithStyles<typeof styles> {}
 
 type State = {
-    settings: ISettings
+    settings: Settings
     game: Game
 }
 
@@ -35,10 +34,6 @@ class CounterController extends Component<Props, State> {
         }
     }
 
-    handleSettings(settings: ISettings) {
-        this.setState({ settings })
-    }
-
     handleGame(game: Game) {
         this.setState({ game })
     }
@@ -49,25 +44,21 @@ class CounterController extends Component<Props, State> {
             <>
                 <div>
                     <HeaderNav />
-                    <BottomNav />
 
                     <Switch>
-                        <Route path="/statistics" component={StatisticsView} />
                         <Route
-                            path="/settings/edit"
-                            render={(props) => (
-                                <SettingsForm
-                                    {...props}
-                                    settings={settings}
-                                    onUpdate={() => this.handleSettings}
-                                />
-                            )}
+                            path="/u/statistics"
+                            component={StatisticsView}
                         />
                         <Route
-                            path="/settings"
+                            path="/u/settings"
                             render={(props) => (
                                 <SettingsView {...props} settings={settings} />
                             )}
+                        />
+                        <Route
+                            path="/u"
+                            render={(props) => <UserView {...props} />}
                         />
                         <Route
                             path="/rounds"

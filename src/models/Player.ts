@@ -1,3 +1,5 @@
-export default class Player {
-    constructor(readonly name: string) {}
+import { StringIterator } from "lodash"
+
+export default interface IPlayer {
+    name: string
 }

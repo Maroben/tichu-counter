@@ -1,12 +1,12 @@
-import React from 'react'
-import { createStyles, Theme } from '@material-ui/core'
-import { WithStyles, withStyles } from '@material-ui/core/styles'
+import React from "react"
+import { createStyles, Theme } from "@material-ui/core"
+import { WithStyles, withStyles } from "@material-ui/core/styles"
 
-import { getDate } from '../services/dateService'
+import { getDate } from "../services/dateService"
 
-import Game from '../models/Game'
-import ISettings from '../models/ISettings'
-import { BetType } from '../models/IBet'
+import Game from "../models/Game"
+import Settings from "../models/Settings"
+import { BetType } from "../models/IBet"
 
 import {
     Grid,
@@ -14,7 +14,7 @@ import {
     Paper,
     Card,
     CardActionArea
-} from '@material-ui/core'
+} from "@material-ui/core"
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -29,12 +29,12 @@ const styles = (theme: Theme) =>
             marginBottom: theme.spacing(2)
         },
         c: {
-            justifyContent: 'center',
-            display: 'flex'
+            justifyContent: "center",
+            display: "flex"
         },
         r: {
-            justifyContent: 'flex-end',
-            display: 'flex'
+            justifyContent: "flex-end",
+            display: "flex"
         },
         bets: {
             paddingRight: theme.spacing()
@@ -43,10 +43,12 @@ const styles = (theme: Theme) =>
 
 interface Props extends WithStyles<typeof styles> {
     game: Game
-    settings: ISettings
+    settings: Settings
 }
 
 const RoundsView = ({ classes, game, settings }: Props) => {
+    const teams = settings.getTeams()
+
     return (
         <div className={classes.root}>
             <Paper className={`${classes.p2} ${classes.mb2}`}>
@@ -85,8 +87,8 @@ const RoundsView = ({ classes, game, settings }: Props) => {
                                     <Grid item xs={5}>
                                         <Typography variant="body1">
                                             {j === 0
-                                                ? settings.teamA.name
-                                                : settings.teamB.name}
+                                                ? teams[0].name
+                                                : teams[1].name}
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={2} className={classes.c}>
@@ -105,14 +107,14 @@ const RoundsView = ({ classes, game, settings }: Props) => {
                                                         className={classes.bets}
                                                         color={
                                                             bet.success
-                                                                ? 'primary'
-                                                                : 'secondary'
+                                                                ? "primary"
+                                                                : "secondary"
                                                         }
                                                     >
                                                         {bet.bet ==
                                                         BetType.small
-                                                            ? 'S'
-                                                            : 'B'}
+                                                            ? "S"
+                                                            : "B"}
                                                     </Typography>
                                                 )
                                         )}
@@ -120,10 +122,10 @@ const RoundsView = ({ classes, game, settings }: Props) => {
                                     <Grid item xs={2} className={classes.c}>
                                         <Typography variant="body1">
                                             {team.double
-                                                ? '200'
+                                                ? "200"
                                                 : round.teamRounds[(j + 1) % 2]
                                                       .double
-                                                ? '0'
+                                                ? "0"
                                                 : team.points}
                                         </Typography>
                                     </Grid>

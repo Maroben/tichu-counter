@@ -1,6 +1,6 @@
-import IRound from './IRound'
-import ISettings from './ISettings'
-import ITeam from './ITeam'
+import Settings from "./Settings"
+import IRound from "./IRound"
+import ITeam from "./ITeam"
 
 export enum GameState {
     playing,
@@ -9,12 +9,12 @@ export enum GameState {
 
 export default class Game {
     dateTime: number
-    state: GameState
+    gameState: GameState
     rounds: IRound[]
 
-    constructor(private settings: ISettings) {
+    constructor(private settings: Settings) {
         this.dateTime = new Date().getUTCDate()
-        this.state = GameState.playing
+        this.gameState = GameState.playing
 
         this.rounds = []
     }
@@ -24,7 +24,7 @@ export default class Game {
 
         const p = this.getTotalPoints()
         if (this.isOver(p) && p[0] != p[1]) {
-            this.state = GameState.over
+            this.gameState = GameState.over
         }
     }
 
@@ -47,13 +47,13 @@ export default class Game {
     }
 
     isOver(p: number[]): boolean {
-        const { winPoints } = this.settings
+        const winPoints = this.settings.getWinPoints()
         return winPoints <= p[0] || winPoints <= p[1]
     }
 
     isWinner(): ITeam {
         let p = this.getTotalPoints()
-        if (p[0] > p[1]) return this.settings.teamA
-        else return this.settings.teamB
+        if (p[0] > p[1]) return this.settings.getTeams()[0]
+        else return this.settings.getTeams()[1]
     }
 }

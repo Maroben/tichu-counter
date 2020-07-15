@@ -1,12 +1,12 @@
-import React from 'react'
-import { createStyles, Theme } from '@material-ui/core'
-import { WithStyles, withStyles } from '@material-ui/core/styles'
-import ISettings from '../models/ISettings'
-import Game from '../models/Game'
-import InputRound from '../components/counter/inputRound'
+import React from "react"
+import { createStyles, Theme } from "@material-ui/core"
+import { WithStyles, withStyles } from "@material-ui/core/styles"
+import ISettings from "../models/Settings"
+import Game from "../models/Game"
+import InputRound from "../components/counter/inputRound"
 
-import { Paper, Grid, Typography } from '@material-ui/core'
-import IRound from '../models/IRound'
+import { Paper, Grid, Typography } from "@material-ui/core"
+import IRound from "../models/IRound"
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -20,12 +20,12 @@ const styles = (theme: Theme) =>
             marginTop: theme.spacing(3)
         },
         paper: {
-            textAlign: 'center'
+            textAlign: "center"
         },
         inputRound: {
-            display: 'flex',
-            alignItems: 'flex-end',
-            height: '100%'
+            display: "flex",
+            alignItems: "flex-end",
+            height: "100%"
         }
     })
 
