@@ -6,10 +6,10 @@ before_install:
     - export TZ=Europe/Zurich
 install: yarn
 before_deploy:
-    - yarn global add firebase-tools
     - yarn build
 deploy:
     provider: firebase
+    project: tichu-counter
     token:
         secure: Ti5mT8xUs90zHbmVkJfuEJxAir4rX503OgA4Bm11en5r5Cg5C7BhJIctEGctDYU9/FBtXl3dOgeupdsvb1bOpgob/KyVGIJQlmyjudRw6gUCH1FqX5LbxYq8K61VhrGxJ0743zqTJfQ+qXzDegmCBI3HjN//F6ZcdITLAwMNJkE39SmqAe0it0IC4nwDuQ4sUaMpwobLemo0/iUKyzlgPFuzDX+b+A2n+IqngSCH6cE+aMI17F5JR2cJD1KAvdWvC4oXBZRDhnic/lyMiIDMMf5nqkhS60fWdEXP8DEsaKNExIL/IDRwNSZs99x7J7Pj6QU3WV0W8hwPJJOEUT1IMUQKrlGDKmMxI07KYU/w2Vd1T7VJqxnxno4dLNDZhpHVXIhe7fv/nbZVnlLnf2vcodSf8ICUveUZoMlPMlqcfE21hRdw1ateHnY5g1vygBcz7AUhGL8oEnPwY0K/xG5TU23h5YuRsPGmohv52c5dDLr7eSSQu2EIL2xIV2ZQjkS8hdiI2gDD5dlghy3lzDNnG+xoCza6WUXuqTH7SdxLVoBdW9a6kRbnfyliUdgrvdG5DrGMZWaaT14YcF6nWZg+TO/Z0oYAnVXSlvIwzuMFftBoNPamnA2Xq6x1JqKVHkQTTky3VSdOTBgmtuBGHy2bOJ8b92zlWmuaJCd8nd/ORbM=
     on:
