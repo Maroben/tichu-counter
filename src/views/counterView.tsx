@@ -11,12 +11,10 @@ import IRound from "../models/IRound"
 const styles = (theme: Theme) =>
     createStyles({
         root: {
-            height: `calc(100vh - ${theme.spacing(18)}px)`,
+            height: "520px",
             maxWidth: "800px",
             width: "100%",
-            marginBottom: theme.spacing(8),
-            margin: "0 auto",
-            background: "paper"
+            margin: `0 auto`
         },
         team: {
             textAlign: "center"
@@ -25,7 +23,6 @@ const styles = (theme: Theme) =>
             alignSelf: "center"
         },
         paper: {
-            margin: `${theme.spacing(3)}px ${theme.spacing(2)}px`,
             padding: theme.spacing(2)
         }
     })

@@ -10,7 +10,10 @@ import InputPoints from "./inputPoints"
 import IBet, { BetType } from "../../models/IBet"
 import IRound, { TeamRound } from "../../models/IRound"
 
-import { Grid, Button, Typography } from "@material-ui/core"
+import { Grid, Button, Typography, Paper, Divider } from "@material-ui/core"
+
+import ListIcon from "@material-ui/icons/ListSharp"
+import CheckIcon from "@material-ui/icons/CheckSharp"
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -35,20 +38,17 @@ const styles = (theme: Theme) =>
         },
         title: {
             textAlign: "center",
-            marginBottom: theme.spacing(2),
-            marginTop: theme.spacing(3)
+            marginBottom: theme.spacing()
         },
-        bottom: {
+        paper: {
+            padding: theme.spacing(2),
             position: "fixed",
-            maxWidth: `calc(800px - ${theme.spacing(2)}px)`,
-            width: `calc(100% - ${theme.spacing(2)}px)`,
-            bottom: theme.spacing(2),
-            right: theme.spacing(2),
-            left: theme.spacing(2),
-            [theme.breakpoints.up(816)]: {
-                left: "unset",
-                right: "unset"
-            }
+            bottom: 0,
+            width: "100%"
+        },
+        button: {
+            width: "100%",
+            backgroundColor: "white"
         }
     })
 
@@ -164,130 +164,145 @@ class InputRound extends Component<Props, State> {
         const displayPointsB = this.getDisplayPoints(teamB, teamA)
 
         return (
-            <div className={c.root}>
-                <Typography variant="h6" className={c.title}>
-                    Make a Bet
-                </Typography>
-                <Grid container spacing={2} className={c.mb2}>
-                    <Grid item xs={6}>
-                        <InputBet
-                            label={teams[0].players[0].name}
-                            bet={teamA.bets[0]}
-                            nrBets={nrBets}
-                            cantWin={cantWin === 0}
-                            onBet={(b) => this.setBet(0, 0, b)}
-                            onRemove={() => this.removeBet(0, 0)}
-                        />
+            <>
+                <div className={c.root}>
+                    <Typography variant="h6" className={c.title}>
+                        Set Points
+                    </Typography>
+                    <Grid container spacing={2} className={c.mb2}>
+                        <Grid item xs={6}>
+                            <Typography
+                                variant="h5"
+                                className={`${c.w100} ${c.center}`}
+                                color={
+                                    displayPointsA >= 50
+                                        ? "primary"
+                                        : "secondary"
+                                }
+                            >
+                                {displayPointsA}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography
+                                variant="h5"
+                                className={`${c.w100} ${c.center}`}
+                                color={
+                                    displayPointsB >= 50
+                                        ? "primary"
+                                        : "secondary"
+                                }
+                            >
+                                {displayPointsB}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Button
+                                variant={
+                                    teamA.double ? "contained" : "outlined"
+                                }
+                                color={teamA.double ? "primary" : "default"}
+                                disabled={cantDouble === 0}
+                                onClick={() => this.toggleDouble(0)}
+                                className={c.w100}
+                            >
+                                Double
+                            </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Button
+                                variant={
+                                    teamB.double ? "contained" : "outlined"
+                                }
+                                color={teamB.double ? "primary" : "default"}
+                                disabled={cantDouble === 1}
+                                onClick={() => this.toggleDouble(1)}
+                                className={c.w100}
+                            >
+                                Double
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} className={c.slider}>
+                            <InputPoints
+                                points={teamB.points}
+                                onChange={(v) => this.handleSlide(v)}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                        <InputBet
-                            label={teams[1].players[0].name}
-                            bet={teamB.bets[0]}
-                            nrBets={nrBets}
-                            cantWin={cantWin === 1}
-                            onBet={(b) => this.setBet(1, 0, b)}
-                            onRemove={() => this.removeBet(1, 0)}
-                        />
+
+                    <Typography variant="h6" className={c.title}>
+                        Make a Bet
+                    </Typography>
+                    <Grid container spacing={2} className={c.mb2}>
+                        <Grid item xs={6}>
+                            <InputBet
+                                label={teams[0].players[0].name}
+                                bet={teamA.bets[0]}
+                                nrBets={nrBets}
+                                cantWin={cantWin === 0}
+                                onBet={(b) => this.setBet(0, 0, b)}
+                                onRemove={() => this.removeBet(0, 0)}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <InputBet
+                                label={teams[1].players[0].name}
+                                bet={teamB.bets[0]}
+                                nrBets={nrBets}
+                                cantWin={cantWin === 1}
+                                onBet={(b) => this.setBet(1, 0, b)}
+                                onRemove={() => this.removeBet(1, 0)}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <InputBet
+                                label={teams[0].players[1].name}
+                                bet={teamA.bets[1]}
+                                nrBets={nrBets}
+                                cantWin={cantWin === 0}
+                                onBet={(b) => this.setBet(0, 1, b)}
+                                onRemove={() => this.removeBet(0, 1)}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <InputBet
+                                label={teams[1].players[1].name}
+                                bet={teamB.bets[1]}
+                                nrBets={nrBets}
+                                cantWin={cantWin === 1}
+                                onBet={(b) => this.setBet(1, 1, b)}
+                                onRemove={() => this.removeBet(1, 1)}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                        <InputBet
-                            label={teams[0].players[1].name}
-                            bet={teamA.bets[1]}
-                            nrBets={nrBets}
-                            cantWin={cantWin === 0}
-                            onBet={(b) => this.setBet(0, 1, b)}
-                            onRemove={() => this.removeBet(0, 1)}
-                        />
+                </div>
+                <Paper className={c.paper}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <Button
+                                variant="contained"
+                                className={c.button}
+                                component={Link}
+                                to="/rounds"
+                                startIcon={<ListIcon />}
+                            >
+                                Rounds
+                            </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={c.w100}
+                                onClick={() => this.handleSave()}
+                                startIcon={<CheckIcon />}
+                            >
+                                add round
+                            </Button>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                        <InputBet
-                            label={teams[1].players[1].name}
-                            bet={teamB.bets[1]}
-                            nrBets={nrBets}
-                            cantWin={cantWin === 1}
-                            onBet={(b) => this.setBet(1, 1, b)}
-                            onRemove={() => this.removeBet(1, 1)}
-                        />
-                    </Grid>
-                </Grid>
-                <Typography variant="h6" className={c.title}>
-                    Set Points
-                </Typography>
-                <Grid container spacing={2} className={c.mb2}>
-                    <Grid item xs={6}>
-                        <Typography
-                            variant="h5"
-                            className={`${c.w100} ${c.center}`}
-                            color={
-                                displayPointsA >= 50 ? "primary" : "secondary"
-                            }
-                        >
-                            {displayPointsA}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography
-                            variant="h5"
-                            className={`${c.w100} ${c.center}`}
-                            color={
-                                displayPointsB >= 50 ? "primary" : "secondary"
-                            }
-                        >
-                            {displayPointsB}
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Button
-                            variant={teamA.double ? "contained" : "outlined"}
-                            color={teamA.double ? "primary" : "default"}
-                            disabled={cantDouble === 0}
-                            onClick={() => this.toggleDouble(0)}
-                            className={c.w100}
-                        >
-                            Double
-                        </Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Button
-                            variant={teamB.double ? "contained" : "outlined"}
-                            color={teamB.double ? "primary" : "default"}
-                            disabled={cantDouble === 1}
-                            onClick={() => this.toggleDouble(1)}
-                            className={c.w100}
-                        >
-                            Double
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12} className={c.slider}>
-                        <InputPoints
-                            points={teamB.points}
-                            onChange={(v) => this.handleSlide(v)}
-                        />
-                    </Grid>
-                </Grid>
-                <Grid container spacing={2} className={c.bottom}>
-                    <Grid item xs={6}>
-                        <Button
-                            variant="text"
-                            className={c.w100}
-                            component={Link}
-                            to="/rounds"
-                        >
-                            Rounds
-                        </Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            className={c.w100}
-                            onClick={() => this.handleSave()}
-                        >
-                            save
-                        </Button>
-                    </Grid>
-                </Grid>
-            </div>
+                </Paper>
+            </>
         )
     }
 }

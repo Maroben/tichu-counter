@@ -17,7 +17,13 @@ import RoundsView from "../views/roundsView"
 import StatisticsView from "../views/statisticsView"
 import SettingsView from "../views/settingsView"
 
-const styles = (theme: Theme) => createStyles({})
+const styles = (theme: Theme) =>
+    createStyles({
+        root: {
+            backgroundColor: "#f5f5f5",
+            height: "100vh"
+        }
+    })
 
 interface Props extends WithStyles<typeof styles> {}
 
@@ -41,9 +47,11 @@ class CounterController extends Component<Props, State> {
 
     render() {
         const { settings, game } = this.state
+        const { classes } = this.props
+
         return (
             <>
-                <div>
+                <div className={classes.root}>
                     <HeaderNav />
 
                     <Switch>
