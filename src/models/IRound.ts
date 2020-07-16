@@ -1,4 +1,4 @@
-import IBet from './IBet'
+import IBet from "./IBet"
 
 export class TeamRound {
     constructor(
@@ -9,7 +9,7 @@ export class TeamRound {
 
     getBetPoints(): number {
         let sum = 0
-        this.bets.map((b) => {
+        this.bets.forEach((b) => {
             sum += b.bet * 100 * (b.success ? 1 : -1)
         })
         return sum

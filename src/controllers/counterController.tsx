@@ -78,7 +78,7 @@ class CounterController extends Component<Props, State> {
                                     {...props}
                                     game={game}
                                     settings={settings}
-                                    updateGame={(game) => this.handleGame(game)}
+                                    updateGame={(g) => this.handleGame(g)}
                                 />
                             )}
                         />

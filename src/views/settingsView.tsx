@@ -1,5 +1,4 @@
 import React from "react"
-import _ from "lodash"
 import { createStyles, Theme } from "@material-ui/core"
 import { WithStyles, withStyles } from "@material-ui/core/styles"
 import Settings from "../models/Settings"

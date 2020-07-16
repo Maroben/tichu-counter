@@ -39,7 +39,7 @@ export default class Game {
     getTotalPoints(): number[] {
         let teamA = 0
         let teamB = 0
-        this.rounds.map((round) => {
+        this.rounds.forEach((round) => {
             teamA += round.teamRounds[0].getPoints(round.teamRounds[1])
             teamB += round.teamRounds[1].getPoints(round.teamRounds[0])
         })

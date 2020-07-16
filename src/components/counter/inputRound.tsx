@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { createStyles, Theme } from '@material-ui/core'
-import { WithStyles, withStyles } from '@material-ui/core/styles'
+import React, { Component } from "react"
+import { Link } from "react-router-dom"
+import { createStyles, Theme } from "@material-ui/core"
+import { WithStyles, withStyles } from "@material-ui/core/styles"
 
-import InputBet from './inputBet'
-import InputPoints from './inputPoints'
+import InputBet from "./inputBet"
+import InputPoints from "./inputPoints"
 
-import IBet, { BetType } from '../../models/IBet'
-import IRound, { TeamRound } from '../../models/IRound'
+import IBet, { BetType } from "../../models/IBet"
+import IRound, { TeamRound } from "../../models/IRound"
 
-import { Grid, Button } from '@material-ui/core'
+import { Grid, Button } from "@material-ui/core"
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -17,10 +17,10 @@ const styles = (theme: Theme) =>
             margin: theme.spacing(2)
         },
         w100: {
-            width: '100%'
+            width: "100%"
         },
         c: {
-            textAlign: 'center'
+            textAlign: "center"
         },
         pr: {
             paddingRight: theme.spacing()
@@ -93,7 +93,7 @@ class InputRound extends Component<Props, State> {
         let nrBets = [0, 0]
         let cantDouble = -1
         const bets = round.teamRounds[0].bets.concat(round.teamRounds[1].bets)
-        bets.map((bet, i) => {
+        bets.forEach((bet, i) => {
             if (bet.bet != BetType.none) {
                 if (bet.success) {
                     nrBets[0]++
@@ -169,8 +169,8 @@ class InputRound extends Component<Props, State> {
                     </Grid>
                     <Grid item xs={6}>
                         <Button
-                            variant={teamA.double ? 'contained' : 'outlined'}
-                            color={teamA.double ? 'primary' : 'default'}
+                            variant={teamA.double ? "contained" : "outlined"}
+                            color={teamA.double ? "primary" : "default"}
                             disabled={cantDouble === 0}
                             onClick={() => this.toggleDouble(0)}
                             className={classes.w100}
@@ -180,8 +180,8 @@ class InputRound extends Component<Props, State> {
                     </Grid>
                     <Grid item xs={6}>
                         <Button
-                            variant={teamB.double ? 'contained' : 'outlined'}
-                            color={teamB.double ? 'primary' : 'default'}
+                            variant={teamB.double ? "contained" : "outlined"}
+                            color={teamB.double ? "primary" : "default"}
                             disabled={cantDouble === 1}
                             onClick={() => this.toggleDouble(1)}
                             className={classes.w100}
@@ -193,7 +193,7 @@ class InputRound extends Component<Props, State> {
                         <Button
                             variant="contained"
                             className={classes.w100}
-                            color={teamA.points >= 50 ? 'primary' : 'secondary'}
+                            color={teamA.points >= 50 ? "primary" : "secondary"}
                             disableRipple
                         >
                             {teamA.points}
@@ -203,7 +203,7 @@ class InputRound extends Component<Props, State> {
                         <Button
                             variant="contained"
                             className={classes.w100}
-                            color={teamB.points >= 50 ? 'primary' : 'secondary'}
+                            color={teamB.points >= 50 ? "primary" : "secondary"}
                             disableRipple
                         >
                             {teamB.points}
