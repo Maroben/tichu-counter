@@ -44,11 +44,8 @@ const styles = (theme: Theme) =>
             padding: theme.spacing(2),
             position: "fixed",
             bottom: 0,
-            width: "100%"
-        },
-        button: {
             width: "100%",
-            backgroundColor: "white"
+            maxWidth: "800px"
         }
     })
 
@@ -229,6 +226,7 @@ class InputRound extends Component<Props, State> {
                             />
                         </Grid>
                     </Grid>
+                    <Divider className={c.mb2} />
 
                     <Typography variant="h6" className={c.title}>
                         Make a Bet
@@ -280,8 +278,7 @@ class InputRound extends Component<Props, State> {
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <Button
-                                variant="contained"
-                                className={c.button}
+                                className={c.w100}
                                 component={Link}
                                 to="/rounds"
                                 startIcon={<ListIcon />}
