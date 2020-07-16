@@ -3,13 +3,14 @@ import { Link } from "react-router-dom"
 import { createStyles, Theme } from "@material-ui/core"
 import { WithStyles, withStyles } from "@material-ui/core/styles"
 
+import Settings from "../../models/Settings"
 import InputBet from "./inputBet"
 import InputPoints from "./inputPoints"
 
 import IBet, { BetType } from "../../models/IBet"
 import IRound, { TeamRound } from "../../models/IRound"
 
-import { Grid, Button } from "@material-ui/core"
+import { Grid, Button, Typography } from "@material-ui/core"
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -19,16 +20,41 @@ const styles = (theme: Theme) =>
         w100: {
             width: "100%"
         },
-        c: {
+        center: {
             textAlign: "center"
         },
         pr: {
             paddingRight: theme.spacing()
+        },
+        slider: {
+            padding: "0 !important",
+            textAlign: "center"
+        },
+        mb2: {
+            marginBottom: theme.spacing(2)
+        },
+        title: {
+            textAlign: "center",
+            marginBottom: theme.spacing(2),
+            marginTop: theme.spacing(3)
+        },
+        bottom: {
+            position: "fixed",
+            maxWidth: `calc(800px - ${theme.spacing(2)}px)`,
+            width: `calc(100% - ${theme.spacing(2)}px)`,
+            bottom: theme.spacing(2),
+            right: theme.spacing(2),
+            left: theme.spacing(2),
+            [theme.breakpoints.up(816)]: {
+                left: "unset",
+                right: "unset"
+            }
         }
     })
 
 interface Props extends WithStyles<typeof styles> {
     addRound: (round: IRound) => void
+    settings: Settings
 }
 
 type State = {
@@ -86,6 +112,8 @@ class InputRound extends Component<Props, State> {
         const { round } = this.state
         round.teamRounds[0].points = 100 - value
         round.teamRounds[1].points = value
+        round.teamRounds[0].double = false
+        round.teamRounds[1].double = false
         this.setState({ round })
     }
 
@@ -122,17 +150,28 @@ class InputRound extends Component<Props, State> {
         this.setState({ cantWin: -1 })
     }
 
+    getDisplayPoints(self: TeamRound, other: TeamRound) {
+        return self.double ? 200 : other.double ? 0 : self.points
+    }
+
     render() {
-        const { classes } = this.props
+        const { classes: c, settings } = this.props
         const { round, nrBets, cantWin, cantDouble } = this.state
+        const teams = settings.getTeams()
         const teamA = round.teamRounds[0]
         const teamB = round.teamRounds[1]
+        const displayPointsA = this.getDisplayPoints(teamA, teamB)
+        const displayPointsB = this.getDisplayPoints(teamB, teamA)
 
         return (
-            <div className={classes.root}>
-                <Grid container spacing={2}>
+            <div className={c.root}>
+                <Typography variant="h6" className={c.title}>
+                    Make a Bet
+                </Typography>
+                <Grid container spacing={2} className={c.mb2}>
                     <Grid item xs={6}>
                         <InputBet
+                            label={teams[0].players[0].name}
                             bet={teamA.bets[0]}
                             nrBets={nrBets}
                             cantWin={cantWin === 0}
@@ -142,6 +181,7 @@ class InputRound extends Component<Props, State> {
                     </Grid>
                     <Grid item xs={6}>
                         <InputBet
+                            label={teams[1].players[0].name}
                             bet={teamB.bets[0]}
                             nrBets={nrBets}
                             cantWin={cantWin === 1}
@@ -151,6 +191,7 @@ class InputRound extends Component<Props, State> {
                     </Grid>
                     <Grid item xs={6}>
                         <InputBet
+                            label={teams[0].players[1].name}
                             bet={teamA.bets[1]}
                             nrBets={nrBets}
                             cantWin={cantWin === 0}
@@ -160,6 +201,7 @@ class InputRound extends Component<Props, State> {
                     </Grid>
                     <Grid item xs={6}>
                         <InputBet
+                            label={teams[1].players[1].name}
                             bet={teamB.bets[1]}
                             nrBets={nrBets}
                             cantWin={cantWin === 1}
@@ -167,13 +209,40 @@ class InputRound extends Component<Props, State> {
                             onRemove={() => this.removeBet(1, 1)}
                         />
                     </Grid>
+                </Grid>
+                <Typography variant="h6" className={c.title}>
+                    Set Points
+                </Typography>
+                <Grid container spacing={2} className={c.mb2}>
+                    <Grid item xs={6}>
+                        <Typography
+                            variant="h5"
+                            className={`${c.w100} ${c.center}`}
+                            color={
+                                displayPointsA >= 50 ? "primary" : "secondary"
+                            }
+                        >
+                            {displayPointsA}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Typography
+                            variant="h5"
+                            className={`${c.w100} ${c.center}`}
+                            color={
+                                displayPointsB >= 50 ? "primary" : "secondary"
+                            }
+                        >
+                            {displayPointsB}
+                        </Typography>
+                    </Grid>
                     <Grid item xs={6}>
                         <Button
                             variant={teamA.double ? "contained" : "outlined"}
                             color={teamA.double ? "primary" : "default"}
                             disabled={cantDouble === 0}
                             onClick={() => this.toggleDouble(0)}
-                            className={classes.w100}
+                            className={c.w100}
                         >
                             Double
                         </Button>
@@ -184,41 +253,23 @@ class InputRound extends Component<Props, State> {
                             color={teamB.double ? "primary" : "default"}
                             disabled={cantDouble === 1}
                             onClick={() => this.toggleDouble(1)}
-                            className={classes.w100}
+                            className={c.w100}
                         >
                             Double
                         </Button>
                     </Grid>
-                    <Grid item xs={6}>
-                        <Button
-                            variant="contained"
-                            className={classes.w100}
-                            color={teamA.points >= 50 ? "primary" : "secondary"}
-                            disableRipple
-                        >
-                            {teamA.points}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Button
-                            variant="contained"
-                            className={classes.w100}
-                            color={teamB.points >= 50 ? "primary" : "secondary"}
-                            disableRipple
-                        >
-                            {teamB.points}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12} className={classes.c}>
+                    <Grid item xs={12} className={c.slider}>
                         <InputPoints
                             points={teamB.points}
                             onChange={(v) => this.handleSlide(v)}
                         />
                     </Grid>
+                </Grid>
+                <Grid container spacing={2} className={c.bottom}>
                     <Grid item xs={6}>
                         <Button
                             variant="text"
-                            className={classes.w100}
+                            className={c.w100}
                             component={Link}
                             to="/rounds"
                         >
@@ -229,7 +280,7 @@ class InputRound extends Component<Props, State> {
                         <Button
                             variant="contained"
                             color="primary"
-                            className={classes.w100}
+                            className={c.w100}
                             onClick={() => this.handleSave()}
                         >
                             save

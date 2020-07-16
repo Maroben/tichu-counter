@@ -9,10 +9,18 @@ import CounterController from "./controllers/counterController"
 import LoginView from "./views/loginView"
 import RegisterView from "./views/registerView"
 
+/**
+ * Colors
+ * Green: #129749
+ * Blue: #0db1cc
+ * Red: #ee2b37
+ * Black: #191b19
+ */
+
 const theme = createMuiTheme({
     palette: {
-        primary: { main: "#2196f3" },
-        secondary: { main: "#ff3d00" }
+        primary: { main: "#129749" },
+        secondary: { main: "#ee2b37" }
     }
 })
 

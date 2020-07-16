@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { createStyles, Theme } from '@material-ui/core'
-import { WithStyles, withStyles } from '@material-ui/core/styles'
+import React, { useState } from "react"
+import { createStyles, Theme } from "@material-ui/core"
+import { WithStyles, withStyles } from "@material-ui/core/styles"
 
-import IBet, { BetType } from '../../models/IBet'
+import IBet, { BetType } from "../../models/IBet"
 
-import { Popover, ButtonGroup, Button, Paper, Grid } from '@material-ui/core'
-import CloseSharpIcon from '@material-ui/icons/CloseSharp'
+import { Popover, ButtonGroup, Button, Paper, Grid } from "@material-ui/core"
+import CloseSharpIcon from "@material-ui/icons/CloseSharp"
 
 const styles = (theme: Theme) =>
     createStyles({
@@ -13,7 +13,7 @@ const styles = (theme: Theme) =>
             margin: theme.spacing(2)
         },
         w100: {
-            width: '100%'
+            width: "100%"
         },
         vw100: {
             width: `calc(50vw - ${theme.spacing(3)}px)`
@@ -21,6 +21,7 @@ const styles = (theme: Theme) =>
     })
 
 interface Props extends WithStyles<typeof styles> {
+    label: string
     bet: IBet
     cantWin: boolean
     nrBets: number[]
@@ -30,6 +31,7 @@ interface Props extends WithStyles<typeof styles> {
 
 const InputBet = ({
     classes,
+    label,
     bet,
     nrBets,
     cantWin,
@@ -80,19 +82,19 @@ const InputBet = ({
                     className={classes.w100}
                     onClick={openPopover}
                 >
-                    Make a Bet
+                    {label}
                 </Button>
             ) : (
                 <ButtonGroup
                     variant="contained"
                     className={classes.w100}
-                    color={bet.success ? 'primary' : 'secondary'}
+                    color={bet.success ? "primary" : "secondary"}
                 >
                     <Button onClick={onRemove}>
                         <CloseSharpIcon />
                     </Button>
                     <Button onClick={openPopover} className={classes.w100}>
-                        {BetType[bet.bet]} {bet.success ? 'win' : 'fail'}
+                        {BetType[bet.bet]} {bet.success ? "win" : "fail"}
                     </Button>
                 </ButtonGroup>
             )}
@@ -102,20 +104,20 @@ const InputBet = ({
                     anchorEl={anchorEl as Element}
                     onClose={() => setAnchorEl(null)}
                     anchorOrigin={{
-                        vertical: 'center',
-                        horizontal: 'center'
+                        vertical: "center",
+                        horizontal: "center"
                     }}
                     transformOrigin={{
-                        vertical: 'center',
-                        horizontal: 'center'
+                        vertical: "center",
+                        horizontal: "center"
                     }}
                 >
                     <Paper className={classes.vw100}>
                         <Grid container>
                             <Grid item xs={6}>
                                 <Button
-                                    variant={selected[0] ? 'contained' : 'text'}
-                                    color={selected[0] ? 'primary' : 'default'}
+                                    variant={selected[0] ? "contained" : "text"}
+                                    color={selected[0] ? "primary" : "default"}
                                     className={classes.w100}
                                     onClick={() => changeBetType(BetType.small)}
                                 >
@@ -124,8 +126,8 @@ const InputBet = ({
                             </Grid>
                             <Grid item xs={6}>
                                 <Button
-                                    variant={selected[1] ? 'contained' : 'text'}
-                                    color={selected[1] ? 'primary' : 'default'}
+                                    variant={selected[1] ? "contained" : "text"}
+                                    color={selected[1] ? "primary" : "default"}
                                     className={classes.w100}
                                     onClick={() => changeBetType(BetType.big)}
                                 >
@@ -134,8 +136,8 @@ const InputBet = ({
                             </Grid>
                             <Grid item xs={6}>
                                 <Button
-                                    variant={selected[2] ? 'contained' : 'text'}
-                                    color={selected[2] ? 'primary' : 'default'}
+                                    variant={selected[2] ? "contained" : "text"}
+                                    color={selected[2] ? "primary" : "default"}
                                     className={classes.w100}
                                     onClick={() => changeSuccess(true)}
                                     disabled={
@@ -149,10 +151,10 @@ const InputBet = ({
                             <Grid item xs={6}>
                                 <Button
                                     variant={
-                                        !selected[2] ? 'contained' : 'text'
+                                        !selected[2] ? "contained" : "text"
                                     }
                                     color={
-                                        !selected[2] ? 'secondary' : 'default'
+                                        !selected[2] ? "secondary" : "default"
                                     }
                                     className={classes.w100}
                                     onClick={() => changeSuccess(false)}

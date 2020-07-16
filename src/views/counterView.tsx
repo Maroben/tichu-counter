@@ -5,27 +5,28 @@ import ISettings from "../models/Settings"
 import Game from "../models/Game"
 import InputRound from "../components/counter/inputRound"
 
-import { Paper, Grid, Typography } from "@material-ui/core"
+import { Grid, Typography, Paper } from "@material-ui/core"
 import IRound from "../models/IRound"
 
 const styles = (theme: Theme) =>
     createStyles({
         root: {
-            // height: `calc(100vh - ${theme.spacing(24)}px)`
-            height: `100%`,
-            marginBottom: theme.spacing(8)
+            height: `calc(100vh - ${theme.spacing(18)}px)`,
+            maxWidth: "800px",
+            width: "100%",
+            marginBottom: theme.spacing(8),
+            margin: "0 auto",
+            background: "paper"
         },
-        container: {
-            margin: theme.spacing(2),
-            marginTop: theme.spacing(3)
-        },
-        paper: {
+        team: {
             textAlign: "center"
         },
-        inputRound: {
-            display: "flex",
-            alignItems: "flex-end",
-            height: "100%"
+        center: {
+            alignSelf: "center"
+        },
+        paper: {
+            margin: `${theme.spacing(3)}px ${theme.spacing(2)}px`,
+            padding: theme.spacing(2)
         }
     })
 
@@ -36,6 +37,7 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const CounterView = ({ classes, settings, game, updateGame }: Props) => {
+    const teams = settings.getTeams()
     const addRound = (round: IRound) => {
         game.pushRound(round)
         updateGame(game)
@@ -43,39 +45,27 @@ const CounterView = ({ classes, settings, game, updateGame }: Props) => {
 
     return (
         <div className={classes.root}>
-            <div className={classes.container}>
-                <Paper className={classes.paper}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={5}>
-                            <Typography variant="h5">Team A</Typography>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Typography variant="h4"></Typography>
-                        </Grid>
-                        <Grid item xs={5}>
-                            <Typography variant="h5">Team B</Typography>
-                        </Grid>
+            <Paper className={classes.paper}>
+                <Grid container spacing={2} className={classes.team}>
+                    <Grid item xs={6}>
+                        <Typography variant="h4">
+                            {game.getTotalPoints()[0]}
+                        </Typography>
+                        <Typography variant="h6">
+                            Team {teams[0].name}
+                        </Typography>
                     </Grid>
-                    <Grid container spacing={2}>
-                        <Grid item xs={5}>
-                            <Typography variant="h6">
-                                {game.getTotalPoints()[0]}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <Typography variant="h6">VS</Typography>
-                        </Grid>
-                        <Grid item xs={5}>
-                            <Typography variant="h6">
-                                {game.getTotalPoints()[1]}
-                            </Typography>
-                        </Grid>
+                    <Grid item xs={6}>
+                        <Typography variant="h4">
+                            {game.getTotalPoints()[1]}
+                        </Typography>
+                        <Typography variant="h6">
+                            Team {teams[1].name}
+                        </Typography>
                     </Grid>
-                </Paper>
-            </div>
-            <div className={classes.inputRound}>
-                <InputRound addRound={addRound} />
-            </div>
+                </Grid>
+            </Paper>
+            <InputRound addRound={addRound} settings={settings} />
         </div>
     )
 }

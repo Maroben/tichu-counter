@@ -1,31 +1,31 @@
-import React from 'react'
-import { createStyles, Theme } from '@material-ui/core'
-import { WithStyles, withStyles } from '@material-ui/core/styles'
+import React from "react"
+import { createStyles, Theme } from "@material-ui/core"
+import { WithStyles, withStyles } from "@material-ui/core/styles"
 
-import { Slider } from '@material-ui/core'
+import { Slider } from "@material-ui/core"
 
 const styles = (theme: Theme) => createStyles({})
 
 const PrettoSlider = withStyles({
     root: {
-        color: '#43a047',
+        color: "#191b19",
         height: 10,
-        width: `calc(100% - 32px)`
+        width: `calc(100% - 56px)`
     },
     thumb: {
         height: 32,
         width: 32,
-        backgroundColor: '#fff',
-        border: '2px solid currentColor',
+        backgroundColor: "#fff",
+        border: "2px solid currentColor",
         marginTop: -8,
         marginLeft: -12,
-        '&:focus,&:hover,&$active': {
-            boxShadow: 'inherit'
+        "&:focus,&:hover,&$active": {
+            boxShadow: "inherit"
         }
     },
     active: {},
     valueLabel: {
-        left: 'calc(-50% + 4px)'
+        left: "calc(-50% + 4px)"
     },
     track: {
         height: 16,
