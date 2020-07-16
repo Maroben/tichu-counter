@@ -2,13 +2,12 @@ import React, { Component } from "react"
 import { Route, Switch } from "react-router-dom"
 
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
-import { WithStyles, withStyles } from "@material-ui/core/styles"
+import { withStyles } from "@material-ui/core/styles"
 import { createStyles, CssBaseline } from "@material-ui/core"
 
 import CounterController from "./controllers/counterController"
 import LoginView from "./views/loginView"
 import RegisterView from "./views/registerView"
-import NotFoundView from "./views/notFoundView"
 
 const theme = createMuiTheme({
     palette: {
@@ -19,11 +18,7 @@ const theme = createMuiTheme({
 
 const styles = () => createStyles({})
 
-interface Props extends WithStyles<typeof styles> {}
-
-type State = {}
-
-class App extends Component<Props, State> {
+class App extends Component {
     render() {
         return (
             <MuiThemeProvider theme={theme}>
@@ -31,7 +26,7 @@ class App extends Component<Props, State> {
                 <Switch>
                     <Route path="/login" component={LoginView} />
                     <Route path="/register" component={RegisterView} />
-                    <Route path="/404" component={NotFoundView} />
+
                     <Route path="/" component={CounterController} />
                 </Switch>
             </MuiThemeProvider>

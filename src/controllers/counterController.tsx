@@ -10,6 +10,7 @@ import { defaultSettings } from "../assets/defaultSettings"
 
 import HeaderNav from "../components/navigations/headerNav"
 
+import NotFoundView from "../views/notFoundView"
 import CounterView from "../views/counterView"
 import UserView from "../views/userView"
 import RoundsView from "../views/roundsView"
@@ -46,6 +47,7 @@ class CounterController extends Component<Props, State> {
                     <HeaderNav />
 
                     <Switch>
+                        <Route path="/404" component={NotFoundView} />
                         <Route
                             path="/u/statistics"
                             component={StatisticsView}
