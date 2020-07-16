@@ -11,7 +11,7 @@ before_install:
 install: yarn
 script:
     - yarn build
-    - sonar-scanner
+    - sonar-scanner -X
 deploy:
     provider: firebase
     project: tichu-counter
