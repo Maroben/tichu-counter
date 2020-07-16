@@ -9,5 +9,5 @@ script:
     - yarn build
 deploy:
     provider: firebase
-    project: tichu-counter
     token: ZHqyQ+6B+7n6rO+awSnf6y1WwmZGw34mrtCz5MFmHWwisYM5AATSmn56BFbce3ITuEOFaO6FZfAwYsjPn14Fh+MJPJjcFSKtkRZ+MQXCzc0bCLgLP2xf1XXVYD6Lnk/D+5pVDWj93JWYANW7l7lc2IjoYfcirpC42k+mRH4za0S4AmiRfoq8EGQWa44N0ln0jJEqTd/GQ97W9ViR6B5b2I72/fAjCgmgEJofC4ME7BklwDW1ZRqeLmm0YSXRim8uuPuzgLp3PcaJpIQpRhrygq1/dBfdIFFXpnPl8C9xfYjOyPHSVqhny+rdcb7c+UcvdzXM3LZwa1BGkq2ugCyCxNfAnyarJDQcjBKjMxBW6/lbyxAsAOMrQwuBHki7mSPRjYWgnbMV7++sSCDwdtOMahxON95B6UxrNGvjee0OFLnBEA+fnl3dGCfq3128bQc/e+qAIQQceE+36BwOwgn1nSKk9g1nQotJYlQDJlmsDhMt4gEDLZjZMLSES8aHOXomdAD1xRSz26eY8F/1HSzxGMiLQegvND7kGRNzh5yKeJ9550/6WBnx4fpb0a4eS8ve4420xa/4DL6f22YUnqnX00iby4P6PLvLmtoJyjUOzRvQIclL/9ii6eQCBAH5VCNcV0c4UczSDD2c8RTCB/plIu3qiabplOb2YFfPC2tdN6U=
+    edge: true
