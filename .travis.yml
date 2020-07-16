@@ -2,16 +2,11 @@ language: node_js
 node_js:
     - 12
 cache: yarn
-addons:
-    sonarcloud:
-        organization: maroben
-        token: J21vW4fo8uYB81XJHYp5e0r7iZMG/T4pUm7gGcBiVeDo+VflDmmbtO0CFgsnqfElw5YsMKx2yISrdV+NkgAGVxyE/ekDwkM12YOj1u0DN9jAgA/T+VE5KiwXWhN1CjKU0lJKHZctef1m5fOShoVG5dMinzgRpYNqRmfg4VfpEYk0bxX5AS2FiykQoXXiPnBNbu5jLiiOzg2DowgIqIoxwGXs+wcTi3lkbEsN5Z10l3fpWjSNuIFYzacqAisQzN0qqk3X7ZV2OTZcyMr3/JET/KBLAErB5o/mEeyqJu16chkyOBu+6ybyPdWvFtQUMVJDDAvX0fW1RguHynoKf/vZdIINI5LVbEaruorIOzET2PEDUO8n9VApg6EtPK8CW6Nhb/Hmfz5uXpv3OxdiJ2gjEZ5qP2/8nG1o0NSWFNHy4w8rj0kHJvXPFxCi1x9kyenhIex4Za6XEdpNKVr6a5OFQ1KzwiGSYuCsIijC6FVmS3pJvdAwNc+9QBAPjKiAMsDQbNs/jrGW2uAPVfsvJq+mF6yZ1EDXclWbE4zmIDiDgxqp/tA43SY0uFlwlDWbxZG15ysNjCXup/1JYqYS8fPUaxVzIcFZl2k/q0LHINKbz4snTmp1+QUzqgRQXmKms0Q9yFQD3YJVJaJzzVaDgJgSpW3NWCH1JPD7h1DdQGMcr94=
 before_install:
     - export TZ=Europe/Zurich
 install: yarn
 script:
     - yarn build
-    - sonar-scanner -X
 deploy:
     provider: firebase
     project: tichu-counter
