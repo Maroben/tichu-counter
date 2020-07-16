@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import { createStyles, Theme } from "@material-ui/core"
 import { WithStyles, withStyles } from "@material-ui/core/styles"
-import Settings from "../../models/Settings"
 
 import {
     TextField,
     ListItem,
+    ListItemIcon,
     ListItemText,
     ListItemSecondaryAction,
     IconButton
@@ -24,17 +24,19 @@ const styles = (theme: Theme) =>
     })
 
 interface Props extends WithStyles<typeof styles> {
-    settings: Settings
-    team: number
-    player: number
+    previous: string
+    onSubmit: (field: string) => void
+    listIcon: "*.png"
+    linkable?: boolean
 }
 
-const PlayerField = ({ classes: c, settings, team: t, player: p }: Props) => {
-    const teams = settings.getTeams()
-
-    const label = `Team ${teams[t].name} Player ${t * 2 + p + 1}`
-    const previous = teams[t].players[p].name
-
+const TextSettingsField = ({
+    classes: c,
+    previous,
+    onSubmit,
+    listIcon,
+    linkable = false
+}: Props) => {
     const [field, setField] = useState(previous)
     const [edit, setEdit] = useState(false)
 
@@ -43,18 +45,19 @@ const PlayerField = ({ classes: c, settings, team: t, player: p }: Props) => {
         setEdit(false)
     }
 
-    const onSubmit = () => {
-        settings.setPlayer(t, p, field)
+    const handleSubmit = () => {
+        onSubmit(field)
         setEdit(false)
     }
 
     return (
         <ListItem className={c.listItem}>
+            <ListItemIcon>
+                <img src={listIcon} height={45} />
+            </ListItemIcon>
             {edit ? (
                 <>
                     <TextField
-                        id={label}
-                        label={label}
                         value={field}
                         onChange={({ target }) => setField(target.value)}
                     />
@@ -65,7 +68,7 @@ const PlayerField = ({ classes: c, settings, team: t, player: p }: Props) => {
                         <IconButton
                             edge="end"
                             color="primary"
-                            onClick={onSubmit}
+                            onClick={handleSubmit}
                         >
                             <CheckIcon />
                         </IconButton>
@@ -73,11 +76,13 @@ const PlayerField = ({ classes: c, settings, team: t, player: p }: Props) => {
                 </>
             ) : (
                 <>
-                    <ListItemText primary={field} secondary={label} />
+                    <ListItemText primary={field} />
                     <ListItemSecondaryAction>
-                        <IconButton disabled>
-                            <LinkIcon />
-                        </IconButton>
+                        {linkable && (
+                            <IconButton disabled>
+                                <LinkIcon />
+                            </IconButton>
+                        )}
                         <IconButton edge="end" onClick={() => setEdit(true)}>
                             <EditIcon />
                         </IconButton>
@@ -88,4 +93,4 @@ const PlayerField = ({ classes: c, settings, team: t, player: p }: Props) => {
     )
 }
 
-export default withStyles(styles)(PlayerField)
+export default withStyles(styles)(TextSettingsField)

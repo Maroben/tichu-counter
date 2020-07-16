@@ -11,8 +11,8 @@ export default class Settings {
         return this.teams
     }
 
-    setTeam(id: number, team: ITeam) {
-        this.teams[id] = team
+    setTeamName(id: number, name: string) {
+        this.teams[id].name = name
     }
 
     setPlayer(team: number, player: number, value: string) {
