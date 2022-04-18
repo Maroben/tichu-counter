@@ -17,6 +17,8 @@ import RoundsView from "../views/roundsView"
 import StatisticsView from "../views/statisticsView"
 import SettingsView from "../views/settingsView"
 
+import { gameStorageProxy } from "../services/gameStorageService";
+
 const styles = (theme: Theme) =>
     createStyles({
         root: {
@@ -37,7 +39,7 @@ class CounterController extends Component<Props, State> {
         super(props)
         this.state = {
             settings: defaultSettings,
-            game: new Game(defaultSettings)
+            game: gameStorageProxy(new Game(defaultSettings))
         }
     }
 

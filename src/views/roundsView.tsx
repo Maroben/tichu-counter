@@ -4,6 +4,8 @@ import { WithStyles, withStyles } from "@material-ui/core/styles"
 
 import { getDate } from "../services/dateService"
 
+import { useForceUpdate } from "../hooks/useForceUpdate";
+
 import Game from "../models/Game"
 import Settings from "../models/Settings"
 import { BetType } from "../models/IBet"
@@ -47,7 +49,16 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const RoundsView = ({ classes, game, settings }: Props) => {
+    const forceUpdate = useForceUpdate()
+
     const teams = settings.getTeams()
+
+    const deleteRound = (index: number) => {
+        if(confirm(`Delete Round #${index + 1}?`)) {
+          game.deleteRound(index)
+          forceUpdate();
+        }
+    }
 
     return (
         <div className={classes.root}>
@@ -69,7 +80,7 @@ const RoundsView = ({ classes, game, settings }: Props) => {
             </Paper>
             {game.rounds.map((round, i) => (
                 <Card key={`round${i}`} className={classes.mb2}>
-                    <CardActionArea className={classes.p2}>
+                    <CardActionArea className={classes.p2} onClick={() => deleteRound(i)}>
                         <Grid container spacing={1}>
                             <Grid item xs={1}>
                                 <Typography variant="body2">
