@@ -1,13 +1,13 @@
-import React from 'react'
-import { createStyles, Theme } from '@material-ui/core'
-import { WithStyles, withStyles } from '@material-ui/core/styles'
+import React from 'react';
+import { createStyles, Theme } from '@material-ui/core';
+import { WithStyles, withStyles } from '@material-ui/core/styles';
 
-const styles = (theme: Theme) => createStyles({})
+const styles = (theme: Theme) => createStyles({});
 
 interface Props extends WithStyles<typeof styles> {}
 
 const RegisterView = (props: Props) => {
-    return <div>¯\_(ツ)_/¯</div>
-}
+  return <div>¯\_(ツ)_/¯</div>;
+};
 
-export default withStyles(styles)(RegisterView)
+export default withStyles(styles)(RegisterView);

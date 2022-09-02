@@ -1,6 +1,6 @@
-import Player from "./Player"
+import Player from './Player';
 
 export default interface ITeam {
-    name: string
-    players: Player[]
+  name: string;
+  players: Player[];
 }
