@@ -1,13 +1,13 @@
-import React, { Component } from "react"
-import { Route, Switch } from "react-router-dom"
+import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
 
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
-import { withStyles } from "@material-ui/core/styles"
-import { createStyles, CssBaseline } from "@material-ui/core"
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import { createStyles, CssBaseline } from '@material-ui/core';
 
-import CounterController from "./controllers/counterController"
-import LoginView from "./views/loginView"
-import RegisterView from "./views/registerView"
+import CounterController from './controllers/counterController';
+import LoginView from './views/loginView';
+import RegisterView from './views/registerView';
 
 /**
  * Colors
@@ -18,28 +18,28 @@ import RegisterView from "./views/registerView"
  */
 
 const theme = createMuiTheme({
-    palette: {
-        primary: { main: "#129749" },
-        secondary: { main: "#ee2b37" }
-    }
-})
+  palette: {
+    primary: { main: '#129749' },
+    secondary: { main: '#ee2b37' },
+  },
+});
 
-const styles = () => createStyles({})
+const styles = () => createStyles({});
 
 class App extends Component {
-    render() {
-        return (
-            <MuiThemeProvider theme={theme}>
-                <CssBaseline />
-                <Switch>
-                    <Route path="/login" component={LoginView} />
-                    <Route path="/register" component={RegisterView} />
+  render() {
+    return (
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        <Switch>
+          <Route path="/login" component={LoginView} />
+          <Route path="/register" component={RegisterView} />
 
-                    <Route path="/" component={CounterController} />
-                </Switch>
-            </MuiThemeProvider>
-        )
-    }
+          <Route path="/" component={CounterController} />
+        </Switch>
+      </MuiThemeProvider>
+    );
+  }
 }
 
-export default withStyles(styles)(App)
+export default withStyles(styles)(App);
