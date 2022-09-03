@@ -91,8 +91,7 @@ const InputBet = ({ classes, label, bet, nrBets, cantWin, onBet, onRemove }: Pro
           transformOrigin={{
             vertical: 'center',
             horizontal: 'center',
-          }}
-        >
+          }}>
           <Paper className={classes.vw100}>
             <Grid container>
               <Grid item xs={6}>
@@ -100,8 +99,7 @@ const InputBet = ({ classes, label, bet, nrBets, cantWin, onBet, onRemove }: Pro
                   variant={selected[0] ? 'contained' : 'text'}
                   color={selected[0] ? 'primary' : 'default'}
                   className={classes.w100}
-                  onClick={() => changeBetType(BetType.small)}
-                >
+                  onClick={() => changeBetType(BetType.small)}>
                   Small
                 </Button>
               </Grid>
@@ -110,8 +108,7 @@ const InputBet = ({ classes, label, bet, nrBets, cantWin, onBet, onRemove }: Pro
                   variant={selected[1] ? 'contained' : 'text'}
                   color={selected[1] ? 'primary' : 'default'}
                   className={classes.w100}
-                  onClick={() => changeBetType(BetType.big)}
-                >
+                  onClick={() => changeBetType(BetType.big)}>
                   Big
                 </Button>
               </Grid>
@@ -121,8 +118,7 @@ const InputBet = ({ classes, label, bet, nrBets, cantWin, onBet, onRemove }: Pro
                   color={selected[2] ? 'primary' : 'default'}
                   className={classes.w100}
                   onClick={() => changeSuccess(true)}
-                  disabled={cantWin || (!bet.success && nrBets[0] === 1)}
-                >
+                  disabled={cantWin || (!bet.success && nrBets[0] === 1)}>
                   Success
                 </Button>
               </Grid>
@@ -132,8 +128,7 @@ const InputBet = ({ classes, label, bet, nrBets, cantWin, onBet, onRemove }: Pro
                   color={!selected[2] ? 'secondary' : 'default'}
                   className={classes.w100}
                   onClick={() => changeSuccess(false)}
-                  disabled={bet.success && nrBets[1] === 3}
-                >
+                  disabled={bet.success && nrBets[1] === 3}>
                   Failure
                 </Button>
               </Grid>

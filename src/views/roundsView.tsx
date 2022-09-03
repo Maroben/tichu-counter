@@ -98,8 +98,7 @@ const RoundsView = ({ classes, game, settings }: Props) => {
                           <Typography
                             variant="body1"
                             className={classes.bets}
-                            color={bet.success ? 'primary' : 'secondary'}
-                          >
+                            color={bet.success ? 'primary' : 'secondary'}>
                             {bet.bet == BetType.small ? 'S' : 'B'}
                           </Typography>
                         ),
