@@ -1,26 +1,8 @@
 name: Lint
-
-on:
-  push:
-    branches:
-      - '**'
-
+'on': pull_request
 jobs:
-  run-linters:
-    name: Run linters
+  build_and_preview:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16
-
-      - name: Install Node.js dependencies
-        run: yarn
-
-      - name: Run linters
-        run: yarn lint:check
+      - uses: actions/checkout@v2
+      - run: yarn install && yarn ci:check
