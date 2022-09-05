@@ -165,8 +165,7 @@ class InputRound extends Component<Props, State> {
               <Typography
                 variant="h5"
                 className={`${c.w100} ${c.center}`}
-                color={displayPointsA >= 50 ? 'primary' : 'secondary'}
-              >
+                color={displayPointsA >= 50 ? 'primary' : 'secondary'}>
                 {displayPointsA}
               </Typography>
             </Grid>
@@ -174,8 +173,7 @@ class InputRound extends Component<Props, State> {
               <Typography
                 variant="h5"
                 className={`${c.w100} ${c.center}`}
-                color={displayPointsB >= 50 ? 'primary' : 'secondary'}
-              >
+                color={displayPointsB >= 50 ? 'primary' : 'secondary'}>
                 {displayPointsB}
               </Typography>
             </Grid>
@@ -185,8 +183,7 @@ class InputRound extends Component<Props, State> {
                 color={teamA.double ? 'primary' : 'default'}
                 disabled={cantDouble === 0}
                 onClick={() => this.toggleDouble(0)}
-                className={c.w100}
-              >
+                className={c.w100}>
                 Double
               </Button>
             </Grid>
@@ -196,8 +193,7 @@ class InputRound extends Component<Props, State> {
                 color={teamB.double ? 'primary' : 'default'}
                 disabled={cantDouble === 1}
                 onClick={() => this.toggleDouble(1)}
-                className={c.w100}
-              >
+                className={c.w100}>
                 Double
               </Button>
             </Grid>
@@ -266,8 +262,7 @@ class InputRound extends Component<Props, State> {
                 color="primary"
                 className={c.w100}
                 onClick={() => this.handleSave()}
-                startIcon={<CheckIcon />}
-              >
+                startIcon={<CheckIcon />}>
                 add round
               </Button>
             </Grid>

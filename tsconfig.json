@@ -1,28 +1,28 @@
 {
-    "compilerOptions": {
-        "alwaysStrict": true,
-        "baseUrl": ".",
-        "diagnostics": true,
-        "esModuleInterop": true,
-        "jsx": "react",
-        "module": "CommonJS",
-        "moduleResolution": "Node",
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "noImplicitReturns": true,
-        "noUnusedLocals": true,
-        "outDir": "dist",
-        "paths": {
-            "*": ["node_modules/*"]
-        },
-        "removeComments": true,
-        "resolveJsonModule": true,
-        "strict": true,
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
-        "strictBindCallApply": true,
-        "strictPropertyInitialization": true,
-        "target": "es2020"
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "diagnostics": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "dist",
+    "paths": {
+      "*": ["node_modules/*"]
     },
-    "include": ["src/**/*"]
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "target": "es2020"
+  },
+  "include": ["src/**/*"]
 }
