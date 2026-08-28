@@ -25,7 +25,7 @@ The dependency rules keep `domain` and `application` free of browser, React, MUI
 
 ## Development
 
-Requirements: Node 24, Corepack, pnpm 10, and Java for the Firestore emulator.
+Requirements: Node 24, Corepack, pnpm 10, and JDK 21+ for the Firestore emulator.
 
 ```bash
 corepack enable
