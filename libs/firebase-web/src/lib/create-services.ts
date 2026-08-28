@@ -16,7 +16,7 @@ import {
   FirestoreProfileRepository,
   FirestoreStatisticsRepository,
 } from './firebase-social-repositories';
-import { hasFirebaseConfig, type FirebaseWebConfig } from './config';
+import { hasFirebaseConfig, resolveAuthDomain, type FirebaseWebConfig } from './config';
 
 export const createServices = (
   config: Partial<FirebaseWebConfig>,
@@ -36,7 +36,12 @@ export const createServices = (
     };
   }
 
-  const app = getApps()[0] ?? initializeApp(config);
+  const app =
+    getApps()[0] ??
+    initializeApp({
+      ...config,
+      authDomain: resolveAuthDomain(config, window.location.hostname),
+    });
   const auth = getAuth(app);
   const firestore = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),

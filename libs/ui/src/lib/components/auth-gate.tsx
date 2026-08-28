@@ -1,18 +1,40 @@
 import { Alert, Box, Button, CircularProgress, Typography } from '@mui/material';
 import { Google } from '@mui/icons-material';
-import type { PropsWithChildren } from 'react';
+import { useState, type PropsWithChildren } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth, useServices } from '../app-context';
 
 export const SignInButton = () => {
   const services = useServices();
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const signIn = async () => {
+    if (!services.auth) return;
+    setPending(true);
+    setError(null);
+    try {
+      await services.auth.signInWithGoogle();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Could not complete Google sign-in.');
+    } finally {
+      setPending(false);
+    }
+  };
   return (
-    <Button
-      variant="contained"
-      startIcon={<Google />}
-      disabled={!services.auth}
-      onClick={() => void services.auth?.signInWithGoogle()}>
-      Continue with Google
-    </Button>
+    <Box>
+      <Button
+        variant="contained"
+        startIcon={<Google />}
+        disabled={!services.auth || pending}
+        onClick={() => void signIn()}>
+        Continue with Google
+      </Button>
+      {error && (
+        <Alert severity="error" sx={{ mt: 2 }}>
+          {error}
+        </Alert>
+      )}
+    </Box>
   );
 };
 
@@ -44,6 +66,16 @@ export const AuthGate = ({ children }: PropsWithChildren) => {
       </Box>
     );
   if (!profile)
-    return <Alert severity="info">Finish creating your public player profile before using this feature.</Alert>;
+    return (
+      <Alert
+        severity="info"
+        action={
+          <Button component={Link} to="/onboarding">
+            Create profile
+          </Button>
+        }>
+        Finish creating your public player profile before using this feature.
+      </Alert>
+    );
   return children;
 };
