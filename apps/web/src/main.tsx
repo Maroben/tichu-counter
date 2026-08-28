@@ -3,7 +3,10 @@ import { createRoot } from 'react-dom/client';
 import { createServices, type FirebaseWebConfig } from '@tichu/firebase-web';
 import { IndexedDbGuestGameRepository, IndexedDbLocalSettingsRepository } from '@tichu/local-data';
 import { TichuApp } from '@tichu/ui';
+import { registerSW } from 'virtual:pwa-register';
 import './styles.css';
+
+registerSW({ immediate: true });
 
 const firebaseConfig: Partial<FirebaseWebConfig> = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,

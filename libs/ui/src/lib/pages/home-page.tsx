@@ -98,14 +98,34 @@ export const HomePage = () => {
 
   return (
     <Page>
-      <Box sx={{ py: { xs: 2, sm: 5 } }}>
-        <Typography variant="overline" color="primary" sx={{ fontWeight: 800 }}>
-          Your table is ready
-        </Typography>
-        <PageTitle sx={{ fontSize: { xs: '2.3rem', sm: '3.5rem' } }}>Count less. Play more.</PageTitle>
-        <Typography color="text.secondary" sx={{ maxWidth: 620, mt: -2, mb: 4, fontSize: '1.1rem' }}>
-          A familiar Tichu counter with synchronized games, friends, and statistics when you want them.
-        </Typography>
+      <Box
+        sx={{
+          py: { xs: 2, sm: 5 },
+          display: 'flex',
+          alignItems: 'center',
+          gap: { xs: 2, sm: 3 },
+        }}>
+        <Box
+          component="img"
+          src="/icons/icon-512.png"
+          alt="Tichu Counter"
+          decoding="async"
+          sx={{
+            width: { xs: 88, sm: 128 },
+            height: { xs: 88, sm: 128 },
+            borderRadius: 4,
+            flexShrink: 0,
+          }}
+        />
+        <Box sx={{ minWidth: 0 }}>
+          <Typography variant="overline" color="primary" sx={{ fontWeight: 800 }}>
+            Your table is ready
+          </Typography>
+          <PageTitle sx={{ fontSize: { xs: '2.3rem', sm: '3.5rem' } }}>Count less. Play more.</PageTitle>
+          <Typography color="text.secondary" sx={{ maxWidth: 620, mt: -2, mb: 4, fontSize: '1.1rem' }}>
+            A familiar Tichu counter with synchronized games, friends, and statistics when you want them.
+          </Typography>
+        </Box>
       </Box>
 
       {!services.firebaseConfigured && (

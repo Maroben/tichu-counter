@@ -16,11 +16,13 @@ import type { ColorMode } from '@tichu/domain';
 import { useAuth, usePreferences, useServices } from '../app-context';
 import { Page, PageTitle } from '../components/page';
 import { SignInButton } from '../components/auth-gate';
+import { useAppInstall } from '../pwa/use-app-install';
 
 export const SettingsPage = () => {
   const services = useServices();
   const { user, profile, refreshProfile } = useAuth();
   const { settings, save: saveLocal } = usePreferences();
+  const { standalone, ios, canPrompt, install } = useAppInstall();
   const [displayName, setDisplayName] = useState('');
   const [handle, setHandle] = useState('');
   const [target, setTarget] = useState(1000);
@@ -100,6 +102,29 @@ export const SettingsPage = () => {
           <Button variant="contained" onClick={() => void save()}>
             Save settings
           </Button>
+        </CardContent>
+      </Card>
+      <Card sx={{ mt: 2 }}>
+        <CardContent sx={{ display: 'grid', gap: 2, p: 3 }}>
+          <Typography variant="h6">Install app</Typography>
+          {standalone ? (
+            <Typography color="text.secondary">Tichu Counter is installed on this device.</Typography>
+          ) : canPrompt ? (
+            <>
+              <Typography color="text.secondary">Add Tichu Counter to your home screen for quicker access.</Typography>
+              <Button variant="contained" onClick={() => void install()}>
+                Install app
+              </Button>
+            </>
+          ) : ios ? (
+            <Typography color="text.secondary">
+              Tap Share, then Add to Home Screen to install Tichu Counter on this iPhone or iPad.
+            </Typography>
+          ) : (
+            <Typography color="text.secondary">
+              Use your browser&apos;s install or Add to Home Screen option to pin Tichu Counter.
+            </Typography>
+          )}
         </CardContent>
       </Card>
       <Card sx={{ mt: 2 }}>
