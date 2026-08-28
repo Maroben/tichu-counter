@@ -20,11 +20,16 @@ export const useGame = (gameId: string) => {
   const services = useServices();
   const { user } = useAuth();
   const [game, setGame] = useState<Game | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(gameId));
   const [error, setError] = useState<string | null>(null);
   const guest = gameId === 'guest';
 
   useEffect(() => {
+    if (!gameId) {
+      setGame(null);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     if (guest) {
       void services.guestGames
@@ -62,6 +67,27 @@ export const useGame = (gameId: string) => {
     if (!game) return;
     if (guest) await saveGuest({ ...game, draft, updatedAt: Date.now() });
     else if (user) await services.games!.updateDraft(game.id, user.uid, draft);
+  };
+  const updateSettings = async (values: {
+    readonly teamNames: readonly [string, string];
+    readonly targetScore: number;
+    readonly seats: Game['seats'];
+  }) => {
+    if (!game) return;
+    if (guest)
+      await saveGuest({
+        ...game,
+        teamNames: values.teamNames,
+        targetScore: values.targetScore,
+        seats: values.seats,
+        updatedAt: Date.now(),
+      });
+    else if (user)
+      await services.games!.updateSettings(game.id, user.uid, {
+        teamNames: values.teamNames,
+        targetScore: values.targetScore,
+        seats: game.status === 'lobby' ? values.seats : undefined,
+      });
   };
   const addRound = async () => {
     if (!game) return;
@@ -135,6 +161,7 @@ export const useGame = (gameId: string) => {
     setError,
     guest,
     updateDraft,
+    updateSettings,
     addRound,
     updateRound,
     deleteRound,

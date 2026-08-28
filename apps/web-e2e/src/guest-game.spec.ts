@@ -6,10 +6,18 @@ test('starts and restores a local guest game', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /start a game/i })).toBeVisible();
   await page.getByRole('button', { name: /start local game/i }).click();
   await expect(page.getByRole('heading', { name: /dragon vs phoenix/i })).toBeVisible();
+  await expect(page.getByText(/first to 1000/i)).toBeVisible();
+  await page.getByRole('link', { name: 'Game settings' }).click();
+  await expect(page.getByRole('heading', { name: /game settings/i })).toBeVisible();
+  await expect(page.getByRole('button', { name: /delete this game/i })).toBeVisible();
+  await page.getByRole('button', { name: /save changes/i }).click();
+  await expect(page.getByRole('heading', { name: /dragon vs phoenix/i })).toBeVisible();
   await page.getByRole('button', { name: /add round/i }).click();
   await expect(page.getByRole('link', { name: /rounds \(1\)/i })).toBeVisible();
   await page.reload();
   await expect(page.getByRole('link', { name: /rounds \(1\)/i })).toBeVisible();
+  await page.getByRole('link', { name: 'Close' }).click();
+  await expect(page.getByRole('heading', { name: /count less/i })).toBeVisible();
 });
 
 test('drags the score slider with the mouse', async ({ page }) => {

@@ -55,6 +55,10 @@ service cloud.firestore {
           'teamNames', 'targetScore', 'seats', 'memberUids', 'acceptedUids', 'joinCode', 'updatedAt'
         ]);
     }
+    function hostSettingsUpdate() {
+      return resource.data.status == 'active' && request.resource.data.status == 'active'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['teamNames', 'targetScore', 'updatedAt']);
+    }
     function hostStartUpdate() {
       return resource.data.status == 'lobby' && request.resource.data.status == 'active'
         && request.resource.data.joinCode == null
@@ -78,7 +82,7 @@ service cloud.firestore {
       return isHost(resource.data)
         && request.resource.data.hostUid == resource.data.hostUid
         && request.resource.data.createdAt == resource.data.createdAt
-        && (hostLobbyUpdate() || hostStartUpdate() || hostFinalizingUpdate() || hostCompletedUpdate() || hostReopenUpdate());
+        && (hostLobbyUpdate() || hostSettingsUpdate() || hostStartUpdate() || hostFinalizingUpdate() || hostCompletedUpdate() || hostReopenUpdate());
     }
 
     match /profiles/{uid} {

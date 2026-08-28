@@ -1,12 +1,48 @@
 import { useState } from 'react';
-import { Alert, Box, Button, Card, CardContent, Chip, CircularProgress, Paper, Typography } from '@mui/material';
-import { CheckRounded, ContentCopyRounded, ListRounded, PlayArrowRounded, RefreshRounded } from '@mui/icons-material';
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  IconButton,
+  Paper,
+  Typography,
+} from '@mui/material';
+import {
+  CheckRounded,
+  ContentCopyRounded,
+  ListRounded,
+  PlayArrowRounded,
+  RefreshRounded,
+  SettingsRounded,
+} from '@mui/icons-material';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
-import { isGameComplete, scoreGame } from '@tichu/domain';
+import { isGameComplete, scoreGame, type Game } from '@tichu/domain';
 import { useAuth, useServices } from '../app-context';
 import { Page, PageTitle } from '../components/page';
 import { CounterEditor } from '../game/counter-editor';
 import { useGame, useOnline } from '../game/use-game';
+
+const GameHeading = ({ game, canEdit }: { game: Game; canEdit: boolean }) => (
+  <PageTitle
+    closeTo="/"
+    action={
+      <>
+        <Chip label={`First to ${game.targetScore}`} />
+        {canEdit && (
+          <IconButton component={Link} to={`/game/${game.id}/settings`} aria-label="Game settings">
+            <SettingsRounded />
+          </IconButton>
+        )}
+      </>
+    }
+    sx={{ fontSize: { xs: '1.5rem', sm: '2.125rem' } }}>
+    {game.teamNames[0]} vs {game.teamNames[1]}
+  </PageTitle>
+);
 
 export const GamePage = () => {
   const { gameId = '' } = useParams();
@@ -53,7 +89,7 @@ export const GamePage = () => {
   if (game.status === 'lobby')
     return (
       <Page maxWidth="sm">
-        <PageTitle>Game lobby</PageTitle>
+        <GameHeading game={game} canEdit={isHost} />
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
@@ -137,7 +173,7 @@ export const GamePage = () => {
   if (game.status === 'completed')
     return (
       <Page maxWidth="sm">
-        <PageTitle>Game complete</PageTitle>
+        <GameHeading game={game} canEdit={isHost} />
         <Card>
           <CardContent sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant="overline">Winner</Typography>
@@ -177,9 +213,7 @@ export const GamePage = () => {
 
   return (
     <Page maxWidth="sm">
-      <PageTitle action={<Chip label={`First to ${game.targetScore}`} />}>
-        {game.teamNames[0]} vs {game.teamNames[1]}
-      </PageTitle>
+      <GameHeading game={game} canEdit={isHost} />
       {!guest && !online && (
         <Alert severity="warning" sx={{ mb: 2 }}>
           Connection lost. Cached scores remain visible, but synchronized editing is paused.
@@ -220,8 +254,9 @@ export const GamePage = () => {
         elevation={8}
         sx={{
           position: 'sticky',
-          bottom: 8,
+          bottom: 16,
           mt: 2,
+          mb: { xs: 2, sm: 0 },
           p: 1.5,
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',

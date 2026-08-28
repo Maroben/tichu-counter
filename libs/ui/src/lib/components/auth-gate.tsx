@@ -29,6 +29,7 @@ export const SignInButton = () => {
         onClick={() => void signIn()}>
         Continue with Google
       </Button>
+
       {error && (
         <Alert severity="error" sx={{ mt: 2 }}>
           {error}

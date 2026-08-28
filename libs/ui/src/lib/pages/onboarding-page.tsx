@@ -28,7 +28,7 @@ export const OnboardingPage = () => {
   if (!user)
     return (
       <Page maxWidth="sm">
-        <PageTitle>Create your profile</PageTitle>
+        <PageTitle closeTo="/">Create your profile</PageTitle>
         <SignInButton />
       </Page>
     );
@@ -66,7 +66,7 @@ export const OnboardingPage = () => {
 
   return (
     <Page maxWidth="sm">
-      <PageTitle>Create your profile</PageTitle>
+      <PageTitle closeTo="/">Create your profile</PageTitle>
       <Card>
         <CardContent sx={{ display: 'grid', gap: 2, p: 3 }}>
           <Typography color="text.secondary">

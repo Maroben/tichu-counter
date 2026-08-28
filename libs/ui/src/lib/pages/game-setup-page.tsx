@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Alert,
   Box,
@@ -6,6 +6,11 @@ import {
   Card,
   CardContent,
   Chip,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   FormControl,
   InputLabel,
@@ -17,11 +22,19 @@ import {
   Typography,
 } from '@mui/material';
 import { CloudRounded, PersonSearchRounded, PhoneAndroidRounded } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import type { FriendshipWithProfile } from '@tichu/application';
-import { createGame, type PlayerSeat, type SeatIndex, type SeatTuple, type UserProfile } from '@tichu/domain';
+import {
+  SCHEMA_VERSION,
+  createGame,
+  type PlayerSeat,
+  type SeatIndex,
+  type SeatTuple,
+  type UserProfile,
+} from '@tichu/domain';
 import { useAuth, usePreferences, useServices } from '../app-context';
 import { Page, PageTitle } from '../components/page';
+import { useGame } from '../game/use-game';
 
 type Mode = 'guest' | 'cloud';
 
@@ -30,6 +43,9 @@ export const GameSetupPage = () => {
   const { user, profile } = useAuth();
   const { settings } = usePreferences();
   const navigate = useNavigate();
+  const { gameId } = useParams();
+  const { game, loading, updateSettings, remove } = useGame(gameId ?? '');
+  const editing = Boolean(gameId);
   const [mode, setMode] = useState<Mode>(user && profile ? 'cloud' : 'guest');
   const [teamNames, setTeamNames] = useState<[string, string]>(['Dragon', 'Phoenix']);
   const [target, setTarget] = useState(profile?.defaultTargetScore ?? settings.defaultTargetScore);
@@ -46,6 +62,39 @@ export const GameSetupPage = () => {
   const [handles, setHandles] = useState<[string, string, string, string]>(['', '', '', '']);
   const [friendships, setFriendships] = useState<readonly FriendshipWithProfile[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const hydrated = useRef(false);
+
+  useEffect(() => {
+    hydrated.current = false;
+  }, [gameId]);
+
+  useEffect(() => {
+    if (!game || hydrated.current) return;
+    hydrated.current = true;
+    setMode(game.storage === 'guest' ? 'guest' : 'cloud');
+    setTeamNames([game.teamNames[0], game.teamNames[1]]);
+    setTarget(game.targetScore);
+    setNames(game.seats.map((seat) => seat.displayName) as [string, string, string, string]);
+    setHostSeat((game.seats.find((seat) => seat.linkSource === 'host')?.index ?? 0) as SeatIndex);
+    setLinked(
+      game.seats.map((seat) =>
+        seat.userId
+          ? {
+              schemaVersion: SCHEMA_VERSION,
+              uid: seat.userId,
+              displayName: seat.displayName,
+              handle: '',
+              avatarUrl: null,
+              defaultTargetScore: 1000,
+              colorMode: 'system' as const,
+              createdAt: 0,
+              updatedAt: 0,
+            }
+          : null,
+      ) as [UserProfile | null, UserProfile | null, UserProfile | null, UserProfile | null],
+    );
+  }, [game]);
 
   useEffect(() => {
     if (user && profile) {
@@ -100,103 +149,129 @@ export const GameSetupPage = () => {
     }
   };
 
+  const cloudSeats = (): PlayerSeat[] => {
+    const friendIds = new Set(friends.map((friend) => friend.uid));
+    return names.map((displayName, index) => {
+      const seat = index as SeatIndex;
+      if (seat === hostSeat)
+        return {
+          index: seat,
+          team: (index % 2) as 0 | 1,
+          displayName: profile?.displayName ?? displayName.trim(),
+          userId: user?.uid ?? null,
+          linkStatus: 'accepted' as const,
+          linkSource: 'host' as const,
+        };
+      const account = linked[seat];
+      if (!account)
+        return {
+          index: seat,
+          team: (index % 2) as 0 | 1,
+          displayName: displayName.trim(),
+          userId: null,
+          linkStatus: 'guest' as const,
+          linkSource: 'guest' as const,
+        };
+      const isFriend = friendIds.has(account.uid);
+      return {
+        index: seat,
+        team: (index % 2) as 0 | 1,
+        displayName: account.displayName,
+        userId: account.uid,
+        linkStatus: isFriend ? ('accepted' as const) : ('pending' as const),
+        linkSource: isFriend ? ('friend' as const) : ('handle' as const),
+      };
+    });
+  };
+
   const submit = async () => {
     try {
       setError(null);
       if (names.some((name) => !name.trim()) || teamNames.some((name) => !name.trim()))
         throw new Error('Every team and player needs a name.');
       const now = Date.now();
+      const guestSeats = names.map((displayName, index) => ({
+        index: index as SeatIndex,
+        team: (index % 2) as 0 | 1,
+        displayName: displayName.trim(),
+        userId: null,
+        linkStatus: 'guest' as const,
+        linkSource: 'guest' as const,
+      })) as unknown as SeatTuple;
+      if (editing && game) {
+        const seats =
+          mode === 'guest' ? guestSeats : game.status === 'lobby' ? (cloudSeats() as unknown as SeatTuple) : game.seats;
+        await updateSettings({ teamNames, targetScore: target, seats });
+        navigate(`/game/${game.id}`);
+        return;
+      }
       if (mode === 'guest') {
-        const seats = names.map((displayName, index) => ({
-          index: index as SeatIndex,
-          team: (index % 2) as 0 | 1,
-          displayName: displayName.trim(),
-          userId: null,
-          linkStatus: 'guest' as const,
-          linkSource: 'guest' as const,
-        })) as unknown as SeatTuple;
-        const game = {
+        const created = {
           ...createGame({ id: 'guest', storage: 'guest', targetScore: target, now }),
           teamNames,
-          seats,
+          seats: guestSeats,
           status: 'active' as const,
           startedAt: now,
         };
-        await services.guestGames.save(game);
+        await services.guestGames.save(created);
         navigate('/game/guest');
         return;
       }
       if (!user || !profile || !services.games)
         throw new Error('Sign in and create a profile to start a synchronized game.');
-      const friendIds = new Set(friends.map((friend) => friend.uid));
-      const seats = names.map((displayName, index) => {
-        const seat = index as SeatIndex;
-        if (seat === hostSeat)
-          return {
-            index: seat,
-            team: (index % 2) as 0 | 1,
-            displayName: profile.displayName,
-            userId: user.uid,
-            linkStatus: 'accepted' as const,
-            linkSource: 'host' as const,
-          };
-        const account = linked[seat];
-        if (!account)
-          return {
-            index: seat,
-            team: (index % 2) as 0 | 1,
-            displayName: displayName.trim(),
-            userId: null,
-            linkStatus: 'guest' as const,
-            linkSource: 'guest' as const,
-          };
-        const isFriend = friendIds.has(account.uid);
-        return {
-          index: seat,
-          team: (index % 2) as 0 | 1,
-          displayName: account.displayName,
-          userId: account.uid,
-          linkStatus: isFriend ? ('accepted' as const) : ('pending' as const),
-          linkSource: isFriend ? ('friend' as const) : ('handle' as const),
-        };
-      }) as PlayerSeat[];
-      const game = await services.games.create({
+      const created = await services.games.create({
         hostUid: user.uid,
         hostName: profile.displayName,
         hostSeat,
         targetScore: target,
         teamNames,
-        seats,
+        seats: cloudSeats(),
       });
-      navigate(`/game/${game.id}`);
+      navigate(`/game/${created.id}`);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Could not create game.');
+      setError(cause instanceof Error ? cause.message : 'Could not save game.');
     }
   };
 
+  const lockPlayers = Boolean(editing && game && game.storage === 'cloud' && game.status !== 'lobby');
+
+  if (editing && loading)
+    return (
+      <Page>
+        <Box sx={{ display: 'grid', placeItems: 'center', minHeight: 300 }}>
+          <CircularProgress />
+        </Box>
+      </Page>
+    );
+  if (editing && !game) return <Navigate to="/" replace />;
+
   return (
     <Page maxWidth="md">
-      <PageTitle>Start a game</PageTitle>
+      <PageTitle closeTo={editing && game ? `/game/${game.id}` : '/'}>
+        {editing ? 'Game settings' : 'Start a game'}
+      </PageTitle>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
-      <ToggleButtonGroup
-        exclusive
-        fullWidth
-        value={mode}
-        onChange={(_, value: Mode | null) => value && setMode(value)}
-        sx={{ mb: 3 }}>
-        <ToggleButton value="guest">
-          <PhoneAndroidRounded sx={{ mr: 1 }} />
-          Local guest
-        </ToggleButton>
-        <ToggleButton value="cloud" disabled={!user || !profile}>
-          <CloudRounded sx={{ mr: 1 }} />
-          Synced game
-        </ToggleButton>
-      </ToggleButtonGroup>
+      {!editing && (
+        <ToggleButtonGroup
+          exclusive
+          fullWidth
+          value={mode}
+          onChange={(_, value: Mode | null) => value && setMode(value)}
+          sx={{ mb: 3 }}>
+          <ToggleButton value="guest">
+            <PhoneAndroidRounded sx={{ mr: 1 }} />
+            Local guest
+          </ToggleButton>
+          <ToggleButton value="cloud" disabled={!user || !profile}>
+            <CloudRounded sx={{ mr: 1 }} />
+            Synced game
+          </ToggleButton>
+        </ToggleButtonGroup>
+      )}
       <Card>
         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
@@ -238,24 +313,27 @@ export const GameSetupPage = () => {
                     {mode === 'cloud' && (
                       <Chip
                         size="small"
-                        label={hostSeat === seat ? 'You' : linked[seat] ? linked[seat]!.handle : 'Guest / open'}
+                        label={
+                          hostSeat === seat ? 'You' : linked[seat] ? linked[seat]!.handle || 'Linked' : 'Guest / open'
+                        }
                         color={hostSeat === seat ? 'primary' : 'default'}
                       />
                     )}
                   </Box>
                   {mode === 'cloud' && hostSeat === seat ? (
-                    <TextField label="Player" value={profile?.displayName ?? ''} disabled />
+                    <TextField label="Player" value={profile?.displayName ?? names[seat]} disabled />
                   ) : (
                     <TextField
                       label="Player name"
                       value={names[seat]}
+                      disabled={lockPlayers && Boolean(linked[seat])}
                       onChange={(event) => {
                         setName(seat, event.target.value);
-                        setLink(seat, null);
+                        if (!editing) setLink(seat, null);
                       }}
                     />
                   )}
-                  {mode === 'cloud' && hostSeat !== seat && (
+                  {mode === 'cloud' && hostSeat !== seat && !lockPlayers && (
                     <>
                       <FormControl size="small">
                         <InputLabel>Choose friend</InputLabel>
@@ -290,7 +368,7 @@ export const GameSetupPage = () => {
                       </Box>
                     </>
                   )}
-                  {mode === 'cloud' && (
+                  {mode === 'cloud' && !lockPlayers && (
                     <Button
                       size="small"
                       variant={hostSeat === seat ? 'contained' : 'text'}
@@ -303,10 +381,40 @@ export const GameSetupPage = () => {
             ))}
           </Box>
           <Button variant="contained" size="large" fullWidth sx={{ mt: 3 }} onClick={() => void submit()}>
-            {mode === 'cloud' ? 'Create lobby' : 'Start local game'}
+            {editing ? 'Save changes' : mode === 'cloud' ? 'Create lobby' : 'Start local game'}
           </Button>
+          {editing && (
+            <Button color="error" fullWidth sx={{ mt: 1.5 }} onClick={() => setDeleteOpen(true)}>
+              Delete this game
+            </Button>
+          )}
         </CardContent>
       </Card>
+      <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
+        <DialogTitle>Delete this game?</DialogTitle>
+        <DialogContent>
+          <Typography>The game and its rounds will be removed. This cannot be undone.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
+          <Button
+            color="error"
+            variant="contained"
+            onClick={() =>
+              void (async () => {
+                try {
+                  await remove();
+                  navigate('/');
+                } catch (cause) {
+                  setError(cause instanceof Error ? cause.message : 'Could not delete game.');
+                  setDeleteOpen(false);
+                }
+              })()
+            }>
+            Delete game
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Page>
   );
 };

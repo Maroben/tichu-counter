@@ -114,7 +114,7 @@ const StatisticsContent = () => {
 
 export const StatisticsPage = () => (
   <Page>
-    <PageTitle>Statistics</PageTitle>
+    <PageTitle closeTo="/">Statistics</PageTitle>
     <AuthGate>
       <StatisticsContent />
     </AuthGate>

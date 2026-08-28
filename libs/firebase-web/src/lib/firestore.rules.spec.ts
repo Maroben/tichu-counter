@@ -135,6 +135,19 @@ describe('Firestore security rules', () => {
     await assertSucceeds(
       updateDoc(doc(host, 'games', 'game'), { status: 'active', joinCode: null, startedAt: Timestamp.now() }),
     );
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await setDoc(
+        doc(context.firestore(), 'games', 'game'),
+        game({
+          status: 'active',
+          memberUids: ['host', 'alice'],
+          acceptedUids: ['host', 'alice'],
+          startedAt: Timestamp.now(),
+        }),
+      );
+    });
+    await assertSucceeds(updateDoc(doc(host, 'games', 'game'), { teamNames: ['Jade', 'Tiger'], targetScore: 500 }));
+    await assertFails(updateDoc(doc(participant, 'games', 'game'), { teamNames: ['Nope', 'Phoenix'] }));
   });
 
   it('locks completed rounds until the host reopens the game', async () => {

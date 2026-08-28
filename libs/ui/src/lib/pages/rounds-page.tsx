@@ -62,7 +62,7 @@ export const RoundsPage = () => {
 
   return (
     <Page maxWidth="sm">
-      <PageTitle>Rounds</PageTitle>
+      <PageTitle closeTo={`/game/${game.id}`}>Rounds</PageTitle>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}

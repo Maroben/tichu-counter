@@ -205,7 +205,7 @@ const FriendsContent = () => {
 
 export const FriendsPage = () => (
   <Page>
-    <PageTitle>Friends</PageTitle>
+    <PageTitle closeTo="/">Friends</PageTitle>
     <AuthGate>
       <FriendsContent />
     </AuthGate>

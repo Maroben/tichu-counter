@@ -62,6 +62,15 @@ export interface GameRepository {
   create(input: CreateCloudGameInput): Promise<Game>;
   start(gameId: string, hostUid: string): Promise<void>;
   updateDraft(gameId: string, uid: string, draft: RoundDraft): Promise<void>;
+  updateSettings(
+    gameId: string,
+    hostUid: string,
+    values: {
+      readonly teamNames: readonly [string, string];
+      readonly targetScore: number;
+      readonly seats?: readonly PlayerSeat[];
+    },
+  ): Promise<void>;
   addRound(gameId: string, uid: string): Promise<void>;
   updateRound(gameId: string, uid: string, round: Round): Promise<void>;
   deleteRound(gameId: string, uid: string, roundId: string): Promise<void>;

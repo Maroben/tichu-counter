@@ -172,6 +172,52 @@ export class FirestoreGameRepository implements GameRepository {
     await updateDoc(doc(this.firestore, 'games', gameId, 'draft', 'current'), draftToDocument(draft));
   }
 
+  async updateSettings(
+    gameId: string,
+    hostUid: string,
+    values: {
+      readonly teamNames: readonly [string, string];
+      readonly targetScore: number;
+      readonly seats?: readonly PlayerSeat[];
+    },
+  ): Promise<void> {
+    await runTransaction(this.firestore, async (transaction) => {
+      const gameRef = doc(this.firestore, 'games', gameId);
+      const snapshot = await transaction.get(gameRef);
+      if (!snapshot.exists() || snapshot.data().hostUid !== hostUid)
+        throw new Error('Only the host can edit this game.');
+      const status = snapshot.data().status as string;
+      if (status === 'lobby') {
+        if (!values.seats) throw new Error('Seats are required while the lobby is open.');
+        transaction.update(gameRef, {
+          teamNames: values.teamNames,
+          targetScore: values.targetScore,
+          seats: values.seats,
+          memberUids: [...new Set(values.seats.map((seat) => seat.userId).filter(Boolean))],
+          acceptedUids: [
+            ...new Set(
+              values.seats
+                .filter((seat) => seat.linkStatus === 'accepted')
+                .map((seat) => seat.userId)
+                .filter(Boolean),
+            ),
+          ],
+          updatedAt: Timestamp.now(),
+        });
+        return;
+      }
+      if (status === 'active') {
+        transaction.update(gameRef, {
+          teamNames: values.teamNames,
+          targetScore: values.targetScore,
+          updatedAt: Timestamp.now(),
+        });
+        return;
+      }
+      throw new Error('This game can no longer be edited.');
+    });
+  }
+
   async addRound(gameId: string, uid: string): Promise<void> {
     await runTransaction(this.firestore, async (transaction) => {
       const gameRef = doc(this.firestore, 'games', gameId);

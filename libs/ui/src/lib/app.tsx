@@ -1,10 +1,10 @@
 import { lazy, Suspense } from 'react';
-import { Alert, Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress } from '@mui/material';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import type { Services } from '@tichu/application';
 import { AppProviders } from './app-context';
 import { AppShell } from './components/app-shell';
-import { Page } from './components/page';
+import { Page, PageTitle } from './components/page';
 
 const HomePage = lazy(() => import('./pages/home-page').then((module) => ({ default: module.HomePage })));
 const OnboardingPage = lazy(() =>
@@ -23,8 +23,8 @@ const SettingsPage = lazy(() => import('./pages/settings-page').then((module) =>
 
 const NotFoundPage = () => (
   <Page maxWidth="sm">
+    <PageTitle closeTo="/">Page not found</PageTitle>
     <Alert severity="warning">
-      <Typography variant="h6">Page not found</Typography>
       <Button component={Link} to="/">
         Back home
       </Button>
@@ -46,6 +46,7 @@ export const TichuApp = ({ services }: { services: Services }) => (
             <Route index element={<HomePage />} />
             <Route path="onboarding" element={<OnboardingPage />} />
             <Route path="game/new" element={<GameSetupPage />} />
+            <Route path="game/:gameId/settings" element={<GameSetupPage />} />
             <Route path="game/:gameId" element={<GamePage />} />
             <Route path="game/:gameId/rounds" element={<RoundsPage />} />
             <Route path="friends" element={<FriendsPage />} />

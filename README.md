@@ -34,7 +34,7 @@ cp .env.example .env.local
 pnpm start
 ```
 
-Firebase is optional for guest-mode development. To enable accounts, copy the web configuration from the Firebase console into `.env.local`, enable Google Authentication and Firestore, then add `tichu.helbling.io`, preview domains, and localhost as authorized Authentication domains. For custom-domain sign-in, also add `https://tichu.helbling.io/__/auth/handler` as an authorized redirect URI on the Google OAuth web client.
+Firebase is optional for guest-mode development. To enable accounts, copy the web configuration from the Firebase console into `.env.local`, enable Google Authentication and Firestore, then add `tichu.helbling.io`, preview domains, and localhost as authorized Authentication domains. Keep `VITE_FIREBASE_AUTH_DOMAIN` as `tichu-helbling-io.firebaseapp.com` so Google sign-in uses the OAuth redirect URI Firebase already registered.
 
 For local Firebase development set `VITE_USE_FIREBASE_EMULATORS=true` and run:
 

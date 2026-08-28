@@ -53,7 +53,7 @@ export const SettingsPage = () => {
 
   return (
     <Page maxWidth="sm">
-      <PageTitle>Settings</PageTitle>
+      <PageTitle closeTo="/">Settings</PageTitle>
       {message && (
         <Alert severity={message === 'Settings saved.' ? 'success' : 'error'} sx={{ mb: 2 }}>
           {message}

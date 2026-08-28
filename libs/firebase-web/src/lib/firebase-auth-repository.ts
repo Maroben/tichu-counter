@@ -4,11 +4,9 @@ import {
   getRedirectResult,
   onAuthStateChanged,
   signInWithPopup,
-  signInWithRedirect,
   signOut,
   type Auth,
 } from 'firebase/auth';
-import { shouldFallBackToRedirect } from './config';
 
 export class FirebaseAuthenticationRepository implements AuthenticationRepository {
   constructor(private readonly auth: Auth) {
@@ -26,12 +24,7 @@ export class FirebaseAuthenticationRepository implements AuthenticationRepositor
   async signInWithGoogle(): Promise<void> {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
-    try {
-      await signInWithPopup(this.auth, provider);
-    } catch (error) {
-      if (!shouldFallBackToRedirect(error)) throw error;
-      await signInWithRedirect(this.auth, provider);
-    }
+    await signInWithPopup(this.auth, provider);
   }
 
   async signOut(): Promise<void> {
