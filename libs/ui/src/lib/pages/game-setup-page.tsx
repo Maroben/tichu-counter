@@ -248,6 +248,10 @@ export const GameSetupPage = () => {
   };
 
   const lockPlayers = Boolean(editing && game && game.storage === 'cloud' && game.status !== 'lobby');
+  const teamSeatGroups = [
+    { team: 0, color: 'primary.main', seats: [0, 2] as const },
+    { team: 1, color: 'secondary.main', seats: [1, 3] as const },
+  ] as const;
 
   if (editing && loading)
     return (
@@ -313,83 +317,108 @@ export const GameSetupPage = () => {
             Players
           </Typography>
           <Typography color="text.secondary" sx={{ mb: 2 }}>
-            Seats 1 and 3 play for {teamNames[0]}; seats 2 and 4 play for {teamNames[1]}.
+            Seat positions stay fixed for statistics: seats 1 and 3 play for {teamNames[0]}; seats 2 and 4 play for{' '}
+            {teamNames[1]}.
           </Typography>
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-            {([0, 1, 2, 3] as SeatIndex[]).map((seat) => (
-              <Card
-                key={seat}
-                variant="outlined"
-                sx={{ borderColor: seat % 2 === 0 ? 'primary.main' : 'secondary.main' }}>
-                <CardContent sx={{ display: 'grid', gap: 1.5 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Typography sx={{ fontWeight: 800 }}>Seat {seat + 1}</Typography>
-                    {mode === 'cloud' && (
-                      <Chip
-                        size="small"
-                        label={
-                          hostSeat === seat ? 'You' : linked[seat] ? linked[seat]!.handle || 'Linked' : 'Guest / open'
-                        }
-                        color={hostSeat === seat ? 'primary' : 'default'}
-                      />
-                    )}
+            {teamSeatGroups.map((group) => (
+              <Card key={group.team} variant="outlined" sx={{ borderColor: group.color }}>
+                <CardContent sx={{ display: 'grid', gap: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 2 }}>
+                    <Box>
+                      <Typography variant="overline" color="text.secondary">
+                        Team {group.team + 1}
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 900 }}>
+                        {teamNames[group.team]}
+                      </Typography>
+                    </Box>
+                    <Chip size="small" label={`Seats ${group.seats.map((seat) => seat + 1).join(' + ')}`} />
                   </Box>
-                  {mode === 'cloud' && hostSeat === seat ? (
-                    <TextField label="Player" value={profile?.displayName ?? names[seat]} disabled />
-                  ) : (
-                    <TextField
-                      label="Player name"
-                      value={names[seat]}
-                      disabled={lockPlayers && Boolean(linked[seat])}
-                      onChange={(event) => {
-                        setName(seat, event.target.value);
-                        if (!editing) setLink(seat, null);
-                      }}
-                    />
-                  )}
-                  {mode === 'cloud' && hostSeat !== seat && !lockPlayers && (
-                    <>
-                      <FormControl size="small">
-                        <InputLabel>Choose friend</InputLabel>
-                        <Select
-                          label="Choose friend"
-                          value={
-                            linked[seat] && friends.some((friend) => friend.uid === linked[seat]?.uid)
-                              ? linked[seat]!.uid
-                              : ''
-                          }
-                          onChange={(event) =>
-                            setLink(seat, friends.find((friend) => friend.uid === event.target.value) ?? null)
-                          }>
-                          <MenuItem value="">Guest / open seat</MenuItem>
-                          {friends.map((friend) => (
-                            <MenuItem key={friend.uid} value={friend.uid}>
-                              {friend.displayName} (@{friend.handle})
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <TextField
-                          size="small"
-                          label="Or exact handle"
-                          value={handles[seat]}
-                          onChange={(event) => setHandle(seat, event.target.value.toLowerCase())}
-                        />
-                        <Button aria-label="Find handle" onClick={() => void searchHandle(seat)}>
-                          <PersonSearchRounded />
-                        </Button>
+                  {group.seats.map((seat, seatPosition) => (
+                    <Box
+                      key={seat}
+                      sx={{
+                        display: 'grid',
+                        gap: 1.5,
+                        borderTop: seatPosition === 0 ? 0 : 1,
+                        borderColor: 'divider',
+                        pt: seatPosition === 0 ? 0 : 2,
+                      }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography sx={{ fontWeight: 800 }}>Seat {seat + 1}</Typography>
+                        {mode === 'cloud' && (
+                          <Chip
+                            size="small"
+                            label={
+                              hostSeat === seat
+                                ? 'You'
+                                : linked[seat]
+                                  ? linked[seat]!.handle || 'Linked'
+                                  : 'Guest / open'
+                            }
+                            color={hostSeat === seat ? 'primary' : 'default'}
+                          />
+                        )}
                       </Box>
-                    </>
-                  )}
-                  {mode === 'cloud' && !lockPlayers && (
-                    <Button
-                      size="small"
-                      variant={hostSeat === seat ? 'contained' : 'text'}
-                      onClick={() => chooseHostSeat(seat)}>
-                      I sit here
-                    </Button>
-                  )}
+                      {mode === 'cloud' && hostSeat === seat ? (
+                        <TextField label="Player" value={profile?.displayName ?? names[seat]} disabled />
+                      ) : (
+                        <TextField
+                          label="Player name"
+                          value={names[seat]}
+                          disabled={lockPlayers && Boolean(linked[seat])}
+                          onChange={(event) => {
+                            setName(seat, event.target.value);
+                            if (!editing) setLink(seat, null);
+                          }}
+                        />
+                      )}
+                      {mode === 'cloud' && hostSeat !== seat && !lockPlayers && (
+                        <>
+                          <FormControl size="small">
+                            <InputLabel>Choose friend</InputLabel>
+                            <Select
+                              label="Choose friend"
+                              value={
+                                linked[seat] && friends.some((friend) => friend.uid === linked[seat]?.uid)
+                                  ? linked[seat]!.uid
+                                  : ''
+                              }
+                              onChange={(event) =>
+                                setLink(seat, friends.find((friend) => friend.uid === event.target.value) ?? null)
+                              }>
+                              <MenuItem value="">Guest / open seat</MenuItem>
+                              {friends.map((friend) => (
+                                <MenuItem key={friend.uid} value={friend.uid}>
+                                  {friend.displayName} (@{friend.handle})
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <TextField
+                              size="small"
+                              label="Or exact handle"
+                              value={handles[seat]}
+                              onChange={(event) => setHandle(seat, event.target.value.toLowerCase())}
+                            />
+                            <Button aria-label="Find handle" onClick={() => void searchHandle(seat)}>
+                              <PersonSearchRounded />
+                            </Button>
+                          </Box>
+                        </>
+                      )}
+                      {mode === 'cloud' && !lockPlayers && (
+                        <Button
+                          size="small"
+                          variant={hostSeat === seat ? 'contained' : 'text'}
+                          onClick={() => chooseHostSeat(seat)}>
+                          I sit here
+                        </Button>
+                      )}
+                    </Box>
+                  ))}
                 </CardContent>
               </Card>
             ))}
