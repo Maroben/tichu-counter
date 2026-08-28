@@ -1,0 +1,8 @@
+packages:
+  - apps/*
+  - libs/*
+
+onlyBuiltDependencies:
+  - '@firebase/util'
+  - esbuild
+  - nx

@@ -1,0 +1,17 @@
+{
+  "name": "firebase-web",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/firebase-web/src",
+  "projectType": "library",
+  "tags": ["scope:data", "platform:web"],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": { "command": "vitest run --config libs/firebase-web/vitest.config.ts" }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "tsc -p libs/firebase-web/tsconfig.json --noEmit" }
+    }
+  }
+}

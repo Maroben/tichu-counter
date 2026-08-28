@@ -1,0 +1,163 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
+    function gamePath(gameId) { return /databases/$(database)/documents/games/$(gameId); }
+    function game(gameId) { return get(/databases/$(database)/documents/games/$(gameId)); }
+    function gameAfter(gameId) { return getAfter(/databases/$(database)/documents/games/$(gameId)); }
+    function isGameMember(data) { return signedIn() && request.auth.uid in data.memberUids; }
+    function isAccepted(data) { return signedIn() && request.auth.uid in data.acceptedUids; }
+    function isHost(data) { return signedIn() && request.auth.uid == data.hostUid; }
+    function pairId(left, right) { return left < right ? left + '_' + right : right + '_' + left; }
+    function areFriends(left, right) {
+      let path = /databases/$(database)/documents/friendships/$(pairId(left, right));
+      return exists(path) && get(path).data.status == 'accepted'
+        && left in get(path).data.userIds && right in get(path).data.userIds;
+    }
+    function validBet(bet) {
+      return bet == null || (bet.keys().hasOnly(['kind', 'successful'])
+        && bet.kind in ['tichu', 'grand-tichu'] && bet.successful is bool);
+    }
+    function success(bets, index) { return bets[index] != null && bets[index].successful == true; }
+    function validDraft(data) {
+      return data.keys().hasAll(['basePointsTeamB', 'doubleTeam', 'bets', 'startedAt'])
+        && data.basePointsTeamB is int && data.basePointsTeamB >= -25 && data.basePointsTeamB <= 125
+        && data.basePointsTeamB % 5 == 0
+        && (data.doubleTeam == null || data.doubleTeam in [0, 1])
+        && data.bets is list && data.bets.size() == 4
+        && validBet(data.bets[0]) && validBet(data.bets[1]) && validBet(data.bets[2]) && validBet(data.bets[3])
+        && !(success(data.bets, 0) && success(data.bets, 1))
+        && !(success(data.bets, 0) && success(data.bets, 2))
+        && !(success(data.bets, 0) && success(data.bets, 3))
+        && !(success(data.bets, 1) && success(data.bets, 2))
+        && !(success(data.bets, 1) && success(data.bets, 3))
+        && !(success(data.bets, 2) && success(data.bets, 3))
+        && !(data.bets[0] != null && data.bets[1] != null && data.bets[2] != null && data.bets[3] != null
+          && !success(data.bets, 0) && !success(data.bets, 1) && !success(data.bets, 2) && !success(data.bets, 3))
+        && (data.doubleTeam == null
+          || (data.doubleTeam == 0 && !success(data.bets, 1) && !success(data.bets, 3))
+          || (data.doubleTeam == 1 && !success(data.bets, 0) && !success(data.bets, 2)));
+    }
+    function validGame(data) {
+      return data.schemaVersion == 1 && data.storage == 'cloud'
+        && data.hostUid is string && data.status in ['lobby', 'active', 'finalizing', 'completed']
+        && data.teamNames is list && data.teamNames.size() == 2
+        && data.targetScore is int && data.targetScore >= 100
+        && data.seats is list && data.seats.size() == 4
+        && data.memberUids is list && data.acceptedUids is list
+        && data.nextRoundNumber is int && data.nextRoundNumber >= 1;
+    }
+    function hostLobbyUpdate() {
+      return resource.data.status == 'lobby' && request.resource.data.status == 'lobby'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'teamNames', 'targetScore', 'seats', 'memberUids', 'acceptedUids', 'joinCode', 'updatedAt'
+        ]);
+    }
+    function hostStartUpdate() {
+      return resource.data.status == 'lobby' && request.resource.data.status == 'active'
+        && request.resource.data.joinCode == null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'joinCode', 'startedAt', 'updatedAt']);
+    }
+    function hostFinalizingUpdate() {
+      return resource.data.status == 'active' && request.resource.data.status == 'finalizing'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt']);
+    }
+    function hostCompletedUpdate() {
+      return resource.data.status == 'finalizing' && request.resource.data.status == 'completed'
+        && request.resource.data.completedAt != null && request.resource.data.summary != null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'completedAt', 'summary', 'updatedAt']);
+    }
+    function hostReopenUpdate() {
+      return resource.data.status == 'completed' && request.resource.data.status == 'active'
+        && request.resource.data.completedAt == null && request.resource.data.summary == null
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'completedAt', 'summary', 'updatedAt']);
+    }
+    function hostAllowedUpdate() {
+      return isHost(resource.data)
+        && request.resource.data.hostUid == resource.data.hostUid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && (hostLobbyUpdate() || hostStartUpdate() || hostFinalizingUpdate() || hostCompletedUpdate() || hostReopenUpdate());
+    }
+
+    match /profiles/{uid} {
+      allow read: if signedIn();
+      allow create: if isSelf(uid) && request.resource.data.uid == uid && request.resource.data.schemaVersion == 1;
+      allow update: if isSelf(uid) && request.resource.data.uid == uid
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if false;
+    }
+    match /handles/{handle} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid
+        && getAfter(/databases/$(database)/documents/profiles/$(request.auth.uid)).data.handle == handle;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+      allow update: if false;
+    }
+    match /friendships/{friendshipId} {
+      allow read: if signedIn() && request.auth.uid in resource.data.userIds;
+      allow create: if signedIn() && request.resource.data.requesterUid == request.auth.uid
+        && request.resource.data.recipientUid != request.auth.uid && request.resource.data.status == 'pending'
+        && request.resource.data.userIds.size() == 2
+        && request.resource.data.requesterUid in request.resource.data.userIds
+        && request.resource.data.recipientUid in request.resource.data.userIds;
+      allow update: if signedIn() && resource.data.recipientUid == request.auth.uid
+        && resource.data.status == 'pending' && request.resource.data.status == 'accepted'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt']);
+      allow delete: if signedIn() && request.auth.uid in resource.data.userIds;
+    }
+    match /games/{gameId} {
+      allow read: if isGameMember(resource.data);
+      allow create: if validGame(request.resource.data) && isHost(request.resource.data)
+        && request.auth.uid in request.resource.data.memberUids
+        && request.auth.uid in request.resource.data.acceptedUids
+        && request.resource.data.status == 'lobby';
+      allow update: if validGame(request.resource.data) && (
+        hostAllowedUpdate()
+        || (isAccepted(resource.data) && resource.data.status == 'active' && request.resource.data.status == 'active'
+          && request.resource.data.nextRoundNumber == resource.data.nextRoundNumber + 1
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nextRoundNumber', 'updatedAt']))
+        || (isGameMember(resource.data) && !(request.auth.uid in resource.data.acceptedUids)
+          && resource.data.status == 'lobby' && request.resource.data.status == 'lobby'
+          && request.resource.data.acceptedUids.toSet().difference(resource.data.acceptedUids.toSet()) == [request.auth.uid].toSet()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['seats', 'acceptedUids', 'updatedAt']))
+        || (signedIn() && resource.data.status == 'lobby' && !(request.auth.uid in resource.data.memberUids)
+          && request.resource.data.memberUids.toSet().difference(resource.data.memberUids.toSet()) == [request.auth.uid].toSet()
+          && request.resource.data.acceptedUids.toSet().difference(resource.data.acceptedUids.toSet()) == [request.auth.uid].toSet()
+          && exists(/databases/$(database)/documents/joinCodes/$(resource.data.joinCode))
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['seats', 'memberUids', 'acceptedUids', 'updatedAt']))
+      );
+      allow delete: if isHost(resource.data);
+
+      match /draft/{draftId} {
+        allow read: if isGameMember(game(gameId).data);
+        allow create: if isHost(gameAfter(gameId).data) && gameAfter(gameId).data.status == 'lobby' && validDraft(request.resource.data);
+        allow update: if isAccepted(game(gameId).data) && game(gameId).data.status == 'active' && validDraft(request.resource.data);
+        allow delete: if isHost(game(gameId).data) && !existsAfter(gamePath(gameId));
+      }
+      match /rounds/{roundId} {
+        allow read: if isGameMember(game(gameId).data);
+        allow create: if isAccepted(game(gameId).data) && game(gameId).data.status == 'active'
+          && request.resource.data.id == roundId && validDraft(request.resource.data);
+        allow update: if isAccepted(game(gameId).data) && game(gameId).data.status == 'active'
+          && request.resource.data.id == roundId && request.resource.data.number == resource.data.number
+          && validDraft(request.resource.data);
+        allow delete: if (isAccepted(game(gameId).data) && game(gameId).data.status == 'active')
+          || (isHost(game(gameId).data) && !existsAfter(gamePath(gameId)));
+      }
+    }
+    match /joinCodes/{code} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.hostUid == request.auth.uid;
+      allow delete: if signedIn() && resource.data.hostUid == request.auth.uid;
+      allow update: if false;
+    }
+    match /sharedStats/{uid} {
+      allow read: if isSelf(uid) || (signedIn() && areFriends(request.auth.uid, uid));
+      allow create, update: if isSelf(uid) && request.resource.data.userId == uid && request.resource.data.schemaVersion == 1;
+      allow delete: if isSelf(uid);
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

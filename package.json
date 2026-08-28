@@ -1,37 +1,67 @@
 {
   "name": "tichu-counter",
-  "version": "0.3.0",
-  "dependencies": {
-    "@material-ui/core": "^4.11.3",
-    "@material-ui/icons": "^4.11.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^5.2.0"
-  },
-  "devDependencies": {
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.3",
-    "@types/react-router-dom": "^5.1.7",
-    "parcel-bundler": "^1.12.5",
-    "prettier": "^2.6.2",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.2.3"
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.25.0",
+  "engines": {
+    "node": ">=24"
   },
   "scripts": {
-    "lint:check": "prettier --check .",
-    "lint": "prettier --write .",
-    "start": "parcel ./src/index.html --open",
-    "build": "parcel build ./src/index.html",
-    "test": "echo \"Error: no test specified\" && exit 0",
-    "deploy": "yarn build && firebase deploy"
+    "start": "nx serve web",
+    "build": "nx build web",
+    "test": "nx run-many -t test",
+    "test:rules": "firebase emulators:exec --only firestore \"vitest run --config libs/firebase-web/vitest.rules.config.ts\"",
+    "typecheck": "nx run-many -t typecheck",
+    "lint": "nx run-many -t lint --exclude=tichu-counter",
+    "format": "nx format:write",
+    "format:check": "nx format:check",
+    "e2e": "nx e2e web-e2e",
+    "ci": "nx run-many -t lint,typecheck,test,build --exclude=tichu-counter",
+    "deploy": "pnpm build && firebase deploy"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.3.1",
+    "@mui/material": "^9.3.1",
+    "@tanstack/react-query": "^5.102.7",
+    "firebase": "^12.18.0",
+    "idb": "^8.0.3",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.2",
+    "zod": "^4.4.3"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@firebase/rules-unit-testing": "^5.0.2",
+    "@nx/eslint": "23.1.2",
+    "@nx/eslint-plugin": "23.1.2",
+    "@nx/js": "23.1.2",
+    "@nx/react": "23.1.2",
+    "@nx/vite": "23.1.2",
+    "@nx/vitest": "23.1.2",
+    "@playwright/test": "^1.62.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "express": "4.21.2",
+    "firebase-tools": "^15.28.1",
+    "jsdom": "^30.0.1",
+    "nx": "23.1.2",
+    "prettier": "^3.9.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.68.0",
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
+  }
 }

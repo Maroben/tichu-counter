@@ -1,28 +1,30 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "alwaysStrict": true,
     "baseUrl": ".",
-    "diagnostics": true,
     "esModuleInterop": true,
-    "jsx": "react",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "outDir": "dist",
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
     "paths": {
-      "*": ["node_modules/*"]
+      "@tichu/application": ["libs/application/src/index.ts"],
+      "@tichu/domain": ["libs/domain/src/index.ts"],
+      "@tichu/firebase-web": ["libs/firebase-web/src/index.ts"],
+      "@tichu/local-data": ["libs/local-data/src/index.ts"],
+      "@tichu/ui": ["libs/ui/src/index.ts"]
     },
-    "removeComments": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "strict": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "target": "es2020"
+    "target": "ES2023",
+    "useDefineForClassFields": true
   },
-  "include": ["src/**/*"]
+  "exclude": ["node_modules", "dist", "tmp"]
 }
