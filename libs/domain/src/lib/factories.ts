@@ -1,4 +1,5 @@
 import { createRoundDraft } from './scoring';
+import { validateSeatAssignments } from './seat-validation';
 import { SCHEMA_VERSION, type Game, type PlayerSeat, type SeatIndex, type SeatTuple, type TeamIndex } from './types';
 
 const defaultSeat = (index: SeatIndex): PlayerSeat => ({
@@ -39,6 +40,8 @@ export const createGame = ({
       linkSource: 'host',
     };
   }
+  const errors = validateSeatAssignments(seats);
+  if (errors.length) throw new Error(errors[0]);
   return {
     schemaVersion: SCHEMA_VERSION,
     id,

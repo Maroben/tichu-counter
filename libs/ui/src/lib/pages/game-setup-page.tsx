@@ -27,6 +27,7 @@ import type { FriendshipWithProfile } from '@tichu/application';
 import {
   SCHEMA_VERSION,
   createGame,
+  validateSeatAssignments,
   type PlayerSeat,
   type SeatIndex,
   type SeatTuple,
@@ -113,8 +114,13 @@ export const GameSetupPage = () => {
   const setHandle = (seat: SeatIndex, value: string) =>
     setHandles((current) => current.map((item, index) => (index === seat ? value : item)) as typeof current);
   const setLink = (seat: SeatIndex, value: UserProfile | null) => {
+    if (value && linked.some((item, index) => index !== seat && item?.uid === value.uid)) {
+      setError('That player already has a seat.');
+      return;
+    }
     setLinked((current) => current.map((item, index) => (index === seat ? value : item)) as typeof current);
     if (value) setName(seat, value.displayName);
+    if (value) setError(null);
   };
 
   const searchHandle = async (seat: SeatIndex) => {
@@ -127,7 +133,7 @@ export const GameSetupPage = () => {
       setError('Your account is already in the host seat.');
       return;
     }
-    if (linked.some((item) => item?.uid === found.uid)) {
+    if (linked.some((item, index) => index !== seat && item?.uid === found.uid)) {
       setError('That player already has a seat.');
       return;
     }
@@ -145,7 +151,10 @@ export const GameSetupPage = () => {
             index === seat ? profile.displayName : index === previous ? `Player ${index + 1}` : name,
           ) as typeof current,
       );
-      setLink(seat, null);
+      setLinked(
+        (current) =>
+          current.map((item, index) => (index === seat || index === previous ? null : item)) as typeof current,
+      );
     }
   };
 
@@ -201,6 +210,8 @@ export const GameSetupPage = () => {
       if (editing && game) {
         const seats =
           mode === 'guest' ? guestSeats : game.status === 'lobby' ? (cloudSeats() as unknown as SeatTuple) : game.seats;
+        const seatErrors = validateSeatAssignments(seats);
+        if (seatErrors.length) throw new Error(seatErrors[0]);
         await updateSettings({ teamNames, targetScore: target, seats });
         navigate(`/game/${game.id}`);
         return;
@@ -219,13 +230,16 @@ export const GameSetupPage = () => {
       }
       if (!user || !profile || !services.games)
         throw new Error('Sign in and create a profile to start a synchronized game.');
+      const seats = cloudSeats();
+      const seatErrors = validateSeatAssignments(seats);
+      if (seatErrors.length) throw new Error(seatErrors[0]);
       const created = await services.games.create({
         hostUid: user.uid,
         hostName: profile.displayName,
         hostSeat,
         targetScore: target,
         teamNames,
-        seats: cloudSeats(),
+        seats,
       });
       navigate(`/game/${created.id}`);
     } catch (cause) {

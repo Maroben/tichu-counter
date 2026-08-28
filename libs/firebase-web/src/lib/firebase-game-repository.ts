@@ -3,6 +3,7 @@ import {
   buildGameSummary,
   createGame,
   createRoundDraft,
+  validateSeatAssignments,
   validateRound,
   type Game,
   type PlayerSeat,
@@ -114,6 +115,8 @@ export class FirestoreGameRepository implements GameRepository {
   }
 
   async create(input: CreateCloudGameInput): Promise<Game> {
+    const seatErrors = validateSeatAssignments(input.seats);
+    if (seatErrors.length) throw new Error(seatErrors[0]);
     const gameRef = doc(collection(this.firestore, 'games'));
     const code = createJoinCode();
     const now = Date.now();
@@ -153,6 +156,8 @@ export class FirestoreGameRepository implements GameRepository {
       if (!snapshot.exists() || snapshot.data().hostUid !== hostUid)
         throw new Error('Only the host can start this game.');
       const seats = snapshot.data().seats as PlayerSeat[];
+      const seatErrors = validateSeatAssignments(seats);
+      if (seatErrors.length) throw new Error(seatErrors[0]);
       if (seats.some((seat) => seat.linkStatus === 'pending'))
         throw new Error('All invitations must be accepted first.');
       const code = snapshot.data().joinCode as string | null;
@@ -189,6 +194,8 @@ export class FirestoreGameRepository implements GameRepository {
       const status = snapshot.data().status as string;
       if (status === 'lobby') {
         if (!values.seats) throw new Error('Seats are required while the lobby is open.');
+        const seatErrors = validateSeatAssignments(values.seats);
+        if (seatErrors.length) throw new Error(seatErrors[0]);
         transaction.update(gameRef, {
           teamNames: values.teamNames,
           targetScore: values.targetScore,
@@ -319,6 +326,8 @@ export class FirestoreGameRepository implements GameRepository {
       );
       if (!seats.some((seat) => seat.userId === uid && seat.linkStatus === 'accepted'))
         throw new Error('Invitation not found.');
+      const seatErrors = validateSeatAssignments(seats);
+      if (seatErrors.length) throw new Error(seatErrors[0]);
       const acceptedUids = [
         ...new Set(
           seats
@@ -344,10 +353,14 @@ export class FirestoreGameRepository implements GameRepository {
       if (!gameSnapshot.exists() || gameSnapshot.data().status !== 'lobby')
         throw new Error('This game has already started.');
       const seats = [...(gameSnapshot.data().seats as PlayerSeat[])];
+      if (seats.some((candidate) => candidate.userId === uid))
+        throw new Error('Your account already has a seat in this game.');
       const selected = seats[seat];
       if (!selected || selected.linkStatus !== 'guest' || selected.userId)
         throw new Error('That seat is no longer open.');
       seats[seat] = { ...selected, displayName, userId: uid, linkStatus: 'accepted', linkSource: 'join-code' };
+      const seatErrors = validateSeatAssignments(seats);
+      if (seatErrors.length) throw new Error(seatErrors[0]);
       const memberUids = [...new Set([...(gameSnapshot.data().memberUids as string[]), uid])];
       const acceptedUids = [...new Set([...(gameSnapshot.data().acceptedUids as string[]), uid])];
       transaction.update(gameRef, { seats, memberUids, acceptedUids, updatedAt: Timestamp.now() });

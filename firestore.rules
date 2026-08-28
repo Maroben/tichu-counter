@@ -20,6 +20,17 @@ service cloud.firestore {
       return bet == null || (bet.keys().hasOnly(['kind', 'successful'])
         && bet.kind in ['tichu', 'grand-tichu'] && bet.successful is bool);
     }
+    function sameSeatUser(left, right) {
+      return left.userId != null && right.userId != null && left.userId == right.userId;
+    }
+    function uniqueSeatUserIds(seats) {
+      return !sameSeatUser(seats[0], seats[1])
+        && !sameSeatUser(seats[0], seats[2])
+        && !sameSeatUser(seats[0], seats[3])
+        && !sameSeatUser(seats[1], seats[2])
+        && !sameSeatUser(seats[1], seats[3])
+        && !sameSeatUser(seats[2], seats[3]);
+    }
     function success(bets, index) { return bets[index] != null && bets[index].successful == true; }
     function validDraft(data) {
       return data.keys().hasAll(['basePointsTeamB', 'doubleTeam', 'bets', 'startedAt'])
@@ -46,6 +57,7 @@ service cloud.firestore {
         && data.teamNames is list && data.teamNames.size() == 2
         && data.targetScore is int && data.targetScore >= 100
         && data.seats is list && data.seats.size() == 4
+        && uniqueSeatUserIds(data.seats)
         && data.memberUids is list && data.acceptedUids is list
         && data.nextRoundNumber is int && data.nextRoundNumber >= 1;
     }

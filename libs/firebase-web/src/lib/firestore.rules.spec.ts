@@ -13,7 +13,7 @@ let environment: RulesTestEnvironment;
 
 beforeAll(async () => {
   environment = await initializeTestEnvironment({
-    projectId: 'demo-no-project',
+    projectId: 'tichu-helbling-io',
     firestore: { rules: readFileSync(resolve(process.cwd(), 'firestore.rules'), 'utf8') },
   });
 });
@@ -41,6 +41,24 @@ const seats = [0, 1, 2, 3].map((index) => ({
   linkStatus: index === 0 ? 'accepted' : 'guest',
   linkSource: index === 0 ? 'host' : 'guest',
 }));
+
+const withAccountSeat = (
+  source: typeof seats,
+  index: number,
+  uid: string,
+  status: 'pending' | 'accepted' = 'accepted',
+) =>
+  source.map((seat, seatIndex) =>
+    seatIndex === index
+      ? {
+          ...seat,
+          displayName: uid,
+          userId: uid,
+          linkStatus: status,
+          linkSource: status === 'pending' ? 'handle' : 'friend',
+        }
+      : seat,
+  );
 
 const game = (overrides: Record<string, unknown> = {}) => {
   const now = Timestamp.now();
@@ -90,6 +108,74 @@ describe('Firestore security rules', () => {
     await assertSucceeds(setDoc(doc(host, 'games', 'game'), game()));
     await assertSucceeds(getDoc(doc(host, 'games', 'game')));
     await assertFails(getDoc(doc(outsider, 'games', 'game')));
+  });
+
+  it('rejects duplicate account seats on game creation and lobby edits', async () => {
+    const host = environment.authenticatedContext('host').firestore();
+    const duplicateSeats = withAccountSeat(withAccountSeat(seats, 1, 'alice', 'pending'), 2, 'alice', 'pending');
+
+    await assertFails(
+      setDoc(
+        doc(host, 'games', 'game'),
+        game({ seats: duplicateSeats, memberUids: ['host', 'alice'], acceptedUids: ['host'] }),
+      ),
+    );
+
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await setDoc(doc(context.firestore(), 'games', 'game'), game());
+    });
+
+    await assertFails(
+      updateDoc(doc(host, 'games', 'game'), {
+        seats: duplicateSeats,
+        memberUids: ['host', 'alice'],
+        acceptedUids: ['host'],
+      }),
+    );
+  });
+
+  it('rejects accepting an invitation when the same account has multiple pending seats', async () => {
+    const alice = environment.authenticatedContext('alice').firestore();
+    const duplicateSeats = withAccountSeat(withAccountSeat(seats, 1, 'alice', 'pending'), 2, 'alice', 'pending');
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await setDoc(
+        doc(context.firestore(), 'games', 'game'),
+        game({ seats: duplicateSeats, memberUids: ['host', 'alice'], acceptedUids: ['host'] }),
+      );
+    });
+
+    await assertFails(
+      updateDoc(doc(alice, 'games', 'game'), {
+        seats: duplicateSeats.map((seat) =>
+          seat.userId === 'alice' ? { ...seat, linkStatus: 'accepted', linkSource: 'handle' } : seat,
+        ),
+        acceptedUids: ['host', 'alice'],
+      }),
+    );
+  });
+
+  it('rejects join-code claims by users already seated in the lobby', async () => {
+    const alice = environment.authenticatedContext('alice').firestore();
+    const seated = withAccountSeat(seats, 2, 'alice', 'accepted');
+    await environment.withSecurityRulesDisabled(async (context) => {
+      await setDoc(
+        doc(context.firestore(), 'games', 'game'),
+        game({ seats: seated, memberUids: ['host', 'alice'], acceptedUids: ['host', 'alice'] }),
+      );
+      await setDoc(doc(context.firestore(), 'joinCodes', 'ABC234'), {
+        gameId: 'game',
+        hostUid: 'host',
+        expiresAt: Timestamp.fromMillis(Date.now() + 60_000),
+      });
+    });
+
+    await assertFails(
+      updateDoc(doc(alice, 'games', 'game'), {
+        seats: withAccountSeat(seated, 1, 'alice', 'accepted'),
+        memberUids: ['host', 'alice'],
+        acceptedUids: ['host', 'alice'],
+      }),
+    );
   });
 
   it('allows accepted participants to edit valid active drafts only', async () => {

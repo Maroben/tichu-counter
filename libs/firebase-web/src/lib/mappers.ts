@@ -1,6 +1,7 @@
 import {
   createRoundDraft,
   SCHEMA_VERSION,
+  validateSeatAssignments,
   type Game,
   type GameSummary,
   type PlayerSeat,
@@ -35,31 +36,35 @@ const millis = (value: number | Timestamp | null): number | null =>
   value === null ? null : value instanceof Timestamp ? value.toMillis() : value;
 const timestamp = (value: number | null): Timestamp | null => (value === null ? null : Timestamp.fromMillis(value));
 
-export const gameToDocument = (game: Game): DocumentData => ({
-  schemaVersion: game.schemaVersion,
-  storage: 'cloud',
-  hostUid: game.hostUid,
-  status: game.status,
-  teamNames: game.teamNames,
-  targetScore: game.targetScore,
-  seats: game.seats,
-  memberUids: [...new Set(game.seats.map((seat) => seat.userId).filter(Boolean))],
-  acceptedUids: [
-    ...new Set(
-      game.seats
-        .filter((seat) => seat.linkStatus === 'accepted')
-        .map((seat) => seat.userId)
-        .filter(Boolean),
-    ),
-  ],
-  nextRoundNumber: game.nextRoundNumber,
-  joinCode: game.joinCode,
-  createdAt: timestamp(game.createdAt),
-  updatedAt: timestamp(game.updatedAt),
-  startedAt: timestamp(game.startedAt),
-  completedAt: timestamp(game.completedAt),
-  summary: game.summary,
-});
+export const gameToDocument = (game: Game): DocumentData => {
+  const seatErrors = validateSeatAssignments(game.seats);
+  if (seatErrors.length) throw new Error(seatErrors[0]);
+  return {
+    schemaVersion: game.schemaVersion,
+    storage: 'cloud',
+    hostUid: game.hostUid,
+    status: game.status,
+    teamNames: game.teamNames,
+    targetScore: game.targetScore,
+    seats: game.seats,
+    memberUids: [...new Set(game.seats.map((seat) => seat.userId).filter(Boolean))],
+    acceptedUids: [
+      ...new Set(
+        game.seats
+          .filter((seat) => seat.linkStatus === 'accepted')
+          .map((seat) => seat.userId)
+          .filter(Boolean),
+      ),
+    ],
+    nextRoundNumber: game.nextRoundNumber,
+    joinCode: game.joinCode,
+    createdAt: timestamp(game.createdAt),
+    updatedAt: timestamp(game.updatedAt),
+    startedAt: timestamp(game.startedAt),
+    completedAt: timestamp(game.completedAt),
+    summary: game.summary,
+  };
+};
 
 export const gameFromDocument = (
   id: string,
@@ -68,6 +73,9 @@ export const gameFromDocument = (
   rounds: readonly Round[],
 ): Game => {
   const parsed = gameSchema.parse(source);
+  const seats = parsed.seats as unknown as SeatTuple;
+  const seatErrors = validateSeatAssignments(seats);
+  if (seatErrors.length) throw new Error(seatErrors[0]);
   return {
     schemaVersion: SCHEMA_VERSION,
     id,
@@ -76,7 +84,7 @@ export const gameFromDocument = (
     status: parsed.status,
     teamNames: parsed.teamNames,
     targetScore: parsed.targetScore,
-    seats: parsed.seats as unknown as SeatTuple,
+    seats,
     rounds,
     draft: draft ?? createRoundDraft(),
     nextRoundNumber: parsed.nextRoundNumber,
